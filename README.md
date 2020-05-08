@@ -12,4 +12,6 @@ Just starting the application in my spare time to learn some new technology stac
     * currently you can navigate to http://localhost:8080/h2-console 
     * use mem:movies for the database and sa/password for the credentials
     * You can then run `select * from movie` as the query and see the initial set of data
-     
+
+# Swagger
+    * when running the application in spring-boot you can navigate to `http://localhost:8080/swagger-ui.html`     
