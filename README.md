@@ -1,3 +1,5 @@
+![Java CI with Maven](https://github.com/blankenshipd001/movies/workflows/Java%20CI%20with%20Maven/badge.svg?branch=master)
+
 # movies
 Custom application to track movies that I've seen or would like to see. Using Spring/Spring-security/Hibernate for the API and planning to use React for the client. 
 Just starting the application in my spare time to learn some new technology stacks and enhance skills on existing ones.
