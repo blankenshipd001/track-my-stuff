@@ -19,11 +19,11 @@ import javax.persistence.Id;
 public class Movie {
 
     @Id
-    @Column(name = "ID")
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "TITLE", nullable = false)
+    @Column(name = "title", nullable = false)
     public String title;
 
     public Movie() { }

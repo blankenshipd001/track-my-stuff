@@ -37,7 +37,7 @@
         <jta.version>1.1</jta.version>
         <h2.version>1.4.200</h2.version>
         <spring-data-jpa.version>2.2.6.RELEASE</spring-data-jpa.version>
-        <org.springframework.boot.version>2.2.6.RELEASE</org.springframework.boot.version>
+        <org.springframework.boot.version>2.2.7.RELEASE</org.springframework.boot.version>
         <org.springframework.version>5.2.5.RELEASE</org.springframework.version>
         <tomcat-dbcp.version>9.0.0.M26</tomcat-dbcp.version>
 
@@ -131,6 +131,13 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
             <version>${org.springframework.boot.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-test</artifactId>
+            <version>${org.springframework.boot.version}</version>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
