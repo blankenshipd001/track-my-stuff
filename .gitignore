@@ -27,3 +27,4 @@ hs_err_pid*
 /server/target/
 /.idea/
 /server/server.iml
+node_modules/*
