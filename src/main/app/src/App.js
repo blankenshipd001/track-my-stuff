@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Component} from 'react';
 import logo from './logo.svg';
 import './App.css';
 
@@ -40,25 +40,40 @@ import './App.css';
 //   }
 // }
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+
+    state = {
+        isLoading: true,
+        movies: []
+    };
+
+    async componentDidMount() {
+        const response = await fetch('movie/list');
+        const body = await response.json();
+        console.log(body);
+        this.setState({movies: body, isLoading: false});
+    };
+
+    render() {
+        const {movies, isLoading} = this.state;
+
+        if (isLoading) {
+            return <p>Loading...</p>
+        }
+
+        return (
+            <div className="App">
+                <div className="App-Main">
+                    <h2>List</h2>
+                    {movies.map(movie =>
+                        <div key={movie.id}>
+                            {movie.title}
+                        </div>
+                    )}
+                </div>
+            </div>
+        );
+    }
 }
 
 export default App;

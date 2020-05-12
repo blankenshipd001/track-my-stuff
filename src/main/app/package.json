@@ -20,8 +20,15 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
+  "proxy": "http://localhost:8080",
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": "react-app",
+    "rules": {
+      "indent": ["error", 4],
+      "linebreak-style": ["error", "unix"],
+      "quotes": ["error", "double"],
+      "semi": ["error", "always"]
+    }
   },
   "browserslist": {
     "production": [
