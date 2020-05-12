@@ -9,6 +9,7 @@ Just starting the application in my spare time to learn some new technology stac
 
 # Deploying the application
     * From the server directory you can run `mvn spring-boot:run` this will start up a spring boot application and load an initial list of movies into an H2 database
+    * You can then navigate to `http://localhost:8080` to view the application 
     
 # Viewing the data
     * currently you can navigate to http://localhost:8080/movie/h2-console 
@@ -17,3 +18,4 @@ Just starting the application in my spare time to learn some new technology stac
 
 # Swagger
     * when running the application in spring-boot you can navigate to `http://localhost:8080/swagger-ui.html`     
+   
