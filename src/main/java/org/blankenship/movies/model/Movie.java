@@ -2,6 +2,8 @@ package org.blankenship.movies.model;
 
 import lombok.Generated;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Entity;
@@ -10,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Table;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.validation.constraints.NotNull;
 
 @Entity //Tells Hibernate/Spring this is an Entity to map to a database object
 @Table(name = "movie") // Tells Hibernate/Spring what table to map the object to
@@ -23,6 +26,7 @@ public class Movie {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull
     @Column(name = "title", nullable = false)
     public String title;
 

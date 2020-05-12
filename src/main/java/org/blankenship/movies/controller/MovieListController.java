@@ -27,11 +27,11 @@ public class MovieListController {
     @Autowired
     MovieService movieService;
 
-    @ApiOperation(value = "Retrive a single movie") //Description used in swagger api document
+    @ApiOperation(value = "Retrive aall movies") //Description used in swagger api document
     @ApiResponses(value = { //Allows documenting the response if when it does not use the default message
             @ApiResponse(code = 200, message = "OK")
     })
-    @GetMapping(value = "/movie", produces = MediaType.APPLICATION_JSON_UTF8_VALUE) //Get mapping used by Spring to map the API
+    @GetMapping(value = "/list", produces = MediaType.APPLICATION_JSON_UTF8_VALUE) //Get mapping used by Spring to map the API
     @ResponseBody ResponseEntity<List<Movie>> movie() {
         return new ResponseEntity(movieService.list(), HttpStatus.OK);
     }
