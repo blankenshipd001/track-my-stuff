@@ -41,7 +41,7 @@
         <org.springframework.version>5.2.5.RELEASE</org.springframework.version>
         <org.springframework.security.version>5.3.2.RELEASE</org.springframework.security.version>
         <tomcat-dbcp.version>9.0.0.M26</tomcat-dbcp.version>
-        <apache-commons-compress.version>1.5</apache-commons-compress.version>
+        <apache-commons-compress.version>1.19</apache-commons-compress.version>
 
         <de.flapdoodle.embed.mongo.version>2.2.0</de.flapdoodle.embed.mongo.version>
         <junit-jupiter.version>5.7.0-M1</junit-jupiter.version>
