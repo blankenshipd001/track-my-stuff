@@ -11,12 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.http.MediaType;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import java.util.List;
 
 @RestController //Marks this as a Controller that lets spring boot wire the endpoints
@@ -27,12 +23,12 @@ public class MovieListController {
     @Autowired
     MovieService movieService;
 
-    @ApiOperation(value = "Retrive aall movies") //Description used in swagger api document
+    @ApiOperation(value = "Retrieve all movies") //Description used in swagger api document
     @ApiResponses(value = { //Allows documenting the response if when it does not use the default message
             @ApiResponse(code = 200, message = "OK")
     })
-    @GetMapping(value = "/list", produces = MediaType.APPLICATION_JSON_UTF8_VALUE) //Get mapping used by Spring to map the API
+    @GetMapping(value = "/list") //Get mapping used by Spring to map the API
     @ResponseBody ResponseEntity<List<Movie>> movie() {
-        return new ResponseEntity(movieService.list(), HttpStatus.OK);
+        return new ResponseEntity<>(movieService.list(), HttpStatus.OK);
     }
 }

@@ -36,11 +36,15 @@
         <hibernate.core.version>5.4.13.Final</hibernate.core.version>
         <jta.version>1.1</jta.version>
         <h2.version>1.4.200</h2.version>
-        <spring-data-jpa.version>2.2.6.RELEASE</spring-data-jpa.version>
+        <spring-data.version>2.2.7.RELEASE</spring-data.version>
         <org.springframework.boot.version>2.2.7.RELEASE</org.springframework.boot.version>
         <org.springframework.version>5.2.5.RELEASE</org.springframework.version>
         <org.springframework.security.version>5.3.2.RELEASE</org.springframework.security.version>
         <tomcat-dbcp.version>9.0.0.M26</tomcat-dbcp.version>
+        <apache-commons-compress.version>1.5</apache-commons-compress.version>
+
+        <de.flapdoodle.embed.mongo.version>2.2.0</de.flapdoodle.embed.mongo.version>
+        <junit-jupiter.version>5.7.0-M1</junit-jupiter.version>
 
         <swagger.version>2.9.2</swagger.version>
         <swagger-annotations.version>1.5.21</swagger-annotations.version>
@@ -64,6 +68,12 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>${dependency.version.lombok}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-compress</artifactId>
+            <version>${apache-commons-compress.version}</version>
         </dependency>
 
         <dependency>
@@ -113,7 +123,33 @@
         <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-jpa</artifactId>
-            <version>${spring-data-jpa.version}</version>
+            <version>${spring-data.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-mongodb</artifactId>
+            <version>${spring-data.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-mongodb</artifactId>
+            <version>${spring-data.version}</version>
+        </dependency>
+
+        <!-- Allows integration testing using embedded mongodb -->
+        <dependency>
+            <groupId>de.flapdoodle.embed</groupId>
+            <artifactId>de.flapdoodle.embed.mongo</artifactId>
+            <version>${de.flapdoodle.embed.mongo.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.commons</groupId>
+                    <artifactId>commons-compress</artifactId>
+                </exclusion>
+            </exclusions>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
@@ -184,6 +220,12 @@
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger-ui</artifactId>
             <version>${swagger.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.google.guava</groupId>
+                    <artifactId>guava</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -226,6 +268,13 @@
             <version>1.4.0</version>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>${junit-jupiter.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -254,6 +303,10 @@
                         <include>**/*Test.java</include>
                         <include>**/*Spec.java</include>
                     </includes>
+                    <rerunFailingTestsCount>2</rerunFailingTestsCount> <!-- reruns the tests in case of random failure or something isn't ready -->
+                    <systemPropertyVariables>
+                        <java.awt.headless>true</java.awt.headless>
+                    </systemPropertyVariables>
                 </configuration>
             </plugin>
             <!--            <plugin>-->
@@ -361,16 +414,45 @@
                 <groupId>org.sonatype.ossindex.maven</groupId>
                 <artifactId>ossindex-maven-plugin</artifactId>
                 <version>3.1.0</version>
+                <configuration>
+                    <transitive>true</transitive>
+                </configuration>
                 <executions>
                     <execution>
                         <id>audit-dependencies</id>
                         <phase>validate</phase>
                         <goals>
-                            <goal>audit</goal>
+                            <goal>audit-aggregate</goal>
                         </goals>
                     </execution>
                 </executions>
             </plugin>
         </plugins>
+
+        <!-- does the filtering of the application.properties file to set the active profile if we are using maven -->
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
     </build>
+
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <spring.profiles.active>dev</spring.profiles.active>
+            </properties>
+        </profile>
+        <profile>
+            <id>prod</id>
+            <properties>
+                <spring.profiles.active>prod</spring.profiles.active>
+            </properties>
+        </profile>
+    </profiles>
 </project>

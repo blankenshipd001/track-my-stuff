@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import './custom.scss'; //imports our custom bootstrap overrides along with the default bootstrap css
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';

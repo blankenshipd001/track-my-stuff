@@ -20,12 +20,20 @@ class MovieServiceUnitSpec extends Specification {
         given: 'that the application has started and the service is wired'
             assert movieService != null
 
+        and: 'A movie saved into the Mongo Database'
+            Movie movie = new Movie("IT")
+            movieService.save(movie)
+
+        and: 'The initial count of records'
+            long initialCount = movieService.count()
+
         when: 'initiating a findAll() on the service'
             List<Movie> movies = movieService.list()
-        println "movies = $movies"
 
-        then: 'our list should contain all the default entries'
-            movies.size() == 23
+        then: 'the size should increase by 1'
+            assert initialCount == initialCount++
+
+        and: 'our list should contain the movie "IT"'
+            assert null != movies.find { it -> it.title == "IT"}
     }
-
 }

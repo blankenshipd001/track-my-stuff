@@ -5,7 +5,8 @@ Custom application to track movies that I've seen or would like to see. Using Sp
 Just starting the application in my spare time to learn some new technology stacks and enhance skills on existing ones.
 
 # Building the source
-    * From the movies directory a `mvn clean install` can be run. This will compile all source code and run all unit tests. 
+    * From the movies directory a `mvn clean install -Pdev` can be run. This will compile all source code and run all unit tests.
+    * To package the project for production run `mvn packaage -Pproduction` 
 
 # Deploying the application
     * From the server directory you can run `mvn spring-boot:run` this will start up a spring boot application and load an initial list of movies into an H2 database
@@ -19,3 +20,11 @@ Just starting the application in my spare time to learn some new technology stac
 # Swagger
     * when running the application in spring-boot you can navigate to `http://localhost:8080/swagger-ui.html`     
    
+   
+# Helpful links:
+    * https://github.com/mongobee/mongobee
+    
+    
+    
+    $ docker run -it --rm --name my-maven-project -v "$PWD":/usr/src/app \
+     -v "$HOME"/.m2:/root/.m2 -w /usr/src/app maven:3.2-jdk-7 mvn clean install

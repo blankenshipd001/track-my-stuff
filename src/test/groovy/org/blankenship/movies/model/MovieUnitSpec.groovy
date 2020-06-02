@@ -1,8 +1,10 @@
 package org.blankenship.movies.model
 
+import org.springframework.test.context.ActiveProfiles
 import org.testng.annotations.Test
 import spock.lang.Specification
 
+@ActiveProfiles("dev")
 class MovieUnitSpec extends Specification {
 
     @Test
