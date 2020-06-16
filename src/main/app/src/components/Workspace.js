@@ -7,8 +7,6 @@ import SearchResultsPage from "./pages/SearchResultsPage";
 import RouteNotFoundPage from "./pages/RouteNotFoundPage";
 import MainPage from "./pages/MainPage";
 import SearchBar from "./SearchBar";
-import Movie from "./Movie";
-
 
 class Workspace extends React.Component {
     handleRoute = route => () => {
