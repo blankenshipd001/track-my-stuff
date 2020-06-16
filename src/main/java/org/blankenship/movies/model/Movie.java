@@ -20,8 +20,6 @@ import java.util.List;
 //Lombak annotations used to produce getters/setters to reduce boilerplate code within the files
 @Getter
 @Setter
-@RequiredArgsConstructor
-@NoArgsConstructor
 @Document
 public class Movie {
 
@@ -50,9 +48,9 @@ public class Movie {
 
     public String poster;
 
-//    public Movie(String title) {
-//        this.title = title;
-//    }
+    public Movie(String title) {
+        this.title = title;
+    }
 
     @Override
     public String toString() {
