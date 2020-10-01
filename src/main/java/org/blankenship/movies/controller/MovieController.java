@@ -18,7 +18,7 @@ import java.util.List;
 @RestController //Marks this as a Controller that lets spring boot wire the endpoints
 @RequestMapping("/movie") //Sets the endpoint
 @Api(value = "/movie") //Swagger API endpoint documentation
-public class MovieListController {
+public class MovieController {
 
     @Autowired
     MovieService movieService;

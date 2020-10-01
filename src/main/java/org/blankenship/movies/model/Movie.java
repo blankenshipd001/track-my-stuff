@@ -1,40 +1,29 @@
 package org.blankenship.movies.model;
 
-import lombok.Generated;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.Entity;
-import javax.persistence.Column;
-import javax.persistence.GenerationType;
-import javax.persistence.Table;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.validation.constraints.NotNull;
-import java.util.List;
-
-//@Entity //Tells Hibernate/Spring this is an Entity to map to a database object
+//@Document //Tells Hibernate/Spring this is an object to map to a Mongo table
 //Lombak annotations used to produce getters/setters to reduce boilerplate code within the files
 @Getter
 @Setter
-@Document
+@Document("movieDetails")
+@AllArgsConstructor
 public class Movie {
 
     @Id
     private String id;
 
-    @NotNull
-    @Column(name = "title", nullable = false)
     public String title;
 
-    public Double year;
+    public int year;
 
     public String rated;
 
-    public Double runtime;
+    public int runtime;
 
 //    public List<String> genres;
 

@@ -12,6 +12,10 @@ public class MovieService {
     @Autowired
     private MovieRepository movieRepository;
 
+    public Movie findMovieByTitle(String title) {
+        return movieRepository.findByTitle(title);
+    }
+
     /**
      * Method returns a simple list of all {Movie} objects in the system
      * @return List<Movie>
