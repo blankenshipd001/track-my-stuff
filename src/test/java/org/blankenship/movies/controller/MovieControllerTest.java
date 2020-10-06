@@ -61,8 +61,8 @@ public class MovieControllerTest {
 
     private List<Movie> getMovies() {
         return Stream.of(
-                new Movie("5ebdb4e64ca824ceca95acff", "Evil Dead", 2013, "R", 91, "Fede Alvarez", "evil dead plot", "evil dead poster"),
-                new Movie("5ebdb4e64ca824ceca95ade6", "Thor: The Dark World", 2013, "PG-13", 112, "Alan Taylor", "Thor plot", "Thor poster")
+                new Movie("5ebdb4e64ca824ceca95acff", "Evil Dead", 2013, "R", "91", "Fede Alvarez", "evil dead plot", "evil dead poster"),
+                new Movie("5ebdb4e64ca824ceca95ade6", "Thor: The Dark World", 2013, "PG-13", "112", "Alan Taylor", "Thor plot", "Thor poster")
         ).collect(Collectors.toList());
     }
 }

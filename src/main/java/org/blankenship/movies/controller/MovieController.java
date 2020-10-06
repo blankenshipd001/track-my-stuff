@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,5 +32,14 @@ public class MovieController {
     @GetMapping(value = "/list") //Get mapping used by Spring to map the API
     @ResponseBody ResponseEntity<List<Movie>> movie() {
         return new ResponseEntity<>(movieService.list(), HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "Save movie") //Description used in swagger api document
+    @ApiResponses(value = { //Allows documenting the response if when it does not use the default message
+            @ApiResponse(code = 202, message = "Created")
+    })
+    @PostMapping(value = "/") //Get mapping used by Spring to map the API
+    @ResponseBody ResponseEntity<Movie> saveMovie(@RequestBody final Movie movie) {
+        return new ResponseEntity<>(movieService.save(movie), HttpStatus.CREATED);
     }
 }
