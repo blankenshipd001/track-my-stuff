@@ -164,27 +164,27 @@
                         </configuration>
                     </execution>
 
-<!--                    <execution>-->
-<!--                        <id>lint-frontend</id>-->
-<!--                        <goals>-->
-<!--                            <goal>npm</goal>-->
-<!--                        </goals>-->
-<!--                        <phase>prepare-package</phase>-->
-<!--                        <configuration>-->
-<!--                            <arguments>run lint</arguments>-->
-<!--                        </configuration>-->
-<!--                    </execution>-->
+                    <execution>
+                        <id>lint-frontend</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <phase>prepare-package</phase>
+                        <configuration>
+                            <arguments>run lint</arguments>
+                        </configuration>
+                    </execution>
 
-<!--                    <execution>-->
-<!--                        <id>test-frontend-coverage</id>-->
-<!--                        <goals>-->
-<!--                            <goal>npm</goal>-->
-<!--                        </goals>-->
-<!--                        <phase>prepare-package</phase>-->
-<!--                        <configuration>-->
-<!--                            <arguments>run coverage</arguments>-->
-<!--                        </configuration>-->
-<!--                    </execution>-->
+                    <execution>
+                        <id>test-frontend-coverage</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <phase>prepare-package</phase>
+                        <configuration>
+                            <arguments>run coverage</arguments>
+                        </configuration>
+                    </execution>
 
                     <execution>
                         <id>build-frontend</id>
@@ -193,7 +193,7 @@
                         </goals>
                         <phase>prepare-package</phase>
                         <configuration>
-                            <arguments>build</arguments>
+                            <arguments>run build</arguments>
                         </configuration>
                     </execution>
                 </executions>
