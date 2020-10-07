@@ -27,6 +27,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import { List } from '@material-ui/core';
 import ListItem from '@material-ui/core/ListItem';
+import Paper from '@material-ui/core/Paper';
 
 const drawerWidth = 240;
 
@@ -146,8 +147,8 @@ const App = () => {
                         >
                             <MenuIcon />
                         </IconButton>
-                        <Typography variant="h6" noWrap>
-                            Persistent drawer
+                        <Typography variant="h6" noWrap style={{flex: 1}}>
+                            Movies
                         </Typography>
                         <IconButton edge='end' color='inherit' aria-label='theme mode' onClick={() => setIsDarkMode(!isDarkMode)}>
                             {icon}
@@ -204,7 +205,7 @@ const App = () => {
                 </Drawer>
 
                 {/* <SearchBar /> */}
-                <main className={classes.content}>
+                <Paper className={classes.content}>
                     <div className={classes.toolbar} />
                     <Switch>
                         { Routes.map((route) => (
@@ -213,7 +214,7 @@ const App = () => {
                             </Route>
                         ))}
                     </Switch>
-                </main>
+                </Paper>
             </div>
         </ThemeProvider>
     );
