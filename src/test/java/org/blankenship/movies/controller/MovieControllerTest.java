@@ -45,16 +45,13 @@ public class MovieControllerTest {
     public void getMovieListReturnsMovies() throws Exception {
         List<Movie> movies = getMovies();
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        String json = objectMapper.writeValueAsString(movies);
-
         when(movieService.list()).thenReturn(movies);
 
         mockMvc.perform(get("/movie/list")
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("utf-8")
         ).andExpect(status().isOk())
-        .andExpect(content().string(containsString(json)));
+        .andExpect(content().string(containsString("[{\"_id\":\"5ebdb4e64ca824ceca95acff\",\"title\":\"Evil Dead\",\"plot\":\"evil dead plot\",\"poster\":\"evil dead poster\"},{\"_id\":\"5ebdb4e64ca824ceca95ade6\",\"title\":\"Thor: The Dark World\",\"plot\":\"Thor plot\",\"poster\":\"Thor poster\"}]")));
 
         verify(movieService, times(1)).list();
     }

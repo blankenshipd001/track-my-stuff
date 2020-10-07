@@ -1,11 +1,15 @@
 package org.blankenship.movies.controller;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.blankenship.movies.controller.views.View;
 import org.blankenship.movies.model.Movie;
+import org.blankenship.movies.model.MovieDTO;
 import org.blankenship.movies.service.MovieService;
+import org.blankenship.movies.util.DTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +29,7 @@ public class MovieController {
     @Autowired
     MovieService movieService;
 
+    @JsonView(View.Summary.class)
     @ApiOperation(value = "Retrieve all movies") //Description used in swagger api document
     @ApiResponses(value = { //Allows documenting the response if when it does not use the default message
             @ApiResponse(code = 200, message = "OK")
@@ -39,7 +44,7 @@ public class MovieController {
             @ApiResponse(code = 202, message = "Created")
     })
     @PostMapping(value = "/") //Get mapping used by Spring to map the API
-    @ResponseBody ResponseEntity<Movie> saveMovie(@RequestBody final Movie movie) {
+    @ResponseBody ResponseEntity<Movie> saveMovie(@RequestBody @DTO(MovieDTO.class) Movie movie) {
         return new ResponseEntity<>(movieService.save(movie), HttpStatus.CREATED);
     }
 }

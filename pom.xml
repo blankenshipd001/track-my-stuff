@@ -21,9 +21,9 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <!-- Java Version -->
-        <java.version>11</java.version>
-        <jdk.target.version>11</jdk.target.version>
-        <targetJdk>11</targetJdk>
+<!--        <java.version>11</java.version>-->
+<!--        <jdk.target.version>11</jdk.target.version>-->
+<!--        <targetJdk>11</targetJdk>-->
 
         <junit-platform-launcher.version>1.4.0</junit-platform-launcher.version>
         <spockframework.version>2.0-M2-groovy-3.0</spockframework.version>
@@ -31,7 +31,7 @@
 
         <frontend-src-dir>${project.basedir}/src/main/app</frontend-src-dir>
         <node.version>v12.3.1</node.version>
-        <yarn.version>v1.22.4</yarn.version>
+        <npm.version>v6.13.4</npm.version>
         <frontend-maven-plugin.version>1.10.0</frontend-maven-plugin.version>
         <maven-resources-plugin.version>3.0.1</maven-resources-plugin.version>
     </properties>
@@ -102,12 +102,6 @@
             </exclusions>
         </dependency>
 
-        <dependency>
-            <groupId>org.modelmapper</groupId>
-            <artifactId>modelmapper</artifactId>
-            <version>2.3.5</version>
-        </dependency>
-
         <!-- This dependency is required for intelliJ IDEA to run the tests internally for some reason. I have yet to figure out why -->
         <dependency>
             <groupId>org.junit.platform</groupId>
@@ -129,6 +123,13 @@
             <artifactId>guava</artifactId>
             <version>29.0-jre</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.modelmapper</groupId>
+            <artifactId>modelmapper</artifactId>
+            <version>2.3.0</version>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -140,7 +141,7 @@
 
                 <configuration>
                     <nodeVersion>${node.version}</nodeVersion>
-                    <yarnVersion>${yarn.version}</yarnVersion>
+                    <yarnVersion>${npm.version}</yarnVersion>
                     <workingDirectory>${frontend-src-dir}</workingDirectory>
                     <installDirectory>${project.build.directory}</installDirectory>
                 </configuration>
@@ -149,14 +150,14 @@
                     <execution>
                         <id>install-frontend-tools</id>
                         <goals>
-                            <goal>install-node-and-yarn</goal>
+                            <goal>install-node-and-npm</goal>
                         </goals>
                     </execution>
 
                     <execution>
-                        <id>yarn-install</id>
+                        <id>npm-install</id>
                         <goals>
-                            <goal>yarn</goal>
+                            <goal>npm</goal>
                         </goals>
                         <configuration>
                             <arguments>install</arguments>
@@ -164,9 +165,31 @@
                     </execution>
 
                     <execution>
+                        <id>lint-frontend</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <phase>prepare-package</phase>
+                        <configuration>
+                            <arguments>lint</arguments>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>test-frontend-coverage</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <phase>prepare-package</phase>
+                        <configuration>
+                            <arguments>coverage</arguments>
+                        </configuration>
+                    </execution>
+
+                    <execution>
                         <id>build-frontend</id>
                         <goals>
-                            <goal>yarn</goal>
+                            <goal>npm</goal>
                         </goals>
                         <phase>prepare-package</phase>
                         <configuration>

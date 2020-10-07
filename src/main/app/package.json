@@ -9,11 +9,6 @@
     "coverage": "react-scripts test --watchAll=false --coverage --env=jest-environment-jsdom-sixteen",
     "lint": "eslint src/**/*.js"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "concurrently npm:test npm:lint"
-    }
-  },
   "proxy": "http://localhost:8700",
   "dependencies": {
     "@material-ui/core": "^4.11.0",
@@ -44,6 +39,7 @@
     "husky": "3.1.0",
     "jest-axe": "3.5.0",
     "jest-environment-jsdom-sixteen": "1.0.3",
+    "prettier": "2.0.5",
     "why-did-you-update": "~1.0.8"
   },
   "plugins": [
