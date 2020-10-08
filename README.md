@@ -19,6 +19,14 @@ Just starting the application in my spare time to learn some new technology stac
 # Helpful links:
     * https://github.com/mongobee/mongobee
     
-    
     $ docker run -it --rm --name my-maven-project -v "$PWD":/usr/src/app \
      -v "$HOME"/.m2:/root/.m2 -w /usr/src/app maven:3.2-jdk-7 mvn clean install
+     
+     
+# Logging
+to change the log level a POST must be made to : 
+curl -i -X POST -H 'Content-Type: application/json' -d '{"configuredLevel": "TRACE"}' http://<server>/actuator/loggers/<package>
+
+    *  examples: 
+        * curl -i -X POST -H 'Content-Type: application/json' -d '{"configuredLevel": "TRACE"}' http://localhost:8700/actuator/loggers/org.blankenship
+        * curl -i -X POST -H 'Content-Type: application/json' -d '{"configuredLevel": "DEBUG"}' http://localhost:8700/actuator/loggers/ROOT

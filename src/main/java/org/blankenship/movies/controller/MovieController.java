@@ -5,6 +5,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import lombok.extern.slf4j.Slf4j;
 import org.blankenship.movies.controller.views.View;
 import org.blankenship.movies.model.Movie;
 import org.blankenship.movies.model.MovieDTO;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
+@Slf4j
 @RestController //Marks this as a Controller that lets spring boot wire the endpoints
 @RequestMapping("/movie") //Sets the endpoint
 @Api(value = "/movie") //Swagger API endpoint documentation
@@ -36,6 +38,7 @@ public class MovieController {
     })
     @GetMapping(value = "/list") //Get mapping used by Spring to map the API
     @ResponseBody ResponseEntity<List<Movie>> movie() {
+        log.info("Obtain movie list");
         return new ResponseEntity<>(movieService.list(), HttpStatus.OK);
     }
 
@@ -45,6 +48,7 @@ public class MovieController {
     })
     @PostMapping(value = "/") //Get mapping used by Spring to map the API
     @ResponseBody ResponseEntity<Movie> saveMovie(@RequestBody @DTO(MovieDTO.class) Movie movie) {
+        log.info("Saving a movie");
         return new ResponseEntity<>(movieService.save(movie), HttpStatus.CREATED);
     }
 }

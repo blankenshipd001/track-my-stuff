@@ -120,9 +120,6 @@ const App = () => {
      * @param routeName {string} route in the url ex: /home
      */
     const activeRoute = (routeName) => {
-        console.log('routeName: ' + routeName);
-        console.log('history: ' + history.location.pathname);
-
         return history.location.pathname === routeName;
     };
 
