@@ -6,10 +6,10 @@ export const light = {
             width: '7px !important',
         },
         '& ::-webkit-scrollbar-track': {
-            backgroundColor: `#f1f1f1 !important`
+            backgroundColor: '#f1f1f1 !important'
         },
         '& ::-webkit-scrollbar-thumb': {
-            backgroundColor: `#888 !important`,
+            backgroundColor: '#888 !important',
             border: 'none !important',
             borderRadius: '5px !important'
         },
@@ -29,10 +29,10 @@ export const dark = {
             width: '7px !important',
         },
         '& ::-webkit-scrollbar-track': {
-            backgroundColor: `#f1f1f1 !important`
+            backgroundColor: '#f1f1f1 !important'
         },
         '& ::-webkit-scrollbar-thumb': {
-            backgroundColor: `#888 !important`,
+            backgroundColor: '#888 !important',
             border: 'none !important',
             borderRadius: '5px !important'
         },
