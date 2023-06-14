@@ -4,7 +4,12 @@ import { forwardRef, Ref } from "react";
 import Image from 'next/image';
 import { HandThumbUpIcon } from "@heroicons/react/24/outline";
 
-const Thumbnail = forwardRef(({ movie, bookmarkClicked }, ref: Ref<HTMLDivElement>) => {
+interface thumbnail {
+  movie: any;
+  bookmarkClicked(movie: any): any;
+}
+
+const Thumbnail = forwardRef(({ movie, bookmarkClicked }: thumbnail, ref: Ref<HTMLDivElement>): JSX.Element => {
   const BASE_URL = "https://image.tmdb.org/t/p/original/"; // process.env.NEXT_PUBLIC_THE_MOVIE_DB_BASE_URL;
 
   return (
