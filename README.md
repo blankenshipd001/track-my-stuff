@@ -32,3 +32,32 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+
+
+Links used:
+
+
+https://firebase.google.com/docs/web/modular-upgrade#example_2_refactoring_a_function
+https://console.cloud.google.com/apis/api/firebasedatabase.googleapis.com/credentials?project=code-monkey-292017
+https://travis.media/how-to-use-firebase-with-react/
+
+
+Building a movies page:
+https://www.freecodecamp.org/news/react-movie-app-tutorial/
+
+Icons page 
+https://fonts.google.com/icons?selected=Material+Symbols+Outlined:home:FILL@0;wght@400;GRAD@0;opsz@48
+
+https://heroicons.com/
+
+
+https://www.themoviedb.org/settings/api
+https://www.themoviedb.org/login?to=read_me&redirect_uri=/docs
+https://www.themoviedb.org/settings/api/details
+
+
+https://www.themoviedb.org/about/logos-attribution
+
+https://app.flagsmith.com/project/11256/environment/DeXpwrBU9vViXjt3ZrwJK2/features
+
+Global State provider with Gastby: https://dev.to/changoman/gatsby-js-global-state-w-react-context-usereducer-3c1
