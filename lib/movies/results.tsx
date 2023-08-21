@@ -1,6 +1,6 @@
 "use client"
 
-import Thumbnail from '@/components/thumbnail';
+import Thumbnail from './thumbnail';
 import FlipMove from "react-flip-move";
 
 function Results({ movies, bookmarkClicked }: any) {

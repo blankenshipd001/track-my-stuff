@@ -1,3 +1,13 @@
+/**
+ * TODO: 
+ *  Make sticky? -> Maybe? 
+ *  Update with any links
+ *  Disclosures etc
+ *  Copyrights
+ *  Thanks you
+ * 
+ * @returns Footer 
+ */
 const Footer = () => {
   return (
     // <!--Footer container-->

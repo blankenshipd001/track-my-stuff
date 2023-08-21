@@ -1,13 +1,13 @@
-"use client"
+"use client";
 
 import { useState, useEffect } from "react";
 
 import { db } from "@/lib/firestore";
 import { doc, deleteDoc, collection, getDocs } from "firebase/firestore";
 
-import Header from "@/components/header";
-import Results from "@/components/results";
-import Footer from "@/components/footer";
+import Header from "@/lib/movies/header";
+import Results from "@/lib/movies/results";
+import Footer from "@/lib/shared/footer";
 
 const MoviesApp = () => {
   const [watchList, setWatchList] = useState([]);
@@ -70,18 +70,24 @@ const MoviesApp = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen">
+    <>
+      {/* <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
+        <div className="flex flex-col h-screen"> */}
       <Header />
-      <div className="flex-grow">
-        {/* <Head>
+      <main className="lg:flex min-h-screen flex-col items-center justify-between p-6 font-mono text-sm ">
+        <div className="flex-grow">
+          {/* <Head>
           <title>Code Monkey Movie Watch list</title>
           <meta name="Application created to display a list of movies that are on my watch list" content="Created by code monkey" />
           <link rel="icon" href="/favicon.ico" />
         </Head> */}
-        <Results movies={watchList} bookmarkClicked={removeFromWatchList} />
-      </div>
+          <Results movies={watchList} bookmarkClicked={removeFromWatchList} />
+        </div>
+      </main>
       <Footer />
-    </div>
+      {/* </div>
+      </div> */}
+    </>
   );
 };
 

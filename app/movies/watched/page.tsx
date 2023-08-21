@@ -1,5 +1,5 @@
-import Header from "@/components/header";
-import Footer from "@/components/footer";
+import Header from "@/lib/movies/header";
+import Footer from "@/lib/shared/footer";
 
 const Watched = () => {
   return (

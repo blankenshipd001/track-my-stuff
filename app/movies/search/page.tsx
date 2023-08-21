@@ -5,10 +5,10 @@ import React from "react";
 import { collection, addDoc } from "firebase/firestore";
 import { db } from "@/lib/firestore";
 
-import Header from "@/components/header";
-import MovieSearchBox from "@/components/search-box";
-import Results from "@/components/results";
-import Footer from "@/components/footer";
+import Header from "@/lib/movies/header";
+import SearchBox from "@/lib/shared/search-box";
+import Results from "@/lib/movies/results";
+import Footer from "@/lib/shared/footer";
 
 const movie_api_key = process.env.NEXT_PUBLIC_THE_MOVIE_DB_API_KEY;
 const omdb_api_key = process.env.NEXT_PUBLIC_OMDB_API_KEY;
@@ -78,7 +78,7 @@ const MovieSearch = () => {
   return (
     <>
       <Header />
-      <MovieSearchBox searchString={searchValue} setSearchValue={setSearchString} />
+      <SearchBox searchString={searchValue} setSearchValue={setSearchString} />
       <Results movies={movies} bookmarkClicked={addToWatchList} />
       <Footer />
     </>

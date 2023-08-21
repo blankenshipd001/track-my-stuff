@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useState } from "react";
 
-const Header = () => {
+const MovieHeader = () => {
   const [navbarOpen, setNavbarOpen] = useState(false);
 
   const setNavBar = () => {
@@ -63,7 +63,7 @@ const Header = () => {
               onClick={setNavBar}
             >
               <svg
-                className=" w-10 h-10 text-gray-500 hover:text-green-500 "
+                className=" w-16 h-16 text-gray-500 hover:text-green-500 "
                 x-show="!showMenu"
                 fill="none"
                 strokeLinecap="round"
@@ -117,4 +117,4 @@ const Header = () => {
   );
 };
 
-export default Header;
+export default MovieHeader;
