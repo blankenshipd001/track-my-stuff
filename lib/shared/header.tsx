@@ -30,13 +30,19 @@ const Header = () => {
               href="/movies"
               className="pt-3 px-2 text-green-500 border-b-4 border-green-500 font-semibold "
             >
-              Movies
+              Movies abc
             </a>
             <a
               href="/books"
               className="pt-3 px-2 text-gray-500 font-semibold hover:text-green-500 transition duration-300"
             >
               Books
+            </a>
+            <a
+              href="/login"
+              className="pt-3 px-2 text-gray-500 font-semibold hover:text-green-500 transition duration-300"
+            >
+              Login
             </a>
           </div>
 

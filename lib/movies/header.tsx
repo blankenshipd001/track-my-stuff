@@ -44,6 +44,12 @@ const MovieHeader = () => {
             >
               Watched
             </a>
+            <a
+              href="/login"
+              className="pt-3 px-2 text-gray-500 font-semibold hover:text-green-500 transition duration-300"
+            >
+              Login
+            </a>
           </div>
 
           {/* <!-- Secondary Navbar items --> */}
