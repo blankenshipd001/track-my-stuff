@@ -14,6 +14,7 @@ const Login = () => {
 
         signInWithEmailAndPassword(auth, user.username, user.password)
             .then((userCredential) => {
+                // TODO: Once Signed In where do we want to navigate to?
                 
             })
             .catch((error) => {
