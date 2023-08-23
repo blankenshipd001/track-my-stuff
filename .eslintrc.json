@@ -1,7 +1,23 @@
 {
+  "root":true,
   "extends": [
+    "eslint:recommended",
     "next/core-web-vitals",
+    "plugin:@typescript-eslint/recommended",
     "plugin:testing-library/react",
-    "plugin:jest-dom/recommended" 
-  ]
+    "plugin:jest-dom/recommended"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {"project" : ["./tsconfig.json"]},
+  "plugins": [
+    "@typescript-eslint"
+  ],
+  "rules": {
+    "@typescript-eslint/strict-boolean-expressions": [ 
+      2, {
+        "allowString" : false,
+        "allowNumber" : false
+      }
+    ]
+  }
 }
