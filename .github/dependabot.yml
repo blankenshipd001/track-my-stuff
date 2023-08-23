@@ -1,0 +1,21 @@
+version: 2
+updates:
+  # Enable version updates for yarn, use 'npm' as value 
+  #https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file#package-ecosystem
+  - package-ecosystem: 'npm'
+    # Look for `package.json` and `lock` files in the `root` directory
+    directory: '/'
+    allow:
+      - dependency-name: 'dotenv'
+    open-pull-requests-limit: 4
+    schedule:
+      interval: 'daily'
+      time: '04:00'
+      timezone: 'America/Chicago'
+    # Prefix the PR title with `chore(deps):`
+    commit-message:
+      prefix: 'chore(deps)'
+      prefix-development: 'chore(deps-dev)'
+    labels:
+      - 'dependencies'
+      - '🤖 bot'

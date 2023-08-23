@@ -13,6 +13,7 @@ const Login = () => {
         const auth = getAuth();
 
         signInWithEmailAndPassword(auth, user.username, user.password)
+            /* eslint-disable @typescript-eslint/no-unused-vars */
             .then((userCredential) => {
                 // TODO: Once Signed In where do we want to navigate to?
                 
