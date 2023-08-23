@@ -23,8 +23,12 @@ This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-opti
 To create a new page add a folder under the `/app` folder space with a `page.tsx` file. The `page.tsx` is your "landing" page for that site.
 
 
-## Links used:
+## Testing
+To run tests you can either run `npm run test` to run all tests or if working on them you can run `npm run test:watch` to have them run with every change int he window
 
+Currently tests are being added to the `__tests__` folder however this can be changed in the future if we decide.
+
+## Links used:
 
 https://firebase.google.com/docs/web/modular-upgrade#example_2_refactoring_a_function
 https://console.cloud.google.com/apis/api/firebasedatabase.googleapis.com/credentials?project=code-monkey-292017
@@ -50,3 +54,6 @@ https://www.themoviedb.org/about/logos-attribution
 https://app.flagsmith.com/project/11256/environment/DeXpwrBU9vViXjt3ZrwJK2/features
 
 Global State provider with Gastby: https://dev.to/changoman/gatsby-js-global-state-w-react-context-usereducer-3c1
+
+## ISSUES
+Currently @testing-library/jest-dom v6.X has an issue with expect not known so we are on @5.16
