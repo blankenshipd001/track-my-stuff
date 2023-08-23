@@ -1,6 +1,7 @@
 
 interface movieSearch {
     searchString: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     setSearchValue(value: string): any;
 }
 

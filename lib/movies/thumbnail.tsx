@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 
 import { forwardRef, Ref } from "react";
@@ -11,6 +12,10 @@ interface thumbnail {
 
 const Thumbnail = forwardRef(({ movie, bookmarkClicked }: thumbnail, ref: Ref<HTMLDivElement>): JSX.Element => {
   const BASE_URL = "https://image.tmdb.org/t/p/original/"; // process.env.NEXT_PUBLIC_THE_MOVIE_DB_BASE_URL;
+
+  const poster = movie.backdrop_path ?? movie.poster_path  ?? movie.poster_path
+
+  const movieData = `${movie.media_type ?? ''} . ${movie.release_date ?? movie.first_air_date} . `
 
   return (
     <div
@@ -39,8 +44,7 @@ const Thumbnail = forwardRef(({ movie, bookmarkClicked }: thumbnail, ref: Ref<HT
       </svg>
       <Image
         src={
-          `${BASE_URL}${movie.backdrop_path || movie.poster_path}` ||
-          `${BASE_URL}${movie.poster_path}`
+          `${BASE_URL}${poster}`
         }
         alt="movie poster2"
         height={400}
@@ -52,8 +56,7 @@ const Thumbnail = forwardRef(({ movie, bookmarkClicked }: thumbnail, ref: Ref<HT
           {movie.title}
         </h2>
         <p className="flex items-center opacity-0 group-hover:opacity-100">
-          {movie.media_type && `${movie.media_type} .`}{" "}
-          {movie.release_date || movie.first_air_date} .{" "}
+          {movieData}
           <HandThumbUpIcon className="h-5 mx-2" />
           {movie.vote_count}
         </p>

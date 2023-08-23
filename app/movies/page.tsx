@@ -18,6 +18,8 @@ const MoviesApp = () => {
    */
   const getMovies = async () => {
     const moviesSnapshot = await getDocs(collection(db, "movies"));
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const moviesList = moviesSnapshot.docs.map((doc: any) => {
       return {
         id: doc.id,
@@ -33,6 +35,7 @@ const MoviesApp = () => {
    */
   useEffect(() => {
     getMovies()
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .then((data: any) => {
         setWatchList(data);
       })
@@ -52,11 +55,13 @@ const MoviesApp = () => {
    * Remove this movie from the watch list
    * @param {*} movie
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const removeFromWatchList = async (movie: any) => {
-    const res = await deleteDoc(doc(db, "movies", `${movie.id}`))
+    await deleteDoc(doc(db, "movies", `${movie.id}`))
       .then(() => {
         console.log(`The movie, ${movie.title}, removed`);
         const newWatchList = watchList.filter(
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (item: any) => item.imdbID !== movie.imdbID
         );
         setWatchList(newWatchList);
