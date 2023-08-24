@@ -38,6 +38,9 @@ const Header = () => {
             >
               Books
             </a>
+            <a href="/testPage" >
+              Test Page
+            </a>
             <a
               href="/login"
               className="pt-3 px-2 text-gray-500 font-semibold hover:text-green-500 transition duration-300"

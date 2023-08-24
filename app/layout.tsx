@@ -1,7 +1,15 @@
+import { ThemeProvider, CssBaseline } from '@mui/material';
+import { darkTheme } from "../lib/shared/theme";
 import './globals.css';
-import { Inter } from 'next/font/google';
+import { Roboto } from 'next/font/google';
 
-const inter = Inter({ subsets: ['latin'] })
+// const inter = Inter({ subsets: ['latin'] })
+const roboto = Roboto({
+  weight: ['300', '400', '500', '700'],
+  style: ['normal', 'italic'],
+  subsets: ['latin'],
+  display: 'swap'
+});
 
 // TODO: set title and description for metadata on pages
 export const metadata = {
@@ -12,9 +20,12 @@ export const metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-        {children}
-      </body>
+      <ThemeProvider theme={darkTheme}>
+        <CssBaseline />
+        <body className={roboto.className}>
+          {children}
+        </body>
+      </ThemeProvider>
     </html>
   )
 }
