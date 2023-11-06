@@ -24,6 +24,7 @@ function Results({ movies, bookmarkClicked }: any) {
               bookmarkClicked={bookmarkClicked}
             />
             <div>Buy</div>
+            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
             {movie.providers?.buy?.map((streamer: any) => {
               return (
                 <div key={streamer.provider_id}>
@@ -37,6 +38,7 @@ function Results({ movies, bookmarkClicked }: any) {
               );
             })}
             <div>Rent</div>
+            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
             {movie.providers?.rent?.map((streamer: any) => {
               return (
                 <div key={streamer.provider_id}>
@@ -50,6 +52,7 @@ function Results({ movies, bookmarkClicked }: any) {
               );
             })}
             <div>Stream</div>
+            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
             {movie.providers?.flatrate?.map((streamer: any) => {
               return (
                 <div key={streamer.provider_id}>
