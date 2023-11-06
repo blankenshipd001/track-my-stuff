@@ -29,29 +29,37 @@ const MovieSearch = () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const newItems: any = [];
 
-    const results = await responseJson.Search;
-    
-    if (results !== null && results.length > 0) {
+    const results: [] = await responseJson.Search;
+    console.log(results);
+
+    if (results !== undefined && results.length > 0) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       results.map(async (movie: any) => {
-        if (movie.imdbID !== null) {
+        if (movie.imdbID !== null) { // we have a movie so get the details and where it's streaming
           const movieDBUrl = `https://api.themoviedb.org/3/find/${movie.imdbID}?api_key=${movie_api_key}&external_source=imdb_id`;
-          await fetch(movieDBUrl)
-            .then(async (res) => {
-              if (res !== undefined) {
-                const parsedRes = await res.json();
-                if (parsedRes.movie_results.length > 0) {
-                  const newMovie = {
-                    ...parsedRes.movie_results[0],
-                    ...movie,
-                  };
-                  newItems.push(newMovie);
-                }
-              }
-            })
-            .catch((err) => {
-              console.log("error", err);
-            });
+          const streamingProviderUrl = `https://api.themoviedb.org/3/movie/${movie.imdbID}/watch/providers?api_key=${movie_api_key}&external_source=imdb_id`;
+
+          Promise.all([
+            fetch(movieDBUrl),
+            fetch(streamingProviderUrl)
+          ]).then(async ([movieResp, providersResp]) => {
+            const moviesRes = await movieResp.json();
+            const providers = await providersResp.json();
+
+            console.log(moviesRes);
+            console.log(providers);
+            if (moviesRes.movie_results.length > 0) {
+              const newMovie = {
+                ...moviesRes.movie_results[0],
+                ...movie,
+                // For now we only care about US but we could expand
+                providers: providers.results.US
+              };
+              newItems.push(newMovie);
+            }
+          }).catch((err) => {
+            console.log("error", err);
+          });
         }
       });
 
