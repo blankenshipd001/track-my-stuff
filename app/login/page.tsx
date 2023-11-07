@@ -3,20 +3,27 @@ import Header from "@/lib/movies/header";
 import Footer from "@/lib/shared/footer";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { signIn } from "@/lib/api/firestore";
-import { getAuth, getRedirectResult, User as FirebaseUser } from "firebase/auth";
+import { auth, signIn } from "@/lib/api/firestore";
+import { User as FirebaseUser } from "firebase/auth";
+import { useRouter } from 'next/navigation'
 
 const Login = () => {
     const [user, setUser] = useState<FirebaseUser | null>(null)
-
+    const router = useRouter()
+   
     
-    useEffect(()=> {
-        const auth = getAuth();
-        getRedirectResult(auth).then((result) => {
-            setUser(result?.user)
-            // to do redirect away from page if logged in 
-        })
-    }, [])
+  
+useEffect(() => {
+    auth.onAuthStateChanged(function(user) {
+      if (user) {
+        // User is signed in.
+        router.push("/")
+      } else {
+        // No user is signed in.
+        console.log('no one home')
+      }
+    });
+  }, [])
     useEffect(() => {
         console.log(user, 'user is set')
     }, [user])

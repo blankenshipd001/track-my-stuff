@@ -1,14 +1,37 @@
 "use client";
 
+import { getAuth, User as FirebaseUser  } from "firebase/auth";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { auth } from "../api/firestore";
 
 const Header = () => {
   const [navbarOpen, setNavbarOpen] = useState(false);
+  const [user, setUser] = useState<FirebaseUser | null>(null)
+
 
   const setNavBar = () => {
     setNavbarOpen(!navbarOpen);
   };
+
+  const logOut = () => {
+    auth.signOut().then(() => {
+      setUser(null)
+    }).catch()
+  }
+
+  useEffect(() => {
+    auth.onAuthStateChanged(function(user) {
+      if (user) {
+        // User is signed in.
+        console.log('its meeeee', user)
+        setUser(user);
+      } else {
+        // No user is signed in.
+        console.log('no one home')
+      }
+    });
+  }, [user, setUser])
 
   return (
     <header className="items-center w-screen">
@@ -32,12 +55,19 @@ const Header = () => {
             >
               Movies abc
             </a>
+
+            { !user ?
             <a
               href="/login"
               className="pt-3 px-2 text-gray-500 font-semibold hover:text-green-500 transition duration-300"
+              onClick={() => {
+
+              }}
             >
-              Login
-            </a>
+             Login
+            </a> :
+            <button onClick={logOut}> Logoout</button>
+            }
           </div>
 
           {/* <!-- Secondary Navbar items --> */}
