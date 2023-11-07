@@ -75,8 +75,6 @@ const Header = () => {
         {/* <!-- mobile menu --> */}
         <div className={`${navbarOpen ? "" : "hidden"} mobile-menu`}>
           <ul className="">
-            {/* <li className="active"><a href="/movies" className="block text-sm px-2 py-4 text-white bg-gray-500 font-semibold">Home</a></li>
-                    <li><a href="/movies-search" className="block text-sm px-2 py-4 text-white bg-gray-500 font-semibold">Search</a></li> */}
             <li className="nav-item">
               <a
                 className="px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug hover:text-green-500 text-white hover:opacity-75"

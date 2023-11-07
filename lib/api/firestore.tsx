@@ -19,7 +19,7 @@ const auth = getAuth();
 const provider = new GoogleAuthProvider();
 
 export const signIn = () => {
-     signInWithRedirect(auth, provider)
+     return signInWithRedirect(auth, provider).then(() => {}).catch(()=> {})
 }
 
 
