@@ -20,8 +20,10 @@ const Footer = () => {
           &nbsp;Code-Monkey
         </a>
         < br />
-        <a className="text-white" href="https://github.com/blankenshipd001">
+        <a className="text-white text-xs" href="https://github.com/blankenshipd001">
           This product uses the TMDB API but is not endorsed or certified by TMDB.
+          <br /> 
+          This product uses the Just Watch API but is not endorsed or certified by Just Watch.
         </a>
       </div>
     </footer>
