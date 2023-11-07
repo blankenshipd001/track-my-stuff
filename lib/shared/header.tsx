@@ -33,15 +33,6 @@ const Header = () => {
               Movies abc
             </a>
             <a
-              href="/books"
-              className="pt-3 px-2 text-gray-500 font-semibold hover:text-green-500 transition duration-300"
-            >
-              Books
-            </a>
-            <a href="/testPage" >
-              Test Page
-            </a>
-            <a
               href="/login"
               className="pt-3 px-2 text-gray-500 font-semibold hover:text-green-500 transition duration-300"
             >
@@ -92,15 +83,6 @@ const Header = () => {
                 href="/movies"
               >
                 Movies
-                <i className="fab fa-facebook-square text-lg leading-lg text-white opacity-75" />
-              </a>
-            </li>
-            <li className="nav-item">
-              <a
-                className="px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:text-green-500 hover:opacity-75"
-                href="/books"
-              >
-                Books
                 <i className="fab fa-facebook-square text-lg leading-lg text-white opacity-75" />
               </a>
             </li>

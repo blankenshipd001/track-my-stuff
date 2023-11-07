@@ -3,7 +3,7 @@
 
 import React from "react";
 import { collection, addDoc } from "firebase/firestore";
-import { db } from "@/lib/firestore";
+import { db } from "@/lib/api/firestore";
 
 import Header from "@/lib/movies/header";
 import SearchBox from "@/lib/shared/search-box";
