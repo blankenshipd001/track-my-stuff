@@ -32,51 +32,103 @@ const MovieSearch = () => {
    * Get all movies from the omdb api that match the search string provided
    */
   const findMovieByTitle = async () => {
-    const omdbUrl = `https://www.omdbapi.com/?s=${searchValue}&apikey=${omdb_api_key}`;
-    const response = await fetch(omdbUrl);
-    const responseJson = await response.json();
+    const getMovieUrl = `https://api.themoviedb.org/3/search/movie?api_key=${movie_api_key}&query=${searchValue}&include_adult=false&language=en-US&append_to_response=providers`;
+    const getTvUrl = `https://api.themoviedb.org/3/search/tv?api_key=${movie_api_key}&query=${searchValue}&include_adult=false&language=en-US&append_to_response=providers`;
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const newItems: any = [];
 
-    const results: [] = await responseJson.Search;
-    console.log(results);
+    Promise.all([fetch(getMovieUrl), fetch(getTvUrl)]).then(
+      async ([movieResponse, tvResponse]) => {
+        const movieResponseJson = await movieResponse.json();
+        const tvResponseJson = await tvResponse.json();
 
-    if (results !== undefined && results.length > 0) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      results.map(async (movie: any) => {
-        if (movie.imdbID !== null) {
-          // we have a movie so get the details and where it's streaming
-          const movieDBUrl = `https://api.themoviedb.org/3/find/${movie.imdbID}?api_key=${movie_api_key}&external_source=imdb_id`;
-          const streamingProviderUrl = `https://api.themoviedb.org/3/movie/${movie.imdbID}/watch/providers?api_key=${movie_api_key}&external_source=imdb_id`;
-
-          Promise.all([fetch(movieDBUrl), fetch(streamingProviderUrl)])
-            .then(async ([movieResp, providersResp]) => {
-              const moviesRes = await movieResp.json();
-              const providers = await providersResp.json();
-
-              console.log(moviesRes);
-              console.log(providers);
-              if (moviesRes.movie_results.length > 0) {
-                const newMovie = {
-                  ...moviesRes.movie_results[0],
-                  ...movie,
-                  // For now we only care about US but we could expand
-                  providers: providers.results.US,
-                };
-                newItems.push(newMovie);
-              }
-            })
-            .catch((err) => {
-              console.log("error", err);
-            });
-        }
-      });
-
-      console.log("movies", newItems);
-      setMovies(newItems);
-    }
+        console.log("movies", movieResponseJson.results);
+        console.log("tv", tvResponseJson.results);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        movieResponseJson.results.map((movie: any) => {
+          const newMovie = {
+            ...movie,
+            // For now we only care about US but we could expand
+            // providers: providers.results.US,
+          };
+          newItems.push(newMovie);
+        });
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        tvResponseJson.results.map((tv: any) => {
+          const newMovie = {
+            ...tv,
+            // For now we only care about US but we could expand
+            // providers: providers.results.US,
+          };
+          newItems.push(newMovie);
+        });
+        console.log("stuff", newItems);
+        setMovies(newItems);
+      }
+    );
   };
+  // const findMovieByTitle = async () => {
+  //   const omdbUrl = `https://www.omdbapi.com/?s=${searchValue}&apikey=${omdb_api_key}`;
+  //   const response = await fetch(omdbUrl);
+  //   const responseJson = await response.json();
+
+  //   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  //   const newItems: any = [];
+
+  //   const results: [] = await responseJson.Search;
+  //   console.log(results);
+
+  //   if (results !== undefined && results.length > 0) {
+  //     // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  //     results.map(async (movie: any) => {
+  //       if (movie.imdbID !== null) {
+  //         // we have a movie so get the details and where it's streaming
+  //         const movieDBUrl = `https://api.themoviedb.org/3/find/${movie.imdbID}?api_key=${movie_api_key}&external_source=imdb_id`;
+
+  //         const streamingProviderUrl = `https://api.themoviedb.org/3/movie/${movie.imdbID}/watch/providers?api_key=${movie_api_key}&external_source=imdb_id`;
+  //         const tvStreamingProviderUrl = `https://api.themoviedb.org/3/tv/${movie.imdbID}/watch/providers?api_key=${movie_api_key}&external_source=imdb_id`
+
+  //         const providerUrl = movie.Type === 'movie' ? streamingProviderUrl : tvStreamingProviderUrl;
+
+  //         Promise.all([fetch(movieDBUrl), fetch(providerUrl)])
+  //           .then(async ([movieResp, providersResp]) => {
+  //             const moviesRes = await movieResp.json();
+  //             const providers = await providersResp.json();
+
+  //             console.log('movies', moviesRes);
+  //             console.log(providers);
+
+  //             if (moviesRes.movie_results.length > 0) {
+  //               const newMovie = {
+  //                 ...moviesRes.movie_results[0],
+  //                 ...movie,
+  //                 // For now we only care about US but we could expand
+  //                 providers: providers.results.US,
+  //               };
+  //               newItems.push(newMovie);
+  //             }
+
+  //             if (moviesRes.tv_results.length > 0) {
+  //               const newMovie = {
+  //                 ...moviesRes.tv_results[0],
+  //                 ...movie,
+  //                 // For now we only care about US but we could expand
+  //                 providers: providers.results.US,
+  //               };
+  //               newItems.push(newMovie);
+  //             }
+  //           })
+  //           .catch((err) => {
+  //             console.log("error", err);
+  //           });
+  //       }
+  //     });
+
+  //     console.log("movies", newItems);
+  //     setMovies(newItems);
+  //   }
+  // };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const addToWatchList = async (movie: any) => {
@@ -137,7 +189,14 @@ const MovieSearch = () => {
         <TabPanel value={value} index={2}>
           <Results movies={movies} bookmarkClicked={addToWatchList} />
         </TabPanel>
-        <Paper sx={{position: 'fixed', bottom: 0, width: "100%", bgcolor: 'transparent'}}>
+        <Paper
+          sx={{
+            position: "fixed",
+            bottom: 0,
+            width: "100%",
+            bgcolor: "transparent",
+          }}
+        >
           <Footer />
         </Paper>
       </Box>
