@@ -31,7 +31,7 @@ const MovieSearch = () => {
 
     const results = await responseJson.Search;
     
-    if (results !== null && results.length > 0) {
+    if (results?.length > 0) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       results.map(async (movie: any) => {
         if (movie.imdbID !== null) {
@@ -40,7 +40,7 @@ const MovieSearch = () => {
             .then(async (res) => {
               if (res !== undefined) {
                 const parsedRes = await res.json();
-                if (parsedRes.movie_results.length > 0) {
+                if (parsedRes?.movie_results.length > 0) {
                   const newMovie = {
                     ...parsedRes.movie_results[0],
                     ...movie,

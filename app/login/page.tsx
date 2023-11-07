@@ -1,29 +1,26 @@
 "use client"
 import Header from "@/lib/movies/header";
 import Footer from "@/lib/shared/footer";
-import { useState } from "react";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { useEffect, useState } from "react";
 import Link from "next/link";
+import { signIn } from "@/lib/firestore";
+import { getAuth, getRedirectResult, User as FirebaseUser } from "firebase/auth";
 
 const Login = () => {
-    const [user, setUser] = useState({username: '', password: ''});
+    const [user, setUser] = useState<FirebaseUser | null>(null)
+
     
-
-    const signIn = () => {
+    useEffect(()=> {
         const auth = getAuth();
+        getRedirectResult(auth).then((result) => {
+            setUser(result?.user)
+            // to do redirect away from page if logged in 
+        })
+    }, [])
+    useEffect(() => {
+        console.log(user, 'user is set')
+    }, [user])
 
-        signInWithEmailAndPassword(auth, user.username, user.password)
-            /* eslint-disable @typescript-eslint/no-unused-vars */
-            .then((userCredential) => {
-                // TODO: Once Signed In where do we want to navigate to?
-                
-            })
-            .catch((error) => {
-                const errorMessage = error.message;
-
-                alert(errorMessage.split(':')[1])
-            });
-    }
  
   return (
     <>
@@ -49,7 +46,7 @@ const Login = () => {
                         </div>
                         <div className="flex items-center justify-between">
                             <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button" onClick={signIn}>
-                                Sign In
+                                Sign In With Google
                             </button>
 
                         </div>
