@@ -19,6 +19,11 @@ import { styled } from "styled-components";
 const movie_api_key = process.env.NEXT_PUBLIC_THE_MOVIE_DB_API_KEY;
 const omdb_api_key = process.env.NEXT_PUBLIC_OMDB_API_KEY;
 
+const Title = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
 const MovieSearch = () => {
   const [movies, setMovies] = React.useState([]);
   const [value, setValue] = React.useState(0);
@@ -156,7 +161,6 @@ const MovieSearch = () => {
   // }, [searchValue]);
 
   return (
-    <>
       <Background
         component="section"
         flexDirection={"column"}
@@ -168,14 +172,14 @@ const MovieSearch = () => {
         }}
       >
         <Header />
-        <div>
+        <Title>
           <h1>
           What do you want to watch?
           </h1>
           <p>
           Search a title and see where it’s available to buy, rent, or stream.
           </p>
-        </div>
+        </Title>
         <SearchBox
           searchForMovie={findMovieByTitle}
         />
@@ -210,7 +214,6 @@ const MovieSearch = () => {
           <Footer />
         </Paper>
       </Background>
-    </>
   );
 };
 
