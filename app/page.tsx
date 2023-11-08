@@ -31,12 +31,14 @@ const movie_api_key = process.env.NEXT_PUBLIC_THE_MOVIE_DB_API_KEY;
 
 
 const MovieSearch = () => {
-  const [movies, setMovies] = React.useState([]);
-  const [value, setValue] = React.useState(0);
+  const [everything, setEverything] = useState([]);
+  const [value, setValue] = useState(0);
   const [user, setUser] = useState<FirebaseUser | null>(null);
-  const [successOpen, setSuccessOpen] = React.useState(false);
-  const [errorOpen, setErrorOpen] = React.useState(false);
-  const [alertMessage, setAlertMessage] = React.useState("");
+  const [successOpen, setSuccessOpen] = useState(false);
+  const [errorOpen, setErrorOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [movies, setMovies] = useState<any>([]);
+  const [tvShows, setTvShows] = useState<any>([]);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -65,7 +67,7 @@ const MovieSearch = () => {
       .then((results) => Promise.all(results.map((r) => r.json())))
       .then(async ([movieResponseJson, tvResponseJson]) => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const movies = await Promise.all(
+        const moviesResult: any[] = await Promise.all(
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           movieResponseJson.results.map((movie: any) => {
             return fetch(
@@ -86,8 +88,10 @@ const MovieSearch = () => {
           })
         );
 
+        setMovies(moviesResult);
+        
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const tv = await Promise.all(
+        const tvResult: any[] = await Promise.all(
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           tvResponseJson.results.map((tv: any) => {
             return fetch(
@@ -108,9 +112,11 @@ const MovieSearch = () => {
           })
         );
 
+        setTvShows(tvResult);
+
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const everything: any = [...movies, ...tv];
-        return setMovies(everything);
+        const everything: any = [...moviesResult, ...tvResult];
+        return setEverything(everything);
       });
   };
 
@@ -153,7 +159,7 @@ const MovieSearch = () => {
         return json;
       })
       .then((popularRes) => {
-        setMovies(popularRes.results.slice(0,3).map((item: { id: unknown; }) => (
+        setEverything(popularRes.results.slice(0,3).map((item: { id: unknown; }) => (
           {
             ...item,
             movieId: item.id
@@ -213,13 +219,13 @@ const MovieSearch = () => {
           </Tabs>
         </Box>
         <TabPanel value={value} index={0}>
-          <Results movies={movies} bookmarkClicked={addToWatchList} />
+          <Results movies={everything} bookmarkClicked={addToWatchList} />
         </TabPanel>
         <TabPanel value={value} index={1}>
           <Results movies={movies} bookmarkClicked={addToWatchList} />
         </TabPanel>
         <TabPanel value={value} index={2}>
-          <Results movies={movies} bookmarkClicked={addToWatchList} />
+          <Results movies={tvShows} bookmarkClicked={addToWatchList} />
         </TabPanel>
         <Paper
           sx={{
