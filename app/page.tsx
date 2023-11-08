@@ -66,7 +66,7 @@ const MovieSearch = () => {
                   ...movie,
                   movieId: movie.id,
                   // For now we only care about US but we could expand
-                  providers: providers.results.US,
+                  providers: providers.results.US ?? [],
                 };
 
                 return newMovie;
@@ -88,7 +88,7 @@ const MovieSearch = () => {
                   ...tv,
                   movieId: tv.id,
                   // For now we only care about US but we could expand
-                  providers: providers.results.US,
+                  providers: providers.results.US ?? [],
                 };
 
                 return newShow;
