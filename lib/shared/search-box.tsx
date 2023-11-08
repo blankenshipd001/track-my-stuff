@@ -1,8 +1,8 @@
 
 import { Button, OutlinedInput, styled } from '@mui/material';
 import { InputAdornment } from "@mui/material";
-import { useState } from 'react';
-
+import { useMemo, useState } from 'react';
+const _ = require('lodash');
 
 const SearchInput = styled(OutlinedInput)`
 width: 100%;
@@ -12,7 +12,18 @@ interface searchBox {
 }
 
 const SearchBox = ({ searchForMovie }: searchBox ): JSX.Element => {
-  const [searchValue, setSearchString] = useState("");
+  const throttledSearch = useMemo(
+    () =>
+      _.throttle(
+        (search: string) => {
+          searchForMovie(search)
+        },
+        10000,
+        { leading: true, trailing: true }
+      ),
+    []
+  );
+  
     return (
       <div className="p-12">
         <div className="pt-2 relative mx-auto text-gray-600">
@@ -20,9 +31,9 @@ const SearchBox = ({ searchForMovie }: searchBox ): JSX.Element => {
             type="search"
             name="search"
             placeholder="Search title..."
-            value={searchValue}
-            onChange={(event) => setSearchString(event.target.value)}
-            endAdornment={<InputAdornment position='end'><Button color='primary' onClick={() => searchForMovie(searchValue)}> Search</Button> </InputAdornment>}
+            onChange={(event) => {
+              throttledSearch(event.target.value)
+            }}
           />
         </div>
       </div>
