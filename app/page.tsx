@@ -123,11 +123,25 @@ const MovieSearch = () => {
     setMovies(newWatchList);
   };
 
-  // //TODO Fix this search because we shouldn't care
-  // React.useEffect(() => {
-  //   findMovieByTitle();
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [searchValue]);
+  const loadPopular = async () => {
+    const popular_url = `https://api.themoviedb.org/3/movie/popular?api_key=${movie_api_key}`;
+
+    fetch(popular_url)
+      .then(async (res) => {
+        const json = await res.json();
+        console.log("json", json);
+        return json;
+      })
+      .then((popularRes) => {
+        setMovies(popularRes.results.slice(0, 3));
+      });
+  };
+
+  //TODO Fix this search because we shouldn't care
+  React.useEffect(() => {
+    loadPopular();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
       <Background
