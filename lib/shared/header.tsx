@@ -1,11 +1,12 @@
 "use client";
 
-import { getAuth, User as FirebaseUser } from "firebase/auth";
+import { User as FirebaseUser } from "firebase/auth";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { auth } from "../api/firestore";
 import Logo from "../assets/logo.svg"
-import { Libre_Barcode_EAN13_Text } from "next/font/google";
+// TODO Is this needed?
+// import { Libre_Barcode_EAN13_Text } from "next/font/google";
 
 const Header = () => {
   const [navbarOpen, setNavbarOpen] = useState(false);

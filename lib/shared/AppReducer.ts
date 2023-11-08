@@ -1,4 +1,5 @@
-const reducer = (state, action) => {
+/* eslint-disable @typescript-eslint/no-explicit-any */
+const reducer = (state: any, action: any) => {
     const { payload = {} } = action;
     const { value } = payload;
     switch (action.type) {

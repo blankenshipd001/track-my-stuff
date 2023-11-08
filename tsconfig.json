@@ -26,6 +26,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "lib/shared/GlobalState.jsx", "lib/shared/GlobalContextHOC.jsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "lib/shared/GlobalState.jsx", "lib/shared/GlobalContextHOC.jsx", "lib/shared/AppReducer.ts"],
   "exclude": ["node_modules"]
 }

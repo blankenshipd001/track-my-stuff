@@ -22,8 +22,9 @@ const MoviesApp = () => {
       if (user) {
         // User is signed in.
         setUser(user);
-        getMovies(user?.uid).then(data => {
-          setWatchList(data);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        getMovies(user?.uid).then((data: any) => {
+          return setWatchList(data);
         })
         .catch((err) => {
           console.error("Error making async call: " + err);
@@ -40,7 +41,6 @@ const MoviesApp = () => {
    * @param {*} movie
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-
   const removeFromWatchList = async (movie: any) => {
     requestRemoveFromWatchList(user?.uid, movie).then(() => {
       

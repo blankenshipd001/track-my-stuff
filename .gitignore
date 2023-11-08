@@ -4,6 +4,7 @@
 /node_modules
 /.pnp
 .pnp.js
+/.yarn
 
 # testing
 /coverage
@@ -18,6 +19,8 @@
 # misc
 .DS_Store
 *.pem
+.pnp.cjs
+.pnp.loader.mjs
 
 # debug
 npm-debug.log*

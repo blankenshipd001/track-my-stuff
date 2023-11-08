@@ -1,4 +1,5 @@
 "use client"
+import React from 'react';
 import Footer from "@/lib/shared/footer";
 import { useEffect, useState } from "react";
 import Link from "next/link";
@@ -8,7 +9,7 @@ import { useRouter } from 'next/navigation'
 import Header from "@/lib/shared/header";
 
 const Login = () => {
-    const [user, setUser] = useState<FirebaseUser | null>(null)
+    const [user, ] = useState<FirebaseUser | null>(null)
     const router = useRouter()
    
     

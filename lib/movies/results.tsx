@@ -49,6 +49,7 @@ function Results({ movies, bookmarkClicked }: any) {
             { movie.providers?.rent?.length ? <div>Rent</div> : null}
             {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
             <Providers>
+            {/*  eslint-disable-next-line @typescript-eslint/no-explicit-any */}  
             {movie.providers?.rent?.map((streamer: any) => {
               return (
                 <div key={streamer.provider_id}>

@@ -18,7 +18,7 @@ import { styled } from "styled-components";
 import Header from "@/lib/shared/header";
 
 const movie_api_key = process.env.NEXT_PUBLIC_THE_MOVIE_DB_API_KEY;
-const omdb_api_key = process.env.NEXT_PUBLIC_OMDB_API_KEY;
+// const omdb_api_key = process.env.NEXT_PUBLIC_OMDB_API_KEY;
 
 const Title = styled.div`
   display: flex;
@@ -60,6 +60,7 @@ const MovieSearch = () => {
       .then(async ([movieResponseJson, tvResponseJson]) => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const movies = await Promise.all(
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           movieResponseJson.results.map((movie: any) => {
             return fetch(
               `https://api.themoviedb.org/3/movie/${movie.id}/watch/providers?api_key=${movie_api_key}&external_source=imdb_id`
@@ -80,6 +81,7 @@ const MovieSearch = () => {
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const tv = await Promise.all(
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           tvResponseJson.results.map((tv: any) => {
             return fetch(
               `https://api.themoviedb.org/3/tv/${tv.id}/watch/providers?api_key=${movie_api_key}&external_source=imdb_id`
@@ -129,7 +131,6 @@ const MovieSearch = () => {
     fetch(popular_url)
       .then(async (res) => {
         const json = await res.json();
-        console.log("json", json);
         return json;
       })
       .then((popularRes) => {

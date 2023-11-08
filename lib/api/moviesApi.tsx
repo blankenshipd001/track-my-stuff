@@ -1,8 +1,6 @@
 import { doc, deleteDoc, collection, getDocs } from "firebase/firestore";
 import { db } from "./firestore";
 
-
-    
 export const getMovies = async (uid: string) => {
   const path = "users/" + uid + "/movies";
     console.log("using path:" + path);
@@ -19,6 +17,7 @@ export const getMovies = async (uid: string) => {
     return moviesList;
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   export const requestRemoveFromWatchList = async (uid: string|undefined, movie: any) => {
     const path = "users/" + uid + "/movies";
     console.log("using path:" + path);
