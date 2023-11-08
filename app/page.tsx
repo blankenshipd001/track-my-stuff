@@ -10,12 +10,12 @@ import Tab from "@mui/material/Tab";
 import { User as FirebaseUser } from "firebase/auth";
 
 import TabPanel from "@/lib/shared/tab-panel";
-import Header from "@/lib/movies/header";
 import SearchBox from "@/lib/shared/search-box";
 import Results from "@/lib/movies/results";
 import Footer from "@/lib/shared/footer";
 import { Paper } from "@mui/material";
 import { styled } from "styled-components";
+import Header from "@/lib/shared/header";
 
 const movie_api_key = process.env.NEXT_PUBLIC_THE_MOVIE_DB_API_KEY;
 const omdb_api_key = process.env.NEXT_PUBLIC_OMDB_API_KEY;

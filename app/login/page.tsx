@@ -1,11 +1,11 @@
 "use client"
-import Header from "@/lib/movies/header";
 import Footer from "@/lib/shared/footer";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { auth, signIn } from "@/lib/api/firestore";
 import { User as FirebaseUser } from "firebase/auth";
 import { useRouter } from 'next/navigation'
+import Header from "@/lib/shared/header";
 
 const Login = () => {
     const [user, setUser] = useState<FirebaseUser | null>(null)

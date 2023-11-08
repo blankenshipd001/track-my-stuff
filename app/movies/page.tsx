@@ -2,11 +2,11 @@
 
 import { useState, useEffect } from "react";
 
-import Header from "@/lib/movies/header";
 import Results from "@/lib/movies/results";
 import Footer from "@/lib/shared/footer";
 import { getMovies, requestRemoveFromWatchList } from "@/lib/api/moviesApi";
 import { auth } from "@/lib/api/firestore";
+import Header from "@/lib/shared/header";
 
 const MoviesApp = () => {
   const [watchList, setWatchList] = useState([]);
