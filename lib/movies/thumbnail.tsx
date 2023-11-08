@@ -13,8 +13,7 @@ interface thumbnail {
 const Thumbnail = forwardRef(({ movie, bookmarkClicked }: thumbnail, ref: Ref<HTMLDivElement>): JSX.Element => {
   const BASE_URL = "https://image.tmdb.org/t/p/original/"; // process.env.NEXT_PUBLIC_THE_MOVIE_DB_BASE_URL;
 
-  const poster = movie.backdrop_path ?? movie.poster_path  ?? movie.poster_path
-
+  const poster = movie.poster_path ?? movie.backdrop_path;
   const movieData = `${movie.media_type ?? ''} . ${movie.release_date ?? movie.first_air_date} . `
 
   return (
@@ -47,8 +46,8 @@ const Thumbnail = forwardRef(({ movie, bookmarkClicked }: thumbnail, ref: Ref<HT
           `${BASE_URL}${poster}`
         }
         alt="movie poster2"
-        height={400}
-        width={500}
+        height={506}
+        width={300}
       />
       <div>
         <p className="truncate max-w-md">{movie.overview}</p>
