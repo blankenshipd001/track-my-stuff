@@ -40,7 +40,7 @@ jobs:
       #       ${{ runner.os }}-
        
       - name: Install package dependencies
-        run: npm install -g yarn
+        run: npm install
           
       - name: Check linting and formatting
         # Custom script for checking the linting and formatting being in place
