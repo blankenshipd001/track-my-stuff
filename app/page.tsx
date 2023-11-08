@@ -14,24 +14,27 @@ import SearchBox from "@/lib/shared/search-box";
 import Results from "@/lib/movies/results";
 import Footer from "@/lib/shared/footer";
 import { Paper } from "@mui/material";
+import { styled } from "styled-components";
 
 const movie_api_key = process.env.NEXT_PUBLIC_THE_MOVIE_DB_API_KEY;
 const omdb_api_key = process.env.NEXT_PUBLIC_OMDB_API_KEY;
 
 const MovieSearch = () => {
   const [movies, setMovies] = React.useState([]);
-  const [searchValue, setSearchString] = React.useState("");
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
 
+  const Background = styled(Box)`
+    background: black;
+  `
   /**
    * //TODO: Can we pull this out?
    * Get all movies from the omdb api that match the search string provided
    */
-  const findMovieByTitle = async () => {
+  const findMovieByTitle = async (searchValue: string) => {
     const getMovieUrl = `https://api.themoviedb.org/3/search/movie?api_key=${movie_api_key}&query=${searchValue}&include_adult=false&language=en-US&append_to_response=providers`;
     const getTvUrl = `https://api.themoviedb.org/3/search/tv?api_key=${movie_api_key}&query=${searchValue}&include_adult=false&language=en-US&append_to_response=providers`;
 
@@ -146,15 +149,15 @@ const MovieSearch = () => {
     setMovies(newWatchList);
   };
 
-  //TODO Fix this search because we shouldn't care
-  React.useEffect(() => {
-    findMovieByTitle();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchValue]);
+  // //TODO Fix this search because we shouldn't care
+  // React.useEffect(() => {
+  //   findMovieByTitle();
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [searchValue]);
 
   return (
     <>
-      <Box
+      <Background
         component="section"
         flexDirection={"column"}
         sx={{
@@ -165,9 +168,16 @@ const MovieSearch = () => {
         }}
       >
         <Header />
+        <div>
+          <h1>
+          What do you want to watch?
+          </h1>
+          <p>
+          Search a title and see where it’s available to buy, rent, or stream.
+          </p>
+        </div>
         <SearchBox
-          searchString={searchValue}
-          setSearchValue={setSearchString}
+          searchForMovie={findMovieByTitle}
         />
         <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
           <Tabs
@@ -199,7 +209,7 @@ const MovieSearch = () => {
         >
           <Footer />
         </Paper>
-      </Box>
+      </Background>
     </>
   );
 };

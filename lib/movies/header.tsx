@@ -4,6 +4,7 @@ import { getAuth, User as FirebaseUser  } from "firebase/auth";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { auth } from "../api/firestore";
+import Logo from "../assets/logo.svg"
 
 const MovieHeader = () => {
   const [navbarOpen, setNavbarOpen] = useState(false);
@@ -37,7 +38,7 @@ const MovieHeader = () => {
         <div className="flex px-5">
           <div className="flex-auto pt-2">
             <Image
-              src="/code-monkey-logo-02.svg"
+              src={Logo}
               alt="Logo"
               className="h-12 w-32 mr-2 mt-1"
               width={400}
