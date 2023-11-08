@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -10,12 +11,20 @@ import Tab from "@mui/material/Tab";
 import { User as FirebaseUser } from "firebase/auth";
 
 import TabPanel from "@/lib/shared/tab-panel";
+import Snackbar from '@mui/material/Snackbar';
 import SearchBox from "@/lib/shared/search-box";
 import Results from "@/lib/movies/results";
 import Footer from "@/lib/shared/footer";
 import { Paper } from "@mui/material";
-import { styled } from "styled-components";
 import Header from "@/lib/shared/header";
+import MuiAlert, { AlertProps } from '@mui/material/Alert';
+
+const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
+  props,
+  ref,
+) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 const movie_api_key = process.env.NEXT_PUBLIC_THE_MOVIE_DB_API_KEY;
 // const omdb_api_key = process.env.NEXT_PUBLIC_OMDB_API_KEY;
@@ -24,7 +33,10 @@ const movie_api_key = process.env.NEXT_PUBLIC_THE_MOVIE_DB_API_KEY;
 const MovieSearch = () => {
   const [movies, setMovies] = React.useState([]);
   const [value, setValue] = React.useState(0);
-  const [user, setUser] = useState<FirebaseUser | null>(null)
+  const [user, setUser] = useState<FirebaseUser | null>(null);
+  const [successOpen, setSuccessOpen] = React.useState(false);
+  const [errorOpen, setErrorOpen] = React.useState(false);
+  const [alertMessage, setAlertMessage] = React.useState("");
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -67,6 +79,7 @@ const MovieSearch = () => {
                   movieId: movie.id,
                   // For now we only care about US but we could expand
                   providers: providers.results.US ?? [],
+                  providers: providers.results.US ?? [],
                 };
 
                 return newMovie;
@@ -108,17 +121,28 @@ const MovieSearch = () => {
     delete movie.id;
 
     const path = "users/" + user?.uid + "/movies";
-    console.log("adding", path, movie);
     // TODO do we need the docRef response
     //const docRef =
-    const response= await addDoc(collection(db, path), {
+    await addDoc(collection(db, path), {
       ...movie,
+    }).then(() => {
+      setAlertMessage("Successfully added to your watch list")
+      setSuccessOpen(true);
+    }).catch((err: any) => {
+      //TODO handle failure due to login and pop login
+      setAlertMessage(`Failure adding to your watch list: ${err}`);
+      setErrorOpen(true);
     });
+  };
 
-    console.log(response, 'response')
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    //const newWatchList: any = [...movies, movie];
-    //setMovies(newWatchList);
+  const handleClose = (event: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway' || reason === 'escapeKeyDown') {
+      setErrorOpen(false);
+      setSuccessOpen(false);
+    }
+
+    setErrorOpen(false);
+    setSuccessOpen(false);
   };
 
   const loadPopular = async () => {
@@ -207,6 +231,16 @@ const MovieSearch = () => {
         >
           <Footer />
         </Paper>
+        <Snackbar open={successOpen} autoHideDuration={6000} onClose={handleClose}>
+          <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+            {alertMessage}
+          </Alert>
+        </Snackbar>
+        <Snackbar open={errorOpen} autoHideDuration={6000} onClose={handleClose}>
+          <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }}>
+            {alertMessage}
+          </Alert>
+        </Snackbar>
       </Box>
   );
 };
