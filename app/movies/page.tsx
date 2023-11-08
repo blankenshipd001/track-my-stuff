@@ -46,7 +46,7 @@ const MoviesApp = () => {
       
       const newWatchList = watchList.filter(
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (item: any) => item.imdbID !== movie.imdbID
+        (item: any) => item.id !== movie.id
       );
       setWatchList(newWatchList);
       })

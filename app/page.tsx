@@ -70,6 +70,7 @@ const MovieSearch = () => {
                 // console.log("providers", providers);
                 const newMovie = {
                   ...movie,
+                  movieId: movie.id,
                   // For now we only care about US but we could expand
                   providers: providers.results.US,
                 };
@@ -91,6 +92,7 @@ const MovieSearch = () => {
                 // console.log("providers", providers);
                 const newShow = {
                   ...tv,
+                  movieId: tv.id,
                   // For now we only care about US but we could expand
                   providers: providers.results.US,
                 };
@@ -112,7 +114,7 @@ const MovieSearch = () => {
     delete movie.id;
 
     const path = "users/" + user?.uid + "/movies";
-
+    console.log("adding", path, movie);
     // TODO do we need the docRef response
     //const docRef =
     const response= await addDoc(collection(db, path), {
@@ -121,8 +123,8 @@ const MovieSearch = () => {
 
     console.log(response, 'response')
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const newWatchList: any = [...movies, movie];
-    setMovies(newWatchList);
+    //const newWatchList: any = [...movies, movie];
+    //setMovies(newWatchList);
   };
 
   const loadPopular = async () => {
@@ -134,7 +136,12 @@ const MovieSearch = () => {
         return json;
       })
       .then((popularRes) => {
-        setMovies(popularRes.results.slice(0, 3));
+        setMovies(popularRes.results.slice(0,3).map((item: { id: unknown; }) => (
+          {
+            ...item,
+            movieId: item.id
+          }
+        )));
       });
   };
 

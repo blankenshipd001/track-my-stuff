@@ -24,9 +24,9 @@ function Results({ movies, bookmarkClicked }: any) {
       {movies.map((movie: any) => {
         console.log("movie", movie);
         return (
-          <div key={movie.imdbId}>
+          <div key={movie.movieId}>
             <Thumbnail
-              key={movie.imdbID}
+              key={movie.movieId}
               movie={movie}
               bookmarkClicked={bookmarkClicked}
             />
