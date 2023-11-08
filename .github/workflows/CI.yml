@@ -21,8 +21,8 @@ jobs:
         with:
           # Reads the node version from the .nvmrc file itself 
           node-version-file: '.nvmrc'
-          cache: 'npm'
-          cache-dependency-path: package-lock.json
+          # cache: 'npm'
+          # cache-dependency-path: package-lock.json
         
       # # Consider this as an add on to optimize the execution of actions
       # - name: Cache node modules
@@ -40,7 +40,7 @@ jobs:
       #       ${{ runner.os }}-
        
       - name: Install package dependencies
-        run: npm install
+        run: npm install -g yarn
           
       - name: Check linting and formatting
         # Custom script for checking the linting and formatting being in place
