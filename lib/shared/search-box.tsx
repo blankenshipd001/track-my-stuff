@@ -1,7 +1,7 @@
 
-import { Button, OutlinedInput, styled } from '@mui/material';
-import { InputAdornment } from "@mui/material";
-import { useMemo, useState } from 'react';
+import { OutlinedInput, styled } from '@mui/material';
+import { useMemo } from 'react';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const _ = require('lodash');
 
 const SearchInput = styled(OutlinedInput)`
@@ -31,7 +31,8 @@ const SearchBox = ({ searchForMovie }: searchBox ): JSX.Element => {
             type="search"
             name="search"
             placeholder="Search title..."
-            onChange={(event) => {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            onChange={(event: any) => {
               throttledSearch(event.target.value)
             }}
           />

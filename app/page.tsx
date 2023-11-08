@@ -168,10 +168,8 @@ const MovieSearch = () => {
       });
   };
 
-  //TODO Fix this search because we shouldn't care
   React.useEffect(() => {
     loadPopular();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
