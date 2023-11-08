@@ -63,11 +63,73 @@ const MovieSearch = () => {
           };
           newItems.push(newMovie);
         });
+        console.log("stuff", newItems);
         setMovies(newItems);
       }
     );
   };
-  
+  // const findMovieByTitle = async () => {
+  //   const omdbUrl = `https://www.omdbapi.com/?s=${searchValue}&apikey=${omdb_api_key}`;
+  //   const response = await fetch(omdbUrl);
+  //   const responseJson = await response.json();
+
+  //   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  //   const newItems: any = [];
+
+  //   const results: [] = await responseJson.Search;
+  //   console.log(results);
+
+  //   if (results !== undefined && results.length > 0) {
+  //     // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  //     results.map(async (movie: any) => {
+  //       if (movie.imdbID !== null) {
+  //         // we have a movie so get the details and where it's streaming
+  //         const movieDBUrl = `https://api.themoviedb.org/3/find/${movie.imdbID}?api_key=${movie_api_key}&external_source=imdb_id`;
+
+  //         const streamingProviderUrl = `https://api.themoviedb.org/3/movie/${movie.imdbID}/watch/providers?api_key=${movie_api_key}&external_source=imdb_id`;
+  //         const tvStreamingProviderUrl = `https://api.themoviedb.org/3/tv/${movie.imdbID}/watch/providers?api_key=${movie_api_key}&external_source=imdb_id`
+
+  //         const providerUrl = movie.Type === 'movie' ? streamingProviderUrl : tvStreamingProviderUrl;
+
+  //         Promise.all([fetch(movieDBUrl), fetch(providerUrl)])
+  //           .then(async ([movieResp, providersResp]) => {
+  //             const moviesRes = await movieResp.json();
+  //             const providers = await providersResp.json();
+
+  //             console.log('movies', moviesRes);
+  //             console.log(providers);
+
+  //             if (moviesRes.movie_results.length > 0) {
+  //               const newMovie = {
+  //                 ...moviesRes.movie_results[0],
+  //                 ...movie,
+  //                 // For now we only care about US but we could expand
+  //                 providers: providers.results.US,
+  //               };
+  //               newItems.push(newMovie);
+  //             }
+
+  //             if (moviesRes.tv_results.length > 0) {
+  //               const newMovie = {
+  //                 ...moviesRes.tv_results[0],
+  //                 ...movie,
+  //                 // For now we only care about US but we could expand
+  //                 providers: providers.results.US,
+  //               };
+  //               newItems.push(newMovie);
+  //             }
+  //           })
+  //           .catch((err) => {
+  //             console.log("error", err);
+  //           });
+  //       }
+  //     });
+
+  //     console.log("movies", newItems);
+  //     setMovies(newItems);
+  //   }
+  // };
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const addToWatchList = async (movie: any) => {
     // Delete the id from the movies database so we can use the documents ID that's set by firebase
