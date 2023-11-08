@@ -14,7 +14,7 @@ const Thumbnail = forwardRef(({ movie, bookmarkClicked }: thumbnail, ref: Ref<HT
   const BASE_URL = "https://image.tmdb.org/t/p/original/"; // process.env.NEXT_PUBLIC_THE_MOVIE_DB_BASE_URL;
 
   const poster = movie.poster_path ?? movie.backdrop_path;
-  const movieData = `${movie.media_type ?? ''} . ${movie.release_date ?? movie.first_air_date} . `
+  const movieData = `${movie.media_type ?? ''} ${movie.release_date ?? movie.first_air_date}`
 
   return (
     <div

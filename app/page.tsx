@@ -31,7 +31,7 @@ const movie_api_key = process.env.NEXT_PUBLIC_THE_MOVIE_DB_API_KEY;
 
 
 const MovieSearch = () => {
-  const [everything, setEverything] = useState([]);
+  const [everything, setEverything] = useState<any>([]);
   const [value, setValue] = useState(0);
   const [user, setUser] = useState<FirebaseUser | null>(null);
   const [successOpen, setSuccessOpen] = useState(false);
@@ -39,6 +39,7 @@ const MovieSearch = () => {
   const [alertMessage, setAlertMessage] = useState("");
   const [movies, setMovies] = useState<any>([]);
   const [tvShows, setTvShows] = useState<any>([]);
+  const [tabOneTitle, setTabOneTitle] = useState<string>("Trending");
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -116,6 +117,7 @@ const MovieSearch = () => {
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const everything: any = [...moviesResult, ...tvResult];
+        setTabOneTitle("All");
         return setEverything(everything);
       });
   };
@@ -153,18 +155,31 @@ const MovieSearch = () => {
   const loadPopular = async () => {
     const popular_url = `https://api.themoviedb.org/3/movie/popular?api_key=${movie_api_key}`;
 
-    fetch(popular_url)
+    return fetch(popular_url)
       .then(async (res) => {
         const json = await res.json();
         return json;
       })
-      .then((popularRes) => {
-        setEverything(popularRes.results.slice(0,3).map((item: { id: unknown; }) => (
-          {
-            ...item,
-            movieId: item.id
+      .then(async (popularRes) => {
+        const trendingResults: any[] = await Promise.all(
+          popularRes.results.slice(0,3).map((item: { id: unknown; }) => {
+            return fetch(
+              `https://api.themoviedb.org/3/movie/${item.id}/watch/providers?api_key=${movie_api_key}&external_source=imdb_id`
+            )
+            .then((res) => res.json())
+            .then((providers) => {
+              const newMovie = {
+                ...item,
+                movieId: item.id,
+                providers: providers.results.US ?? [],
+              };
+    
+              return newMovie;
+            });
           }
-        )));
+        ));
+        
+        return setEverything(trendingResults);
       });
   };
 
@@ -211,7 +226,7 @@ const MovieSearch = () => {
             onChange={handleChange}
             aria-label="basic tabs example"
           >
-            <Tab label="All/Popular" id="tab-0" aria-controls="tabpanel-0" />
+            <Tab label={tabOneTitle} id="tab-0" aria-controls="tabpanel-0" />
             <Tab label="Movies" id="tab-1" aria-controls="tabpanel-1" />
             <Tab label="TV" id="tab-2" aria-controls="tabpanel-2" />
           </Tabs>

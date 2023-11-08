@@ -18,7 +18,7 @@ const SearchBox = ({ searchForMovie }: searchBox ): JSX.Element => {
         (search: string) => {
           searchForMovie(search)
         },
-        1200,
+        300,
         { leading: false, trailing: true }
       ),
     []
