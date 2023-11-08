@@ -20,11 +20,7 @@ import Header from "@/lib/shared/header";
 const movie_api_key = process.env.NEXT_PUBLIC_THE_MOVIE_DB_API_KEY;
 // const omdb_api_key = process.env.NEXT_PUBLIC_OMDB_API_KEY;
 
-const Title = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`
+
 const MovieSearch = () => {
   const [movies, setMovies] = React.useState([]);
   const [value, setValue] = React.useState(0);
@@ -43,10 +39,8 @@ const MovieSearch = () => {
         setUser(null)
       }
     });
-  }, [])
-  const Background = styled(Box)`
-    background: black;
-  `
+  }, []);
+  
   /**
    * //TODO: Can we pull this out?
    * Get all movies from the omdb api that match the search string provided
@@ -145,9 +139,10 @@ const MovieSearch = () => {
   }, []);
 
   return (
-      <Background
+      <Box
         component="section"
         flexDirection={"column"}
+        bgcolor="black"
         sx={{
           flexGrow: 1,
           width: "100%",
@@ -156,14 +151,22 @@ const MovieSearch = () => {
         }}
       >
         <Header />
-        <Title>
+        <Box 
+          component="div"
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
           <h1>
-          What do you want to watch?
+          What do you want to watch? 
           </h1>
+          &nbsp;
           <p>
           Search a title and see where it’s available to buy, rent, or stream.
           </p>
-        </Title>
+        </Box>
         <SearchBox
           searchForMovie={findMovieByTitle}
         />
@@ -197,7 +200,7 @@ const MovieSearch = () => {
         >
           <Footer />
         </Paper>
-      </Background>
+      </Box>
   );
 };
 
