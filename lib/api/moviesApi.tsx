@@ -19,7 +19,9 @@ export const getMovies = async (uid: string) => {
     return moviesList;
   };
 
-  export const requestRemoveFromWatchList = async (movie: any) => {
-    return await deleteDoc(doc(db, "movies", `${movie.id}`))
+  export const requestRemoveFromWatchList = async (uid: string|undefined, movie: any) => {
+    const path = "users/" + uid + "/movies";
+    console.log("using path:" + path);
+    return await deleteDoc(doc(db, path, `${movie.id}`))
   };
   

@@ -7,9 +7,12 @@ import Results from "@/lib/movies/results";
 import Footer from "@/lib/shared/footer";
 import { getMovies, requestRemoveFromWatchList } from "@/lib/api/moviesApi";
 import { auth } from "@/lib/api/firestore";
+import { User as FirebaseUser } from "firebase/auth";
 
 const MoviesApp = () => {
   const [watchList, setWatchList] = useState([]);
+  const [user, setUser] = useState<FirebaseUser | null>(null);
+
   /**
    * Loads movies when the page loads
    */
@@ -18,6 +21,7 @@ const MoviesApp = () => {
     auth.onAuthStateChanged(function(user) {
       if (user) {
         // User is signed in.
+        setUser(user);
         getMovies(user?.uid).then(data => {
           setWatchList(data);
         })
@@ -38,7 +42,7 @@ const MoviesApp = () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 
   const removeFromWatchList = async (movie: any) => {
-    requestRemoveFromWatchList(movie).then(() => {
+    requestRemoveFromWatchList(user?.uid, movie).then(() => {
       
       const newWatchList = watchList.filter(
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
