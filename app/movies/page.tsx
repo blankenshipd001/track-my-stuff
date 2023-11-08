@@ -6,6 +6,7 @@ import Header from "@/lib/movies/header";
 import Results from "@/lib/movies/results";
 import Footer from "@/lib/shared/footer";
 import { getMovies, requestRemoveFromWatchList } from "@/lib/api/moviesApi";
+import { auth } from "@/lib/api/firestore";
 
 const MoviesApp = () => {
   const [watchList, setWatchList] = useState([]);
@@ -13,14 +14,21 @@ const MoviesApp = () => {
    * Loads movies when the page loads
    */
   useEffect(() => {
-    getMovies()
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .then((data: any) => {
-        setWatchList(data);
-      })
-      .catch((err) => {
-        console.error("Error making async call: " + err);
-      });
+
+    auth.onAuthStateChanged(function(user) {
+      if (user) {
+        // User is signed in.
+        getMovies(user?.uid).then(data => {
+          setWatchList(data);
+        })
+        .catch((err) => {
+          console.error("Error making async call: " + err);
+        });
+      } else {
+        // No user is signed in.
+        console.log('no one home')
+      }
+    });    
   }, []);
 
   /**

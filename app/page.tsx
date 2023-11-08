@@ -1,12 +1,13 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { collection, addDoc } from "firebase/firestore";
-import { db } from "@/lib/api/firestore";
+import { db, auth } from "@/lib/api/firestore";
 
 import Box from "@mui/material/Box";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
+import { User as FirebaseUser } from "firebase/auth";
 
 import TabPanel from "@/lib/shared/tab-panel";
 import Header from "@/lib/movies/header";
@@ -27,11 +28,22 @@ const Title = styled.div`
 const MovieSearch = () => {
   const [movies, setMovies] = React.useState([]);
   const [value, setValue] = React.useState(0);
+  const [user, setUser] = useState<FirebaseUser | null>(null)
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
 
+  useEffect(() => {
+    auth.onAuthStateChanged(function(user) {
+      if (user) {
+        setUser(user);
+      } else {
+        // No user is signed in.
+        setUser(null)
+      }
+    });
+  }, [])
   const Background = styled(Box)`
     background: black;
   `
@@ -72,6 +84,7 @@ const MovieSearch = () => {
           newItems.push(newMovie);
         });
         console.log("stuff", newItems);
+        console.log("user", auth.currentUser);
         setMovies(newItems);
       }
     );
@@ -143,12 +156,15 @@ const MovieSearch = () => {
     // Delete the id from the movies database so we can use the documents ID that's set by firebase
     delete movie.id;
 
+    const path = "users/" + user?.uid + "/movies";
+
     // TODO do we need the docRef response
     //const docRef =
-    await addDoc(collection(db, "movies"), {
+    const response= await addDoc(collection(db, path), {
       ...movie,
     });
 
+    console.log(response, 'response')
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const newWatchList: any = [...movies, movie];
     setMovies(newWatchList);

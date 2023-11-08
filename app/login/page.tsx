@@ -23,7 +23,7 @@ useEffect(() => {
         console.log('no one home')
       }
     });
-  }, [])
+  }, [router])
     useEffect(() => {
         console.log(user, 'user is set')
     }, [user])
