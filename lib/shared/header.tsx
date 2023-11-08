@@ -27,7 +27,6 @@ const Header = () => {
     auth.onAuthStateChanged(function (user) {
       if (user) {
         // User is signed in.
-        console.log('its meeeee', user)
         setUser(user);
       } else {
         // No user is signed in.

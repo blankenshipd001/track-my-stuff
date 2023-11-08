@@ -50,7 +50,7 @@ const Thumbnail = forwardRef(({ movie, bookmarkClicked }: thumbnail, ref: Ref<HT
         height={400}
         width={500}
       />
-      <div className="p-2">
+      <div>
         <p className="truncate max-w-md">{movie.overview}</p>
         <h2 className="mt-1 text-2xl text-white transition-all duration-100 ease-in-out group-hover:font-bold">
           {movie.title}

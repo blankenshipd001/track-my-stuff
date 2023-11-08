@@ -22,7 +22,6 @@ function Results({ movies, bookmarkClicked }: any) {
     >
       {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
       {movies.map((movie: any) => {
-        console.log("movie", movie);
         return (
           <div key={movie.movieId}>
             <Thumbnail

@@ -14,12 +14,12 @@ interface searchBox {
 const SearchBox = ({ searchForMovie }: searchBox ): JSX.Element => {
   const throttledSearch = useMemo(
     () =>
-      _.throttle(
+      _.debounce(
         (search: string) => {
           searchForMovie(search)
         },
-        10000,
-        { leading: true, trailing: true }
+        1200,
+        { leading: false, trailing: true }
       ),
     []
   );
