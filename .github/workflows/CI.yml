@@ -5,7 +5,7 @@ name: 'Track-It build'
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, hackathon-movies ]
   pull_request:
     branches: [ master ]
 
