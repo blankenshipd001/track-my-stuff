@@ -187,13 +187,14 @@ const MovieSearch = () => {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
+            flexDirection: "column",
+            marginTop: "4rem"
           }}
         >
-          <h1>
+          <h1 className="text-white md:text-3xl lg:text-4xl">
           What do you want to watch? 
           </h1>
-          &nbsp;
-          <p>
+          <p className="text-white">
           Search a title and see where it’s available to buy, rent, or stream.
           </p>
         </Box>
