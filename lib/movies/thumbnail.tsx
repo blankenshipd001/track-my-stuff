@@ -25,15 +25,12 @@ const Thumbnail = forwardRef(({ movie, bookmarkClicked }: thumbnail, ref: Ref<HT
     align-items: center;
     flex-direction: column;
     display: flex;
-    text-align: center;
+    text-align: left;
     color: white;
   `
   const Caption = styled.div`
-    align-items: center;
-    p {
-      padding-left: 1.5rem;;
-      padding-right: 1.5rem;
-    }
+    align-items: flex-start;
+    width: 100%;
 `
 
   const handleClickEvent = (event: any) => {

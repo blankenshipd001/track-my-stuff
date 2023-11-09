@@ -12,6 +12,7 @@ const BASE_URL = "https://image.tmdb.org/t/p/original/"; // process.env.NEXT_PUB
 const Providers = styled.div`
   display: flex;
   flex-direction: row;
+  margin-top: 1rem;
 `;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

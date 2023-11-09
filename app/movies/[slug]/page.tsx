@@ -2,29 +2,57 @@
 
 "use client";
 import Header from "@/lib/shared/header";
-import {
-  Box,
-  Button,
-  Divider,
-  Fab,
-  Grid,
-} from "@mui/material";
+import { Box, Button, Divider, Fab, Grid, Paper, styled } from "@mui/material";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
 import CheckIcon from "@mui/icons-material/Check";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import ThumbDownIcon from "@mui/icons-material/ThumbDown";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useState, forwardRef } from "react";
 import { useRouter } from "next/navigation";
+import Results from "@/lib/movies/results";
+import { collection, addDoc } from "firebase/firestore";
+
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert, { AlertProps } from '@mui/material/Alert';
 
 const movie_api_key = process.env.NEXT_PUBLIC_THE_MOVIE_DB_API_KEY;
 const BASE_URL = "https://image.tmdb.org/t/p/original/"; // process.env.NEXT_PUBLIC_THE_MOVIE_DB_BASE_URL;
+
+const Alert = forwardRef<HTMLDivElement, AlertProps>(function Alert(
+  props,
+  ref,
+) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
+
+const Item = styled(Paper)(({ theme }) => ({
+  backgroundColor: "#3D3D3D",
+  ...theme.typography.body2,
+  padding: theme.spacing(3),
+  textAlign: "left",
+  color: theme.palette.text.secondary,
+}));
 
 //TODO: Refactor the header to use Box/Paper/Containers/Flex layouts not absolute
 export default function Page({ params }: { params: { slug: string } }) {
   const router = useRouter();
   const [details, setDetails] = useState<any>();
+  const [recommended, setRecommended] = useState<any>([]);
+  const [successOpen, setSuccessOpen] = useState(false);
+  const [errorOpen, setErrorOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+  
+  const handleClose = (event: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway' || reason === 'escapeKeyDown') {
+      setErrorOpen(false);
+      setSuccessOpen(false);
+    }
+
+    setErrorOpen(false);
+    setSuccessOpen(false);
+  };
 
   // TODO Handle actually going back with the search?
   const goBack = () => {
@@ -51,6 +79,36 @@ export default function Page({ params }: { params: { slug: string } }) {
       </Box>
     );
   };
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const addToWatchList = async (movie: any) => {
+      // Delete the id from the movies database so we can use the documents ID that's set by firebase
+      delete movie.id;
+  
+      const path = "users/" + user?.uid + "/movies";
+      // TODO do we need the docRef response
+      //const docRef =
+      await addDoc(collection(db, path), {
+        ...movie,
+      }).then(() => {
+        setAlertMessage("Successfully added to your watch list")
+        setSuccessOpen(true);
+      }).catch((err: any) => {
+        //TODO handle failure due to login and pop login
+        setAlertMessage(`Failure adding to your watch list: ${err}`);
+        setErrorOpen(true);
+      });
+    };
+
+  const getRecommended = (movie: any) => {
+    const genre = movie?.genres[0]?.id;
+    const url = `https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&sort_by=popularity.desc&with_genres=${genre}&api_key=${movie_api_key}`
+
+    return fetch(url).then(res => res.json()).then(data => {
+      console.log(data);
+      setRecommended(data.results);
+    })
+  }
 
   /**
    * For now check on both movies and tv (later pass it as a query param?)
@@ -81,6 +139,7 @@ export default function Page({ params }: { params: { slug: string } }) {
 
               console.log(newMovie);
               setDetails(newMovie);
+              getRecommended(newMovie);
             });
         }
 
@@ -100,6 +159,7 @@ export default function Page({ params }: { params: { slug: string } }) {
               };
               console.log(newMovie);
               setDetails(newMovie);
+              getRecommended(newMovie);
             });
         }
       }
@@ -115,12 +175,12 @@ export default function Page({ params }: { params: { slug: string } }) {
       <Header />
       <Box
         component="section"
-        bgcolor="1A1A1A"
+        bgcolor="#1A1A1A"
         sx={{
           flexGrow: 1,
           paddingBottom: "3rem",
         }}
-        style={{ backgroundColor: "1A1A1A" }}
+        style={{ backgroundColor: "#1A1A1A" }}
       >
         <Box
           zIndex={-1}
@@ -273,36 +333,55 @@ export default function Page({ params }: { params: { slug: string } }) {
           <ThumbDownIcon onClick={goBack} style={{ paddingLeft: "5px" }} />
         </Fab>
       </Box>
-      <Box display="flex" sx={{ flexGrow: 1 }}>
-        <Grid container spacing={2}>
-          <Grid item xs={4}>
-            <div style={{paddingLeft: "20px"}}>Buy</div>
+
+      <Grid sx={{ flexGrow: 1 }} style={{paddingLeft: "20px", paddingRight: "20px"}} container spacing={5}>
+        <Grid item xs={4}>
+          <Item bgcolor="#3D3D3D">
+            <div style={{fontWeight: "bold"}}>Buy</div>
             <Divider variant="middle" />
             {details?.providers?.buy?.length > 0 &&
               details?.providers?.buy?.map((p: any) => {
                 return provider(p);
               })}
-          </Grid>
-          <Grid item xs={4}>
-            <div style={{paddingLeft: "20px"}}>Rent</div>
+          </Item>
+        </Grid>
+
+        <Grid item xs={4} >
+          <Item bgcolor="#3D3D3D">
+            <div>Rent</div>
             <Divider variant="middle" />
 
             {details?.providers?.rent?.length > 0 &&
               details?.providers?.rent?.map((p: any) => {
                 return provider(p);
               })}
-          </Grid>
-          <Grid item xs={4}>
-            <div style={{paddingLeft: "20px"}}>Subscribe</div>
+          </Item>
+        </Grid>
+
+        <Grid item xs={4}>
+          <Item bgcolor="#3D3D3D">
+            <div>Subscribe</div>
             <Divider variant="middle" />
 
             {details?.providers?.flatrate?.length > 0 &&
               details?.providers?.flatrate?.map((p: any) => {
                 return provider(p);
               })}
-          </Grid>
+          </Item>
         </Grid>
-      </Box>
+      </Grid>
+
+      <Results movies={recommended} bookmarkClicked={addToWatchList} />
+      <Snackbar open={successOpen} autoHideDuration={6000} onClose={handleClose}>
+          <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+            {alertMessage}
+          </Alert>
+        </Snackbar>
+        <Snackbar open={errorOpen} autoHideDuration={6000} onClose={handleClose}>
+          <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }}>
+            {alertMessage}
+          </Alert>
+        </Snackbar>
     </Box>
   );
 }

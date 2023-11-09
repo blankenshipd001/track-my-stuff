@@ -8,7 +8,7 @@ const SearchInput = styled(OutlinedInput)`
 width: 100%;
 background: white;
     color: black;
-    border: 1px solid black;
+    border: 1px solid #1A1A1A;
     border-radius: 25px;
 `
 interface searchBox {

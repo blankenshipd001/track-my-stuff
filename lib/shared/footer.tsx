@@ -14,7 +14,7 @@ const Footer = () => {
     <footer className="text-center text-white">
         
       {/* <!--Copyright section--> */}
-      <div className="p-4 text-center" style={{"backgroundColor": "rgba(0, 0, 0, 0.2)"}}>
+      <div className="p-4 text-center" style={{"backgroundColor": '#1A1A1A'}}>
         © 2023 Copyright:
         <a className="text-white" href="https://github.com/blankenshipd001">
           &nbsp;Code-Monkey
