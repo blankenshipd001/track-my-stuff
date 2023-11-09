@@ -191,7 +191,8 @@ export default function Page({ params }: { params: { slug: string } }) {
             backgroundPosition: "center",
             backgroundSize: "cover",
             backgroundRepeat: "no-repeat",
-            height: "40vh",
+            // 43vh starts to fall apart when the screen gets too small as it is relative to the vertical height
+            height: "430px",
             width: "100%",
           }}
         />
