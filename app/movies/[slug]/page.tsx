@@ -8,8 +8,6 @@ import {
   Divider,
   Fab,
   Grid,
-  IconButton,
-  Paper,
 } from "@mui/material";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
