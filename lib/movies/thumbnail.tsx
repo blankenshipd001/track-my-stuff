@@ -38,7 +38,7 @@ const Thumbnail = forwardRef(({ movie, bookmarkClicked }: thumbnail, ref: Ref<HT
 
   const handleClickEvent = (event: any) => {
     console.log('event click');
-    router.push(`/movies/${movie.id}`, { scroll: false })
+    router.push(`/movies/${movie.movieId}`, { scroll: false })
     // <Link href={`/blog/${post.slug}`}>{post.title}</Link>
   }
   return (
