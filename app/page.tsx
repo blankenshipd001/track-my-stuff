@@ -153,7 +153,7 @@ const MovieSearch = () => {
   };
 
   const loadPopular = async () => {
-    const popular_url = `https://api.themoviedb.org/3/movie/popular?api_key=${movie_api_key}`;
+    const popular_url = `https://api.themoviedb.org/3/movie/popular?api_key=${movie_api_key}&include_video=false`;
 
     return fetch(popular_url)
       .then(async (res) => {
