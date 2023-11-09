@@ -191,7 +191,7 @@ const MovieSearch = () => {
       <Box
         component="section"
         flexDirection={"column"}
-        bgcolor="black"
+        bgcolor="#1A1A1A"
         sx={{
           flexGrow: 1,
           width: "100%",

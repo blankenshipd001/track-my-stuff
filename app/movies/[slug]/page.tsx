@@ -115,12 +115,12 @@ export default function Page({ params }: { params: { slug: string } }) {
       <Header />
       <Box
         component="section"
-        bgcolor="1A1A1A"
+        bgcolor="#1A1A1A"
         sx={{
           flexGrow: 1,
           paddingBottom: "3rem",
         }}
-        style={{ backgroundColor: "1A1A1A" }}
+        style={{ backgroundColor: "#1A1A1A" }}
       >
         <Box
           zIndex={-1}
