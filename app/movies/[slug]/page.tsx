@@ -337,8 +337,8 @@ export default function Page({ params }: { params: { slug: string } }) {
       <Grid sx={{ flexGrow: 1 }} style={{paddingLeft: "20px", paddingRight: "20px"}} container spacing={5}>
         <Grid item xs={4}>
           <Item bgcolor="#3D3D3D">
-            <div style={{fontWeight: "bold"}}>Buy</div>
-            <Divider variant="middle" />
+            <div style={{fontWeight: "400", fontSize: "18px", paddingBottom: "15px"}}>Buy</div>
+            <Divider />
             {details?.providers?.buy?.length > 0 &&
               details?.providers?.buy?.map((p: any) => {
                 return provider(p);
@@ -348,8 +348,8 @@ export default function Page({ params }: { params: { slug: string } }) {
 
         <Grid item xs={4} >
           <Item bgcolor="#3D3D3D">
-            <div>Rent</div>
-            <Divider variant="middle" />
+          <div style={{fontWeight: "400", fontSize: "18px", paddingBottom: "15px"}}>Rent</div>
+            <Divider />
 
             {details?.providers?.rent?.length > 0 &&
               details?.providers?.rent?.map((p: any) => {
@@ -360,8 +360,8 @@ export default function Page({ params }: { params: { slug: string } }) {
 
         <Grid item xs={4}>
           <Item bgcolor="#3D3D3D">
-            <div>Subscribe</div>
-            <Divider variant="middle" />
+          <div style={{fontWeight: "400", fontSize: "18px", paddingBottom: "15px"}}>Subscribe</div>
+            <Divider />
 
             {details?.providers?.flatrate?.length > 0 &&
               details?.providers?.flatrate?.map((p: any) => {
