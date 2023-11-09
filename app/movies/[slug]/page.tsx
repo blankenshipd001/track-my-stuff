@@ -13,6 +13,7 @@ import { useEffect, useState, forwardRef } from "react";
 import { useRouter } from "next/navigation";
 import Results from "@/lib/movies/results";
 import { collection, addDoc } from "firebase/firestore";
+import { User as FirebaseUser } from "firebase/auth";
 
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
@@ -42,6 +43,7 @@ export default function Page({ params }: { params: { slug: string } }) {
   const [recommended, setRecommended] = useState<any>([]);
   const [successOpen, setSuccessOpen] = useState(false);
   const [errorOpen, setErrorOpen] = useState(false);
+  const [user, setUser] = useState<FirebaseUser | null>(null);
   const [alertMessage, setAlertMessage] = useState("");
   
   const handleClose = (event: React.SyntheticEvent | Event, reason?: string) => {
