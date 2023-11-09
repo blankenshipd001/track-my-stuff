@@ -195,8 +195,8 @@ const MovieSearch = () => {
         sx={{
           flexGrow: 1,
           width: "100%",
-          height: "100vh",
           display: "flex",
+          paddingBottom: "3rem"
         }}
       >
         <Header />

@@ -4,6 +4,7 @@
 import { forwardRef, Ref } from "react";
 import Image from 'next/image';
 import { HandThumbUpIcon } from "@heroicons/react/24/outline";
+import styled from "styled-components";
 
 interface thumbnail {
   movie: any;
@@ -16,12 +17,22 @@ const Thumbnail = forwardRef(({ movie, bookmarkClicked }: thumbnail, ref: Ref<HT
   const poster = movie.poster_path ?? movie.backdrop_path;
   const movieData = `${movie.media_type ?? ''} ${movie.release_date ?? movie.first_air_date}`
 
+  const Movie = styled.div`
+    align-items: center;
+    flex-direction: column;
+    display: flex;
+    text-align: center;
+  `
+
+  const Caption = styled.div`
+  align-items: center;
+`
   return (
-    <div
+    <Movie
       ref={ref}
       className="p-2 group cursor-pointer
       transition duration-200 ease-in 
-      transform sm:hover:scale-105 hover:z-50"
+      transform sm:hover:scale-105 hover:z-50 flex-column items-center"
     >
       <svg
         onClick={() => bookmarkClicked(movie)}
@@ -45,11 +56,11 @@ const Thumbnail = forwardRef(({ movie, bookmarkClicked }: thumbnail, ref: Ref<HT
         src={
           `${BASE_URL}${poster}`
         }
-        alt="movie poster2"
-        height={506}
-        width={300}
+        alt={movie.name}
+        width="350"
+        height="450"
       />
-      <div>
+      <Caption>
         <p className="truncate max-w-md">{movie.overview}</p>
         <h2 className="mt-1 text-2xl text-white transition-all duration-100 ease-in-out group-hover:font-bold">
           {movie.title}
@@ -59,8 +70,8 @@ const Thumbnail = forwardRef(({ movie, bookmarkClicked }: thumbnail, ref: Ref<HT
           <HandThumbUpIcon className="h-5 mx-2" />
           {movie.vote_count}
         </p>
-      </div>
-    </div>
+      </Caption>
+    </Movie>
   );
 });
 
