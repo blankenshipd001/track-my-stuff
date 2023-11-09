@@ -279,7 +279,7 @@ export default function Page({ params }: { params: { slug: string } }) {
             <div style={{paddingLeft: "20px"}}>Buy</div>
             <Divider variant="middle" />
             {details?.providers?.buy?.length > 0 &&
-              details?.providers?.buy.map((p: any) => {
+              details?.providers?.buy?.map((p: any) => {
                 return provider(p);
               })}
           </Grid>
@@ -288,7 +288,7 @@ export default function Page({ params }: { params: { slug: string } }) {
             <Divider variant="middle" />
 
             {details?.providers?.rent?.length > 0 &&
-              details?.providers?.buy.map((p: any) => {
+              details?.providers?.rent?.map((p: any) => {
                 return provider(p);
               })}
           </Grid>
@@ -297,7 +297,7 @@ export default function Page({ params }: { params: { slug: string } }) {
             <Divider variant="middle" />
 
             {details?.providers?.flatrate?.length > 0 &&
-              details?.providers?.buy.map((p: any) => {
+              details?.providers?.flatrate?.map((p: any) => {
                 return provider(p);
               })}
           </Grid>
