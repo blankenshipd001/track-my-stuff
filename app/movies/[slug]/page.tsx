@@ -9,11 +9,23 @@ import CheckIcon from "@mui/icons-material/Check";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import ThumbDownIcon from "@mui/icons-material/ThumbDown";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useState, forwardRef } from "react";
 import { useRouter } from "next/navigation";
+import Results from "@/lib/movies/results";
+import { collection, addDoc } from "firebase/firestore";
+
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert, { AlertProps } from '@mui/material/Alert';
 
 const movie_api_key = process.env.NEXT_PUBLIC_THE_MOVIE_DB_API_KEY;
 const BASE_URL = "https://image.tmdb.org/t/p/original/"; // process.env.NEXT_PUBLIC_THE_MOVIE_DB_BASE_URL;
+
+const Alert = forwardRef<HTMLDivElement, AlertProps>(function Alert(
+  props,
+  ref,
+) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: "#3D3D3D",
@@ -27,6 +39,20 @@ const Item = styled(Paper)(({ theme }) => ({
 export default function Page({ params }: { params: { slug: string } }) {
   const router = useRouter();
   const [details, setDetails] = useState<any>();
+  const [recommended, setRecommended] = useState<any>([]);
+  const [successOpen, setSuccessOpen] = useState(false);
+  const [errorOpen, setErrorOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+  
+  const handleClose = (event: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway' || reason === 'escapeKeyDown') {
+      setErrorOpen(false);
+      setSuccessOpen(false);
+    }
+
+    setErrorOpen(false);
+    setSuccessOpen(false);
+  };
 
   // TODO Handle actually going back with the search?
   const goBack = () => {
@@ -53,6 +79,36 @@ export default function Page({ params }: { params: { slug: string } }) {
       </Box>
     );
   };
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const addToWatchList = async (movie: any) => {
+      // Delete the id from the movies database so we can use the documents ID that's set by firebase
+      delete movie.id;
+  
+      const path = "users/" + user?.uid + "/movies";
+      // TODO do we need the docRef response
+      //const docRef =
+      await addDoc(collection(db, path), {
+        ...movie,
+      }).then(() => {
+        setAlertMessage("Successfully added to your watch list")
+        setSuccessOpen(true);
+      }).catch((err: any) => {
+        //TODO handle failure due to login and pop login
+        setAlertMessage(`Failure adding to your watch list: ${err}`);
+        setErrorOpen(true);
+      });
+    };
+
+  const getRecommended = (movie: any) => {
+    const genre = movie?.genres[0]?.id;
+    const url = `https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&sort_by=popularity.desc&with_genres=${genre}&api_key=${movie_api_key}`
+
+    return fetch(url).then(res => res.json()).then(data => {
+      console.log(data);
+      setRecommended(data.results);
+    })
+  }
 
   /**
    * For now check on both movies and tv (later pass it as a query param?)
@@ -83,6 +139,7 @@ export default function Page({ params }: { params: { slug: string } }) {
 
               console.log(newMovie);
               setDetails(newMovie);
+              getRecommended(newMovie);
             });
         }
 
@@ -102,6 +159,7 @@ export default function Page({ params }: { params: { slug: string } }) {
               };
               console.log(newMovie);
               setDetails(newMovie);
+              getRecommended(newMovie);
             });
         }
       }
@@ -312,6 +370,18 @@ export default function Page({ params }: { params: { slug: string } }) {
           </Item>
         </Grid>
       </Grid>
+
+      <Results movies={recommended} bookmarkClicked={addToWatchList} />
+      <Snackbar open={successOpen} autoHideDuration={6000} onClose={handleClose}>
+          <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+            {alertMessage}
+          </Alert>
+        </Snackbar>
+        <Snackbar open={errorOpen} autoHideDuration={6000} onClose={handleClose}>
+          <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }}>
+            {alertMessage}
+          </Alert>
+        </Snackbar>
     </Box>
   );
 }
