@@ -1,9 +1,12 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 
 import { forwardRef, Ref } from "react";
 import Image from 'next/image';
 import { HandThumbUpIcon } from "@heroicons/react/24/outline";
+import styled from "styled-components";
+import { useRouter } from 'next/navigation'
 
 interface thumbnail {
   movie: any;
@@ -13,16 +16,34 @@ interface thumbnail {
 const Thumbnail = forwardRef(({ movie, bookmarkClicked }: thumbnail, ref: Ref<HTMLDivElement>): JSX.Element => {
   const BASE_URL = "https://image.tmdb.org/t/p/original/"; // process.env.NEXT_PUBLIC_THE_MOVIE_DB_BASE_URL;
 
-  const poster = movie.backdrop_path ?? movie.poster_path  ?? movie.poster_path
+  const router = useRouter()
+  const poster = movie.poster_path ?? movie.backdrop_path;
+  const movieData = `${movie.media_type ?? ''} ${movie.release_date ?? movie.first_air_date}`
+  const [movieYear] = movieData.split('-')
 
-  const movieData = `${movie.media_type ?? ''} . ${movie.release_date ?? movie.first_air_date} . `
+  const Movie = styled.div`
+    align-items: center;
+    flex-direction: column;
+    display: flex;
+    text-align: left;
+    color: white;
+  `
+  const Caption = styled.div`
+    align-items: flex-start;
+    width: 100%;
+`
 
+  const handleClickEvent = (event: any) => {
+    console.log('event click');
+    router.push(`/movies/${movie.movieId}`, { scroll: false })
+    // <Link href={`/blog/${post.slug}`}>{post.title}</Link>
+  }
   return (
-    <div
+    <Movie
       ref={ref}
       className="p-2 group cursor-pointer
       transition duration-200 ease-in 
-      transform sm:hover:scale-105 hover:z-50"
+      transform sm:hover:scale-105 hover:z-50 flex-column items-center"
     >
       <svg
         onClick={() => bookmarkClicked(movie)}
@@ -46,22 +67,20 @@ const Thumbnail = forwardRef(({ movie, bookmarkClicked }: thumbnail, ref: Ref<HT
         src={
           `${BASE_URL}${poster}`
         }
-        alt="movie poster2"
-        height={400}
-        width={500}
+        alt={movie.name}
+        width="350"
+        height="450"
+        onClick={handleClickEvent}
       />
-      <div className="p-2">
-        <p className="truncate max-w-md">{movie.overview}</p>
+      <Caption>
         <h2 className="mt-1 text-2xl text-white transition-all duration-100 ease-in-out group-hover:font-bold">
           {movie.title}
         </h2>
-        <p className="flex items-center opacity-0 group-hover:opacity-100">
-          {movieData}
-          <HandThumbUpIcon className="h-5 mx-2" />
-          {movie.vote_count}
+        <p className="flex items-center opacity-100">
+          {movieYear}
         </p>
-      </div>
-    </div>
+      </Caption>
+    </Movie>
   );
 });
 

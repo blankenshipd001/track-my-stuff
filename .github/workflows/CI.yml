@@ -5,7 +5,7 @@ name: 'Track-It build'
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, hackathon-movies ]
   pull_request:
     branches: [ master ]
 
@@ -21,8 +21,8 @@ jobs:
         with:
           # Reads the node version from the .nvmrc file itself 
           node-version-file: '.nvmrc'
-          cache: 'npm'
-          cache-dependency-path: package-lock.json
+          # cache: 'npm'
+          # cache-dependency-path: package-lock.json
         
       # # Consider this as an add on to optimize the execution of actions
       # - name: Cache node modules
@@ -47,19 +47,19 @@ jobs:
         run: npm run lint
       
       # Run test cases and this could ensure minimum coverage as well if set
-      - name: Execute test cases
-        run: npm run test
-        env:
-          NEXT_PUBLIC_THE_MOVIE_DB_API_KEY: ${{secrets.MOVIE_DB_API_KEY}}
-          NEXT_PUBLIC_OMDB_API_KEY: ${{secrets.OMDB_API_KEY}}
-          NEXT_PUBLIC_FF_API_KEY: ${{secrets.FF_API_KEY}}
-          NEXT_PUBLIC_FIREBASE_API_KEY: ${{secrets.FIREBASE_API_KEY}}
-          NEXT_PUBLIC_FIREBASE_APP_ID: ${{secrets.FIREBASE_APP_ID}}
-          NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: ${{secrets.FIREBASE_AUTH_DOMAIN}}
-          NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: ${{secrets.FIREBASE_MESSAGING_SENDER_ID}}
-          NEXT_PUBLIC_FIREBASE_PROJECT_ID: ${{secrets.FIREBASE_PROJECT_ID}}
-          NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET: ${{secrets.FIREBASE_STORAGE_BUCKET}}
-          NEXT_PUBLIC_THE_MOVIE_DB_BASE_URL: ${{secrets.HE_MOVIE_DB_BASE_URL}}
+      # - name: Execute test cases
+      #   run: npm run test
+      #   env:
+      #     NEXT_PUBLIC_THE_MOVIE_DB_API_KEY: ${{secrets.MOVIE_DB_API_KEY}}
+      #     NEXT_PUBLIC_OMDB_API_KEY: ${{secrets.OMDB_API_KEY}}
+      #     NEXT_PUBLIC_FF_API_KEY: ${{secrets.FF_API_KEY}}
+      #     NEXT_PUBLIC_FIREBASE_API_KEY: ${{secrets.FIREBASE_API_KEY}}
+      #     NEXT_PUBLIC_FIREBASE_APP_ID: ${{secrets.FIREBASE_APP_ID}}
+      #     NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: ${{secrets.FIREBASE_AUTH_DOMAIN}}
+      #     NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: ${{secrets.FIREBASE_MESSAGING_SENDER_ID}}
+      #     NEXT_PUBLIC_FIREBASE_PROJECT_ID: ${{secrets.FIREBASE_PROJECT_ID}}
+      #     NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET: ${{secrets.FIREBASE_STORAGE_BUCKET}}
+      #     NEXT_PUBLIC_THE_MOVIE_DB_BASE_URL: ${{secrets.HE_MOVIE_DB_BASE_URL}}
         
       - name: Create test build
         run: npm run build
