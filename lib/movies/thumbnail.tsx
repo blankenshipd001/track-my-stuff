@@ -47,7 +47,6 @@ const Thumbnail = forwardRef(({ movie, bookmarkClicked }: thumbnail, ref: Ref<HT
       className="p-2 group cursor-pointer
       transition duration-200 ease-in 
       transform sm:hover:scale-105 hover:z-50 flex-column items-center"
-      onClick={handleClickEvent}
     >
       <svg
         onClick={() => bookmarkClicked(movie)}
@@ -74,6 +73,7 @@ const Thumbnail = forwardRef(({ movie, bookmarkClicked }: thumbnail, ref: Ref<HT
         alt={movie.name}
         width="350"
         height="450"
+        onClick={handleClickEvent}
       />
       <Caption>
         <h2 className="mt-1 text-2xl text-white transition-all duration-100 ease-in-out group-hover:font-bold">

@@ -125,7 +125,7 @@ export default function Page({ params }: { params: { slug: string } }) {
         <Box
           zIndex={-1}
           style={{
-            filter: "blur(16px)",
+            filter: "blur(16px) brightness(50%)",
             backgroundColor: "rgba(255,255,255, 0.35)",
             backgroundImage: `url(${BASE_URL}${details?.backdrop_path})`,
             backgroundPosition: "center",
