@@ -2,13 +2,7 @@
 
 "use client";
 import Header from "@/lib/shared/header";
-import {
-  Box,
-  Button,
-  Divider,
-  Fab,
-  Grid,
-} from "@mui/material";
+import { Box, Button, Divider, Fab, Grid, Paper, styled } from "@mui/material";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
 import CheckIcon from "@mui/icons-material/Check";
@@ -20,6 +14,14 @@ import { useRouter } from "next/navigation";
 
 const movie_api_key = process.env.NEXT_PUBLIC_THE_MOVIE_DB_API_KEY;
 const BASE_URL = "https://image.tmdb.org/t/p/original/"; // process.env.NEXT_PUBLIC_THE_MOVIE_DB_BASE_URL;
+
+const Item = styled(Paper)(({ theme }) => ({
+  backgroundColor: "#3D3D3D",
+  ...theme.typography.body2,
+  padding: theme.spacing(3),
+  textAlign: "left",
+  color: theme.palette.text.secondary,
+}));
 
 //TODO: Refactor the header to use Box/Paper/Containers/Flex layouts not absolute
 export default function Page({ params }: { params: { slug: string } }) {
@@ -273,36 +275,43 @@ export default function Page({ params }: { params: { slug: string } }) {
           <ThumbDownIcon onClick={goBack} style={{ paddingLeft: "5px" }} />
         </Fab>
       </Box>
-      <Box display="flex" sx={{ flexGrow: 1 }}>
-        <Grid container spacing={2}>
-          <Grid item xs={4}>
-            <div style={{paddingLeft: "20px"}}>Buy</div>
+
+      <Grid sx={{ flexGrow: 1 }} style={{paddingLeft: "20px", paddingRight: "20px"}} container spacing={5}>
+        <Grid item xs={4}>
+          <Item bgcolor="#3D3D3D">
+            <div style={{fontWeight: "bold"}}>Buy</div>
             <Divider variant="middle" />
             {details?.providers?.buy?.length > 0 &&
               details?.providers?.buy?.map((p: any) => {
                 return provider(p);
               })}
-          </Grid>
-          <Grid item xs={4}>
-            <div style={{paddingLeft: "20px"}}>Rent</div>
+          </Item>
+        </Grid>
+
+        <Grid item xs={4} >
+          <Item bgcolor="#3D3D3D">
+            <div>Rent</div>
             <Divider variant="middle" />
 
             {details?.providers?.rent?.length > 0 &&
               details?.providers?.rent?.map((p: any) => {
                 return provider(p);
               })}
-          </Grid>
-          <Grid item xs={4}>
-            <div style={{paddingLeft: "20px"}}>Subscribe</div>
+          </Item>
+        </Grid>
+
+        <Grid item xs={4}>
+          <Item bgcolor="#3D3D3D">
+            <div>Subscribe</div>
             <Divider variant="middle" />
 
             {details?.providers?.flatrate?.length > 0 &&
               details?.providers?.flatrate?.map((p: any) => {
                 return provider(p);
               })}
-          </Grid>
+          </Item>
         </Grid>
-      </Box>
+      </Grid>
     </Box>
   );
 }
