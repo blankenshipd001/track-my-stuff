@@ -211,7 +211,7 @@ const MovieSearch = () => {
           }}
         >
           <h1 className="text-white md:text-3xl lg:text-4xl">
-          What do you want to watch? 
+          Your watchlists and recommendations—together.
           </h1>
           <p className="text-white">
           Search a title and see where it’s available to buy, rent, or stream.

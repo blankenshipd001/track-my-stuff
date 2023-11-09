@@ -19,15 +19,21 @@ const Thumbnail = forwardRef(({ movie, bookmarkClicked }: thumbnail, ref: Ref<HT
   const router = useRouter()
   const poster = movie.poster_path ?? movie.backdrop_path;
   const movieData = `${movie.media_type ?? ''} ${movie.release_date ?? movie.first_air_date}`
+  const [movieYear] = movieData.split('-')
 
   const Movie = styled.div`
     align-items: center;
     flex-direction: column;
     display: flex;
     text-align: center;
+    color: white;
   `
   const Caption = styled.div`
-  align-items: center;
+    align-items: center;
+    p {
+      padding-left: 1.5rem;;
+      padding-right: 1.5rem;
+    }
 `
 
   const handleClickEvent = (event: any) => {
@@ -70,14 +76,11 @@ const Thumbnail = forwardRef(({ movie, bookmarkClicked }: thumbnail, ref: Ref<HT
         height="450"
       />
       <Caption>
-        <p className="truncate max-w-md">{movie.overview}</p>
         <h2 className="mt-1 text-2xl text-white transition-all duration-100 ease-in-out group-hover:font-bold">
           {movie.title}
         </h2>
-        <p className="flex items-center opacity-0 group-hover:opacity-100">
-          {movieData}
-          <HandThumbUpIcon className="h-5 mx-2" />
-          {movie.vote_count}
+        <p className="flex items-center opacity-100">
+          {movieYear}
         </p>
       </Caption>
     </Movie>

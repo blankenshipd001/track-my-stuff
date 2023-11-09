@@ -6,6 +6,10 @@ const _ = require('lodash');
 
 const SearchInput = styled(OutlinedInput)`
 width: 100%;
+background: white;
+    color: black;
+    border: 1px solid black;
+    border-radius: 25px;
 `
 interface searchBox {
     searchForMovie: (value: string) => void

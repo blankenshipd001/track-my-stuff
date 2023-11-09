@@ -45,22 +45,6 @@ function Results({ movies, bookmarkClicked }: any) {
               movie={movie}
               bookmarkClicked={bookmarkClicked}
             />
-            {movie.providers?.buy?.length ? <div>Buy</div> : null}
-            <Providers>
-              {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-              {movie.providers?.buy?.map((streamer: any) => {
-                return provider(streamer);
-              })}
-            </Providers>
-            {movie.providers?.rent?.length ? <div>Rent</div> : null}
-            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-            <Providers>
-              {/*  eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-              {movie.providers?.rent?.map((streamer: any) => {
-                return provider(streamer);
-              })}
-            </Providers>
-            {movie.providers?.flatrate?.length ? <div>Stream</div> : null}
             <Providers>
               {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
               {movie.providers?.flatrate?.map((streamer: any) => {
