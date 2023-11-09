@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 
@@ -5,6 +6,7 @@ import { forwardRef, Ref } from "react";
 import Image from 'next/image';
 import { HandThumbUpIcon } from "@heroicons/react/24/outline";
 import styled from "styled-components";
+import { useRouter } from 'next/navigation'
 
 interface thumbnail {
   movie: any;
@@ -14,6 +16,7 @@ interface thumbnail {
 const Thumbnail = forwardRef(({ movie, bookmarkClicked }: thumbnail, ref: Ref<HTMLDivElement>): JSX.Element => {
   const BASE_URL = "https://image.tmdb.org/t/p/original/"; // process.env.NEXT_PUBLIC_THE_MOVIE_DB_BASE_URL;
 
+  const router = useRouter()
   const poster = movie.poster_path ?? movie.backdrop_path;
   const movieData = `${movie.media_type ?? ''} ${movie.release_date ?? movie.first_air_date}`
 
@@ -23,16 +26,22 @@ const Thumbnail = forwardRef(({ movie, bookmarkClicked }: thumbnail, ref: Ref<HT
     display: flex;
     text-align: center;
   `
-
   const Caption = styled.div`
   align-items: center;
 `
+
+  const handleClickEvent = (event: any) => {
+    console.log('event click');
+    router.push(`/movies/${movie.id}`, { scroll: false })
+    // <Link href={`/blog/${post.slug}`}>{post.title}</Link>
+  }
   return (
     <Movie
       ref={ref}
       className="p-2 group cursor-pointer
       transition duration-200 ease-in 
       transform sm:hover:scale-105 hover:z-50 flex-column items-center"
+      onClick={handleClickEvent}
     >
       <svg
         onClick={() => bookmarkClicked(movie)}
