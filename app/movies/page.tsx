@@ -8,12 +8,14 @@ import { getMovies, requestRemoveFromWatchList } from "@/lib/api/moviesApi";
 import { auth } from "@/lib/api/firestore";
 import { User as FirebaseUser } from "firebase/auth";
 import Header from "@/lib/shared/header";
+import { useRouter } from "next/navigation";
 
 const MoviesApp = () => {
   const [watchList, setWatchList] = useState([]);
   const [user, setUser] = useState<FirebaseUser | null>(null);
-
-  /**
+  const router = useRouter()
+ 
+    /**
    * Loads movies when the page loads
    */
   useEffect(() => {
@@ -28,10 +30,12 @@ const MoviesApp = () => {
         })
         .catch((err) => {
           console.error("Error making async call: " + err);
+          router.push("/")
         });
       } else {
         // No user is signed in.
         console.log('no one home')
+        router.push("/")
       }
     });    
   }, []);

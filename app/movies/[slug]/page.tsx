@@ -13,6 +13,8 @@ import { useEffect, useState, forwardRef } from "react";
 import { useRouter } from "next/navigation";
 import Results from "@/lib/movies/results";
 import { collection, addDoc } from "firebase/firestore";
+import { db, auth } from "@/lib/api/firestore";
+import { User as FirebaseUser } from "firebase/auth";
 
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
@@ -27,6 +29,8 @@ const Alert = forwardRef<HTMLDivElement, AlertProps>(function Alert(
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
+
+//TODO come back here and fix the layout
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: "#3D3D3D",
   ...theme.typography.body2,
@@ -42,8 +46,24 @@ export default function Page({ params }: { params: { slug: string } }) {
   const [recommended, setRecommended] = useState<any>([]);
   const [successOpen, setSuccessOpen] = useState(false);
   const [errorOpen, setErrorOpen] = useState(false);
+  const [user, setUser] = useState<FirebaseUser | null>(null);
   const [alertMessage, setAlertMessage] = useState("");
   
+  useEffect(() => {
+    auth.onAuthStateChanged(function(user) {
+      if (user) {
+        setUser(user);
+      } else {
+        // No user is signed in.
+        setUser(null)
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    getItem();
+  }, []);
+
   const handleClose = (event: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway' || reason === 'escapeKeyDown') {
       setErrorOpen(false);
@@ -166,9 +186,6 @@ export default function Page({ params }: { params: { slug: string } }) {
     );
   };
 
-  useEffect(() => {
-    getItem();
-  }, []);
 
   return (
     <Box>
@@ -335,9 +352,11 @@ export default function Page({ params }: { params: { slug: string } }) {
         </Fab>
       </Box>
 
+      
+      {/* Lower Grid for providers */}
       <Grid sx={{ flexGrow: 1 }} style={{paddingLeft: "20px", paddingRight: "20px"}} container spacing={5}>
         <Grid item xs={4}>
-          <Item bgcolor="#3D3D3D">
+          <Item>
             <div style={{fontWeight: "400", fontSize: "18px", paddingBottom: "15px"}}>Buy</div>
             <Divider />
             {details?.providers?.buy?.length > 0 &&
@@ -348,7 +367,7 @@ export default function Page({ params }: { params: { slug: string } }) {
         </Grid>
 
         <Grid item xs={4} >
-          <Item bgcolor="#3D3D3D">
+          <Item>
           <div style={{fontWeight: "400", fontSize: "18px", paddingBottom: "15px"}}>Rent</div>
             <Divider />
 
@@ -360,7 +379,7 @@ export default function Page({ params }: { params: { slug: string } }) {
         </Grid>
 
         <Grid item xs={4}>
-          <Item bgcolor="#3D3D3D">
+          <Item>
           <div style={{fontWeight: "400", fontSize: "18px", paddingBottom: "15px"}}>Subscribe</div>
             <Divider />
 
@@ -372,7 +391,22 @@ export default function Page({ params }: { params: { slug: string } }) {
         </Grid>
       </Grid>
 
-      <Results movies={recommended} bookmarkClicked={addToWatchList} />
+      {/* Results for Recommendations */}
+      <Box
+        sx={{
+          color: "white",
+          fontWeight: "400",
+          fontSize: "18px",
+          lineHeight: "24.51px",
+          paddingLeft: "28px",
+          // This is a hack for now
+          marginBottom: "-1rem" 
+        }}
+      >
+        You may also like...
+      </Box>
+
+      <Results style={{marginTop: "1rem"}} movies={recommended} bookmarkClicked={addToWatchList} />
       <Snackbar open={successOpen} autoHideDuration={6000} onClose={handleClose}>
           <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
             {alertMessage}
