@@ -12,7 +12,6 @@ const BASE_URL = "https://image.tmdb.org/t/p/original/"; // process.env.NEXT_PUB
 const Providers = styled.div`
   display: flex;
   flex-direction: row;
-  margin-top: 1rem;
 `;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -23,18 +22,18 @@ const provider = (provider: any) => {
         style={{ borderRadius: "10px" }}
         src={`${BASE_URL}${provider.logo_path}`}
         alt="movie poster2"
-        height={40}
-        width={50}
+        height={32}
+        width={32}
       />
     </Box>
   );
 };
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function Results({ movies, bookmarkClicked }: any) {
   return (
     <FlipMove
-      className="px-5 my-10 sm:grid 
-      md:grid-cols-4 lg:grid-cols-6 3xl:grid-cols-8"
+      className="sm:grid md:grid-cols-4 lg:grid-cols-6 3xl:grid-cols-8"
     >
       {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
       {movies.map((movie: any) => {

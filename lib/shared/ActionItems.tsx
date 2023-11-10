@@ -17,7 +17,7 @@ const ActionItems = ({movie, bookmarkClicked}: Actions) => {
     }
     
     return (
-      <div className="absolute inset-x-2 top-2 z-50 bg-gray-400">
+      <div className="absolute inset-x-2 top-2 z-50">
         <ul>
             <li>
                 <Button
@@ -48,7 +48,7 @@ const ActionItems = ({movie, bookmarkClicked}: Actions) => {
                     WATCHED
                 </Button>
             </li>
-            <li>
+            {/* <li>
                 <Fab
                     size="medium"
                     style={{
@@ -64,7 +64,7 @@ const ActionItems = ({movie, bookmarkClicked}: Actions) => {
                     >
                     <ThumbDownIcon onClick={rate} style={{ paddingLeft: "5px" }} />
                 </Fab>
-            </li>
+            </li> */}
         </ul>
       </div>
     );
