@@ -30,7 +30,7 @@ const Alert = forwardRef<HTMLDivElement, AlertProps>(function Alert(
 });
 
 
-//TODO come back here
+//TODO come back here and fix the layout
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: "#3D3D3D",
   ...theme.typography.body2,
