@@ -1,33 +1,31 @@
 "use client"
 import React from 'react';
 import Footer from "@/lib/shared/footer";
-import { useEffect, useState } from "react";
+// import { useEffect, useState } from "react";
 import Link from "next/link";
-import { auth, signIn } from "@/lib/api/firestore";
-import { User as FirebaseUser } from "firebase/auth";
-import { useRouter } from 'next/navigation'
+import { signIn } from "@/lib/api/firestore";
+// import { User as FirebaseUser } from "firebase/auth";
+// import { useRouter } from 'next/navigation'
 import Header from "@/lib/shared/header";
 
 const Login = () => {
-    const [user, ] = useState<FirebaseUser | null>(null)
-    const router = useRouter()
+    // const [user, ] = useState<FirebaseUser | null>(null)
+    // const router = useRouter()
    
     
   
-useEffect(() => {
-    auth.onAuthStateChanged(function(user) {
-      if (user) {
-        // User is signed in.
-        router.push("/")
-      } else {
-        // No user is signed in.
-        console.log('no one home')
-      }
-    });
-  }, [router])
-    useEffect(() => {
-        console.log(user, 'user is set')
-    }, [user])
+// useEffect(() => {
+//     auth.onAuthStateChanged(function(user) {
+//       if (user) {
+//         // User is signed in.
+//         router.push("/")
+//       } else {
+//         // No user is signed in.
+//         console.log('no one home')
+//       }
+//     });
+//   }, [router])
+
 
  
   return (

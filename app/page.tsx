@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, {  useState } from "react";
 import { collection, addDoc } from "firebase/firestore";
-import { db, auth } from "@/lib/api/firestore";
+import { db } from "@/lib/api/firestore";
+import { useRouter } from "next/navigation";
 
 import Box from "@mui/material/Box";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
-import { User as FirebaseUser } from "firebase/auth";
 
 import TabPanel from "@/lib/shared/tab-panel";
 import Snackbar from '@mui/material/Snackbar';
@@ -18,6 +18,7 @@ import Footer from "@/lib/shared/footer";
 import { Paper } from "@mui/material";
 import Header from "@/lib/shared/header";
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
+import { useAuthContext } from "@/lib/context/auth-provider";
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
   props,
@@ -27,34 +28,22 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
 });
 
 const movie_api_key = process.env.NEXT_PUBLIC_THE_MOVIE_DB_API_KEY;
-// const omdb_api_key = process.env.NEXT_PUBLIC_OMDB_API_KEY;
 
-
-const MovieSearch = () => {
+const MovieSearch = () => {  
+  const { currentUser  } = useAuthContext()
   const [everything, setEverything] = useState<any>([]);
   const [value, setValue] = useState(0);
-  const [user, setUser] = useState<FirebaseUser | null>(null);
   const [successOpen, setSuccessOpen] = useState(false);
   const [errorOpen, setErrorOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
   const [movies, setMovies] = useState<any>([]);
   const [tvShows, setTvShows] = useState<any>([]);
   const [tabOneTitle, setTabOneTitle] = useState<string>("Trending");
+  const router = useRouter()
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
-
-  useEffect(() => {
-    auth.onAuthStateChanged(function(user) {
-      if (user) {
-        setUser(user);
-      } else {
-        // No user is signed in.
-        setUser(null)
-      }
-    });
-  }, []);
   
   /**
    * //TODO: Can we pull this out?
@@ -124,10 +113,15 @@ const MovieSearch = () => {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const addToWatchList = async (movie: any) => {
+    // Send them to login!
+    if (currentUser == null) {
+      router.push("/login");
+    }
+
     // Delete the id from the movies database so we can use the documents ID that's set by firebase
     delete movie.id;
 
-    const path = "users/" + user?.uid + "/movies";
+    const path = "users/" + currentUser?.uid + "/movies";
     // TODO do we need the docRef response
     //const docRef =
     await addDoc(collection(db, path), {

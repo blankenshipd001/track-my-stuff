@@ -8,7 +8,7 @@ import Image from "next/image";
 import styled from "styled-components";
 import { useRouter } from "next/navigation";
 
-import ActionItems from "../shared/ActionItems";
+import ActionItems from "../shared/action-items";
 import { Box } from "@mui/material";
 
 interface thumbnail {
