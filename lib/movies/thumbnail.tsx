@@ -5,11 +5,12 @@
 import { forwardRef, Ref, useState } from "react";
 
 import Image from "next/image";
-import styled from "styled-components";
+// import styled from "styled-components";
 import { useRouter } from "next/navigation";
+import { styled } from '@mui/material';
 
 import ActionItems from "../shared/action-items";
-import { Box } from "@mui/material";
+import { Box, Paper } from "@mui/material";
 
 interface thumbnail {
   movie: any;
@@ -17,7 +18,7 @@ interface thumbnail {
 }
 
 const Thumbnail = forwardRef(({ movie, bookmarkClicked }: thumbnail, ref: Ref<HTMLDivElement>): JSX.Element => {
-  const BASE_URL = "https://image.tmdb.org/t/p/original/"; // process.env.NEXT_PUBLIC_THE_MOVIE_DB_BASE_URL;
+  const BASE_URL = process.env.NEXT_PUBLIC_THE_MOVIE_DB_BASE_URL;
 
   const router = useRouter();
   const poster = movie.poster_path ?? movie.backdrop_path;
@@ -25,20 +26,20 @@ const Thumbnail = forwardRef(({ movie, bookmarkClicked }: thumbnail, ref: Ref<HT
   const [movieYear] = movieData.split("-");
   const [isDropdownVisible, setDropdownVisible] = useState(false);
 
-  const Movie = styled.div`
-    align-items: center;
-    flex-direction: column;
-    display: flex;
-    text-align: left;
-    color: white;
-    position: relative;
-    z-index: 10;
-    margin-top: 10px;
-  `;
-  const Caption = styled.div`
-    align-items: flex-start;
-    width: 100%;
-  `;
+  const Movie = styled(Paper)(({ theme }) => ({
+    alignItems: "center",
+    flexDirection: "column",
+    display: "flex",
+    textAlign: "left",
+    color: "white",
+    position: "relative",
+    marginTop: "10px",
+  }));
+  
+  const Caption = styled(Paper)(({ theme }) => ({
+    alignItems: "flex-start",
+    width: "100%"
+  }));
 
   const handleClickEvent = (event: any) => {
     console.log("event click");
@@ -56,15 +57,10 @@ const Thumbnail = forwardRef(({ movie, bookmarkClicked }: thumbnail, ref: Ref<HT
   return (
     <Movie ref={ref} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
       {isDropdownVisible && <ActionItems movie={movie} bookmarkClicked={bookmarkClicked} />}
-      {/* <div
-        onClick={() => bookmarkClicked(movie)}
-        className="absolute h-8 w-8 opacity-30 hover:opacity-70 z-10"
-      >
-        Hello
-      </div> */}
       <Image
+        priority={true}
         src={`${BASE_URL}${poster}`}
-        alt={movie.name}
+        alt={movie.title}
         width="200"
         height="300"
         onClick={handleClickEvent}

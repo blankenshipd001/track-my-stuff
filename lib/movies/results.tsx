@@ -1,59 +1,38 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 "use client";
 
-import Box from "@mui/material/Box";
-
-import Image from "next/image";
+import { Paper, styled } from "@mui/material";
 import Thumbnail from "./thumbnail";
-import FlipMove from "react-flip-move";
-import styled from "styled-components";
-const BASE_URL = "https://image.tmdb.org/t/p/original/"; // process.env.NEXT_PUBLIC_THE_MOVIE_DB_BASE_URL;
+import Carousel from "../components/carousel/carousel";
+import ProviderComponent from "../components/misc/provider-component";
+import { Provider } from "@/lib/@interfaces/provider.interface";
+import { Movie } from "@/lib/@interfaces/movie.interface";
 
-const Providers = styled.div`
+const BASE_URL = process.env.NEXT_PUBLIC_THE_MOVIE_DB_BASE_URL;
+
+const Providers = styled(Paper)`
   display: flex;
   flex-direction: row;
 `;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const provider = (provider: any) => {
+function Results({ movies, bookmarkClicked }: { movies: Movie[]; bookmarkClicked(movie: any): any; }) {
   return (
-    <Box key={provider.provider_id} sx={{ paddingRight: "10px" }}>
-      <Image
-        style={{ borderRadius: "10px" }}
-        src={`${BASE_URL}${provider.logo_path}`}
-        alt="movie poster2"
-        height={32}
-        width={32}
-      />
-    </Box>
-  );
-};
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function Results({ movies, bookmarkClicked }: any) {
-  return (
-    <FlipMove
-      className="sm:grid md:grid-cols-4 lg:grid-cols-6 3xl:grid-cols-8"
-    >
-      {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-      {movies.map((movie: any) => {
+    <Carousel>
+      {movies.map((movie: Movie) => {
+        console.log("movie: ", movie);
         return (
           <div key={movie.movieId}>
-            <Thumbnail
-              key={movie.movieId}
-              movie={movie}
-              bookmarkClicked={bookmarkClicked}
-            />
+            <Thumbnail key={movie.movieId} movie={movie} bookmarkClicked={bookmarkClicked} />
             <Providers>
-              {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-              {movie.providers?.flatrate?.map((streamer: any) => {
-                return provider(streamer);
+              {movie.providers?.flatrate?.map((provider: Provider) => {
+                return <ProviderComponent key={provider.provider_id} provider={provider} imageSrc={`${BASE_URL}${provider.logo_path}`} />;
               })}
             </Providers>
           </div>
         );
       })}
-    </FlipMove>
+    </Carousel>
   );
 }
 

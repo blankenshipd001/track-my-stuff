@@ -156,7 +156,7 @@ const MovieSearch = () => {
       })
       .then(async (popularRes) => {
         const trendingResults: any[] = await Promise.all(
-          popularRes.results.slice(0,8).map((item: { id: unknown; }) => {
+          popularRes.results.map((item: { id: unknown; }) => {
             return fetch(
               `https://api.themoviedb.org/3/movie/${item.id}/watch/providers?api_key=${movie_api_key}&external_source=imdb_id`
             )

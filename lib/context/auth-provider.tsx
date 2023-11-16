@@ -4,7 +4,8 @@ import { auth } from "../api/firestore";
 
 interface Props { children: ReactNode }
 
-export const AuthContext = React.createContext(null);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const AuthContext = React.createContext<any>(null);
 
 export const useAuthContext = () => React.useContext(AuthContext);
 
@@ -24,7 +25,7 @@ export const AuthProvider: FC<Props> = ({ children }: Props) => {
     }, [currentUser]);
 
     useEffect(() => {
-        if (currentUser) {
+        if (currentUser !== null) {
         console.log(currentUser.email, 'user is set')
         } else {
             console.log('no user')

@@ -18,7 +18,7 @@ import Snackbar from "@mui/material/Snackbar";
 import MuiAlert, { AlertProps } from "@mui/material/Alert";
 
 const movie_api_key = process.env.NEXT_PUBLIC_THE_MOVIE_DB_API_KEY;
-const BASE_URL = "https://image.tmdb.org/t/p/original/"; // process.env.NEXT_PUBLIC_THE_MOVIE_DB_BASE_URL;
+const BASE_URL = process.env.NEXT_PUBLIC_THE_MOVIE_DB_BASE_URL;
 const Alert = forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
@@ -64,7 +64,7 @@ export default function Page({ params }: { params: { slug: string } }) {
   const provider = (provider: any) => {
     return (
       <Box display="flex" key={provider.provider_id} sx={{ paddingRight: "10px", paddingTop: "10px" }}>
-        <Image style={{ borderRadius: "10px" }} src={`${BASE_URL}${provider.logo_path}`} alt="movie poster2" height={40} width={50} />
+        <Image style={{ borderRadius: "10px" }} src={`${BASE_URL}${provider.logo_path}`} alt={provider.provider_name} height={40} width={50} />
         <span style={{ paddingLeft: "10px", paddingTop: "10px" }}>{provider.provider_name}</span>
       </Box>
     );
@@ -412,7 +412,7 @@ export default function Page({ params }: { params: { slug: string } }) {
       >
         You may also like...
       </Box>
-      <Results style={{ marginTop: "1rem" }} movies={recommended} bookmarkClicked={addToWatchList} />
+      <Results movies={recommended} bookmarkClicked={addToWatchList} />
       <Snackbar open={successOpen} autoHideDuration={6000} onClose={handleClose}>
         <Alert onClose={handleClose} severity="success" sx={{ width: "100%" }}>
           {alertMessage}

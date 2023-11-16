@@ -1,16 +1,17 @@
 
 import { OutlinedInput, styled } from '@mui/material';
 import { useMemo } from 'react';
+
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const _ = require('lodash');
 
-const SearchInput = styled(OutlinedInput)`
-width: 100%;
-background: white;
-    color: black;
-    border: 1px solid #1A1A1A;
-    border-radius: 25px;
-`
+const SearchInput = styled(OutlinedInput)(() => ({
+  width: "100%",
+  color: "black",
+  border: "1px solid #1A1A1A",
+  borderRadius: "25px"
+}));
+
 interface searchBox {
     searchForMovie: (value: string) => void
 }
