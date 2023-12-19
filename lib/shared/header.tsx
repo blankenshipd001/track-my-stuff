@@ -1,6 +1,7 @@
 "use client";
 
 import { User as FirebaseUser } from "firebase/auth";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { auth } from "../api/firestore";
@@ -9,6 +10,8 @@ import Logo from "../assets/logo.svg"
 // import { Libre_Barcode_EAN13_Text } from "next/font/google";
 
 const Header = () => {
+  const router = useRouter();
+
   const [navbarOpen, setNavbarOpen] = useState(false);
   const [user, setUser] = useState<FirebaseUser | null>(null)
 
@@ -35,12 +38,21 @@ const Header = () => {
     });
   }, [user, setUser])
 
+  /**
+   * Send the user back to the homepage
+   */
+  const handleClickEvent = () => {
+    router.push(`/`, { scroll: false });
+  };
+
   return (
     <header className="items-center w-screen">
       <nav>
         <ul className="flex px-5">
           <li className="flex-auto pt-2">
             <Image
+              onClick={handleClickEvent}
+              style={{cursor: "pointer"}}
               src={Logo}
               alt="Logo"
               className="h-12 w-32 mr-2 mt-1"

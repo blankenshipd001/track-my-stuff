@@ -10,20 +10,24 @@ interface Actions {
 }
 
 const ActionItems = ({ movie, bookmarkClicked }: Actions) => {
-  // const rate = () => {
-  // }
 
   return (
-    <div className="absolute inset-x-2 top-2 z-50">
+    <div 
+    className="absolute inset-x-0 top-0 z-0" 
+    style={{background: "#1A1A1A", opacity: "80%", height: "152px"}}
+    >
       <ul>
-        <li>
+        <li style={{padding: "15px"}}>
           <Button
             variant="outlined"
             style={{
               color: "white",
+              width: "188px",
               fontWeight: "bold",
               border: "1px solid white",
-              borderRadius: "20px",
+              borderRadius: "100px",
+              padding: "13px 32px 13px 32px",
+              gap: "8px"
             }}
             startIcon={<PlaylistAddIcon />}
             onClick={() => bookmarkClicked(movie)}
@@ -36,9 +40,12 @@ const ActionItems = ({ movie, bookmarkClicked }: Actions) => {
             variant="outlined"
             style={{
               color: "white",
+              width: "188px",
               fontWeight: "bold",
               border: "1px solid white",
-              borderRadius: "20px",
+              borderRadius: "100px",
+              padding: "13px 32px 13px 32px",
+              gap: "8px"
             }}
             startIcon={<CheckIcon />}
           >

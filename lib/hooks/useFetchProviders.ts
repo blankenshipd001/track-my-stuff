@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 
 const useFetchProviders = (url: string) => {
   const [status, setStatus] = useState<string>("idle");
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [data, setData] = useState<any>([]);
 
   useEffect(() => {

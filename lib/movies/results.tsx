@@ -1,7 +1,6 @@
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 "use client";
 
-import { Paper, styled } from "@mui/material";
+import { Box, styled } from "@mui/material";
 import Thumbnail from "./thumbnail";
 import Carousel from "../components/carousel/carousel";
 import ProviderComponent from "../components/misc/provider-component";
@@ -10,25 +9,35 @@ import { Movie } from "@/lib/@interfaces/movie.interface";
 
 const BASE_URL = process.env.NEXT_PUBLIC_THE_MOVIE_DB_BASE_URL;
 
-const Providers = styled(Paper)`
+const  Providers = styled(Box)`
   display: flex;
   flex-direction: row;
 `;
+
+// const Caption = styled(Paper)(({ theme }) => ({
+// alignItems: "flex-start",
+// width: "100%",
+// }));
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function Results({ movies, bookmarkClicked }: { movies: Movie[]; bookmarkClicked(movie: any): any; }) {
   return (
     <Carousel>
       {movies.map((movie: Movie) => {
-        console.log("movie: ", movie);
+        const movieData = `${movie.media_type ?? ""} ${movie.release_date ?? movie.first_air_date}`;
+        const [movieYear] = movieData.split("-");
         return (
-          <div key={movie.movieId}>
-            <Thumbnail key={movie.movieId} movie={movie} bookmarkClicked={bookmarkClicked} />
+          <div key={movie.movieId} >
+            <Thumbnail key={movie.id} movie={movie} bookmarkClicked={bookmarkClicked} />
+            {/* <Box sx={{ alignItems: "flex-start", width: "100%" }}>
+              <Box sx={{ fontWeight: "700", fontSize: "16px", fontStyle: "normal", lineHeight: "21.79px", color: "#FFF" }}>{movie.title}</Box>
+              <Box sx={{ fontWeight: "400", fontSize: "16px", fontStyle: "normal", lineHeight: "21.79px", color: "#AAA" }}>{movieYear}</Box>
+            </Box>
             <Providers>
               {movie.providers?.flatrate?.map((provider: Provider) => {
                 return <ProviderComponent key={provider.provider_id} provider={provider} imageSrc={`${BASE_URL}${provider.logo_path}`} />;
-              })}
-            </Providers>
+              })} */}
+            {/* </Providers> */}
           </div>
         );
       })}

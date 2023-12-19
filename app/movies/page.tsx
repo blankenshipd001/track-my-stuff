@@ -20,7 +20,7 @@ const MoviesApp = () => {
    */
   useEffect(() => {
 
-    auth.onAuthStateChanged(function(user) {
+    // auth.onAuthStateChanged(function(user) {
       if (user) {
         // User is signed in.
         setUser(user);
@@ -37,8 +37,8 @@ const MoviesApp = () => {
         console.log('no one home')
         router.push("/")
       }
-    });    
-  }, []);
+    // });    
+  }, [user]);
 
   /**
    * Remove this movie from the watch list
@@ -61,7 +61,7 @@ const MoviesApp = () => {
       <Header />
       <main className="lg:flex min-h-screen flex-col items-center justify-between p-6 font-mono text-sm ">
         <div className="flex-grow">
-          <Results movies={watchList} bookmarkClicked={removeFromWatchList} />
+          {watchList.length > 0  ?? <Results movies={watchList} bookmarkClicked={removeFromWatchList} />}
         </div>
       </main>
       <Footer />
