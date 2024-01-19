@@ -16,6 +16,7 @@ const Header = () => {
 
   const [navbarOpen, setNavbarOpen] = useState(false);
   const [user, setUser] = useState<FirebaseUser | null>(null);
+  const [loading, setLoading] = useState(true);
 
   const setNavBar = () => {
     setNavbarOpen(!navbarOpen);
@@ -31,15 +32,15 @@ const Header = () => {
   };
 
   useEffect(() => {
-    auth.onAuthStateChanged(function (user) {
+    const unsubscribe = auth.onAuthStateChanged(function (user) {
+      setLoading(false); // Set loading to false once the authentication state is checked
       if (user) {
-        // User is signed in.
         setUser(user);
       } else {
-        // No user is signed in.
-        console.log("no one home");
+        setUser(null);
       }
     });
+    return () => unsubscribe();
   }, [user, setUser]);
 
   /**
@@ -73,28 +74,20 @@ const Header = () => {
             ) : null}
           </li>
           <li>
-            {!user ? (
+            {loading ? (
+              <div>...</div>
+            ) : user ? (
+              <button onClick={logOut} className="pt-3 px-2 text-white font-semibold hover:text-reelPurple-500 transition duration-300">
+                Log Out
+              </button>
+            ) : (
               <Button
                 variant="contained"
-                style={{
-                  color: "white",
-                  background: "#782FEF",
-                  width: "105px",
-                  height: "48px",
-                  top: "6px",
-                  borderRadius: "100px",
-                  gap: "8px",
-                  padding: "13px 32px 13px 32px",
-                }}
+                style={loginButton}
                 onClick={() => signIn()}
               >
                 Login
               </Button>
-            ) : (
-              <button onClick={logOut} className="pt-3 px-2 text-white font-semibold hover:text-reelPurple-500 transition duration-300">
-                {" "}
-                Log Out
-              </button>
             )}
           </li>
 
