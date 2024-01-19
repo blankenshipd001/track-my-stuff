@@ -11,10 +11,10 @@ const roboto = Roboto({
   display: "swap",
 });
 
-export const metadata = {
-  title: 'ReelTime',
-  description: 'ReelTime brings all your TV and movie watch lists together in one place.',
-}
+// export const metadata = {
+//   title: 'ReelTime',
+//   description: 'ReelTime brings all your TV and movie watch lists together in one place.',
+// }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
