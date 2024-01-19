@@ -118,7 +118,7 @@ const smallResponsive = {
 
 /**
  * @param {ReactNode} the contents of the carousel
- * @param {size} String for the size of the grid
+ * @param {size} [String] for the size of the grid
  * @returns {ReactNode} items inside a carousel component
  *
  * example:
@@ -128,7 +128,7 @@ const smallResponsive = {
  *   })}
  * </Carousel>
  */
-const Carousel = ({size,  children }: { size: string,  children: React.ReactNode }): ReactNode => {
+const Carousel = ({size,  children }: { size?: string,  children: React.ReactNode }): ReactNode => {
   if (size !== null && size === "large") {
     return <MultiCarousel responsive={largeResponsive}>{children}</MultiCarousel>;
   } else {

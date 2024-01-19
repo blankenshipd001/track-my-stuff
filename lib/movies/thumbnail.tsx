@@ -1,20 +1,19 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
+// /* eslint-disable @typescript-eslint/no-unused-vars */
+// /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { forwardRef, Ref, useState } from "react";
+import { forwardRef, Ref } from "react";
 
-import Image from "next/image";
+// import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Card, CardMedia, styled } from "@mui/material";
-import ProviderComponent from "../components/misc/provider-component";
-import { Provider } from "@/lib/@interfaces/provider.interface";
 import ActionItems from "../shared/action-items";
-import { Box, Paper } from "@mui/material";
+import { Box } from "@mui/material";
+import { Movie } from "../@interfaces/movie.interface";
 
 interface thumbnail {
-  movie: any;
-  bookmarkClicked(movie: any): any;
+  movie: Movie;
+  bookmarkClicked(movie: Movie): undefined;
 }
 
 const Thumbnail = forwardRef(({ movie, bookmarkClicked }: thumbnail, ref: Ref<HTMLDivElement>): JSX.Element => {
@@ -22,7 +21,7 @@ const Thumbnail = forwardRef(({ movie, bookmarkClicked }: thumbnail, ref: Ref<HT
   const router = useRouter();
   const poster = movie.poster_path ?? movie.backdrop_path;
 
-  const Movie = styled(Box)(({ theme }) => ({
+  const Movie = styled(Box)(() => ({
     alignItems: "center",
     flexDirection: "column",
     display: "flex",
@@ -47,8 +46,7 @@ const Thumbnail = forwardRef(({ movie, bookmarkClicked }: thumbnail, ref: Ref<HT
     }  
   }`;
 
-  const handleClickEvent = (event: any) => {
-    console.log("event click");
+  const handleClickEvent = () => {
     router.push(`/movies/${movie.movieId}`, { scroll: false });
   };
 

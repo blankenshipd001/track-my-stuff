@@ -3,29 +3,24 @@
 import { Box, styled } from "@mui/material";
 import Thumbnail from "./thumbnail";
 import Carousel from "../components/carousel/carousel";
-import ProviderComponent from "../components/misc/provider-component";
-import { Provider } from "@/lib/@interfaces/provider.interface";
+// import ProviderComponent from "../components/misc/provider-component";
+// import { Provider } from "@/lib/@interfaces/provider.interface";
 import { Movie } from "@/lib/@interfaces/movie.interface";
 
-const BASE_URL = process.env.NEXT_PUBLIC_THE_MOVIE_DB_BASE_URL;
+// const BASE_URL = process.env.NEXT_PUBLIC_THE_MOVIE_DB_BASE_URL;
 
-const  Providers = styled(Box)`
-  display: flex;
-  flex-direction: row;
-`;
-
-// const Caption = styled(Paper)(({ theme }) => ({
-// alignItems: "flex-start",
-// width: "100%",
-// }));
+// const  Providers = styled(Box)`
+//   display: flex;
+//   flex-direction: row;
+// `;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function Results({ movies, bookmarkClicked }: { movies: Movie[]; bookmarkClicked(movie: any): any; }) {
+function Results({ movies, bookmarkClicked }: { movies: Movie[]; bookmarkClicked(movie: Movie): any; }) {
   return (
     <Carousel>
       {movies.map((movie: Movie) => {
-        const movieData = `${movie.media_type ?? ""} ${movie.release_date ?? movie.first_air_date}`;
-        const [movieYear] = movieData.split("-");
+        // const movieData = `${movie.media_type ?? ""} ${movie.release_date ?? movie.first_air_date}`;
+        // const [movieYear] = movieData.split("-");
         return (
           <div key={movie.movieId} >
             <Thumbnail key={movie.id} movie={movie} bookmarkClicked={bookmarkClicked} />
