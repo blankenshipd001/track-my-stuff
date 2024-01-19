@@ -18,6 +18,14 @@ const Header = () => {
   const [user, setUser] = useState<FirebaseUser | null>(null);
   const [loading, setLoading] = useState(true);
 
+  const loginButton = {
+    color: "white",
+    background: "#782FEF",
+    top: "16px",
+    borderRadius: "100px",
+    gap: "8px",
+  };
+
   const setNavBar = () => {
     setNavbarOpen(!navbarOpen);
   };
