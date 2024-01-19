@@ -6,7 +6,7 @@ import { FC, ReactNode } from "react";
 
 interface Props { children: ReactNode }
 
-export const Providers: FC<Props> = ({ children }: Props) => {
+const Providers: FC<Props> = ({ children }: Props) => {
   return (
     <AuthProvider>
       <ThemeProvider theme={darkTheme}>
@@ -15,3 +15,5 @@ export const Providers: FC<Props> = ({ children }: Props) => {
     </AuthProvider>
   );
 };
+
+export default Providers;
