@@ -1,33 +1,20 @@
 
 import { OutlinedInput, styled } from '@mui/material';
-import { useMemo } from 'react';
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const _ = require('lodash');
+import { ChangeEvent } from 'react';
 
-const SearchInput = styled(OutlinedInput)`
-width: 100%;
-background: white;
-    color: black;
-    border: 1px solid #1A1A1A;
-    border-radius: 25px;
-`
+const SearchInput = styled(OutlinedInput)(() => ({
+  width: "100%",
+  color: "black",
+  backgroundColor: "white",
+  border: "1px solid #1A1A1A",
+  borderRadius: "25px"
+}));
+
 interface searchBox {
-    searchForMovie: (value: string) => void
+  searchForMovie: (value: string) => void
 }
 
 const SearchBox = ({ searchForMovie }: searchBox ): JSX.Element => {
-  const throttledSearch = useMemo(
-    () =>
-      _.debounce(
-        (search: string) => {
-          searchForMovie(search)
-        },
-        300,
-        { leading: false, trailing: true }
-      ),
-    []
-  );
-  
     return (
       <div className="p-12">
         <div className="pt-2 relative mx-auto text-gray-600">
@@ -35,9 +22,8 @@ const SearchBox = ({ searchForMovie }: searchBox ): JSX.Element => {
             type="search"
             name="search"
             placeholder="Search title..."
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            onChange={(event: any) => {
-              throttledSearch(event.target.value)
+              onChange={(event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+                searchForMovie(event.target.value)
             }}
           />
         </div>

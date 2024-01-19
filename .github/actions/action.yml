@@ -3,4 +3,4 @@ author: 'Code Monkey'
 description: 'Build file for the application to set node version'
 
 runs: 
-  using: 'node16'
+  using: 'node18'

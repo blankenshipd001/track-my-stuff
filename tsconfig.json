@@ -26,6 +26,16 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "lib/shared/GlobalState.jsx", "lib/shared/GlobalContextHOC.jsx", "lib/shared/AppReducer.ts"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "lib/shared/GlobalState.jsx",
+    "lib/shared/GlobalContextHOC.jsx",
+    "lib/shared/AppReducer.ts",
+    "app/context/auth-provider.tsx",
+    "app/context/providers.tsx",
+  ],
   "exclude": ["node_modules"]
 }

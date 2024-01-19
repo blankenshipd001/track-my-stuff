@@ -1,0 +1,17 @@
+{
+    "version": "0.2",
+    "ignorePaths": [],
+    "dictionaryDefinitions": [],
+    "dictionaries": [],
+    "words": [
+        "flagsmith",
+        "flatrate",
+        "fontsource",
+        "roboto",
+        "WATCHLIST",
+        "watchlists",
+        "clickaway"
+    ],
+    "ignoreWords": [],
+    "import": []
+}

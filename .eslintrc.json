@@ -18,6 +18,7 @@
         "allowString" : false,
         "allowNumber" : false
       }
-    ]
+    ],
+    "react-hooks/exhaustive-deps": "off"
   }
 }

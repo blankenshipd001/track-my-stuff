@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, {  useState } from "react";
 import { collection, addDoc } from "firebase/firestore";
-import { db, auth } from "@/lib/api/firestore";
+import { db } from "@/lib/api/firestore";
+import { useRouter } from "next/navigation";
 
 import Box from "@mui/material/Box";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
-import { User as FirebaseUser } from "firebase/auth";
 
 import TabPanel from "@/lib/shared/tab-panel";
 import Snackbar from '@mui/material/Snackbar';
@@ -18,7 +18,8 @@ import Footer from "@/lib/shared/footer";
 import { Paper } from "@mui/material";
 import Header from "@/lib/shared/header";
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
-
+import { useAuthContext } from "@/app/context/auth-provider";
+import { useLoadPopular } from "@/lib/hooks/useLoadPopular";
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
   props,
   ref,
@@ -27,34 +28,24 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
 });
 
 const movie_api_key = process.env.NEXT_PUBLIC_THE_MOVIE_DB_API_KEY;
-// const omdb_api_key = process.env.NEXT_PUBLIC_OMDB_API_KEY;
 
+const MovieSearch = () => {  
+  const trendingResults = useLoadPopular();
 
-const MovieSearch = () => {
+  const { currentUser  } = useAuthContext()
   const [everything, setEverything] = useState<any>([]);
   const [value, setValue] = useState(0);
-  const [user, setUser] = useState<FirebaseUser | null>(null);
   const [successOpen, setSuccessOpen] = useState(false);
   const [errorOpen, setErrorOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
   const [movies, setMovies] = useState<any>([]);
   const [tvShows, setTvShows] = useState<any>([]);
   const [tabOneTitle, setTabOneTitle] = useState<string>("Trending");
+  const router = useRouter()
 
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
-
-  useEffect(() => {
-    auth.onAuthStateChanged(function(user) {
-      if (user) {
-        setUser(user);
-      } else {
-        // No user is signed in.
-        setUser(null)
-      }
-    });
-  }, []);
   
   /**
    * //TODO: Can we pull this out?
@@ -124,10 +115,15 @@ const MovieSearch = () => {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const addToWatchList = async (movie: any) => {
+    // Send them to login!
+    if (currentUser == null) {
+      router.push("/login");
+    }
+
     // Delete the id from the movies database so we can use the documents ID that's set by firebase
     delete movie.id;
 
-    const path = "users/" + user?.uid + "/movies";
+    const path = "users/" + currentUser?.uid + "/movies";
     // TODO do we need the docRef response
     //const docRef =
     await addDoc(collection(db, path), {
@@ -152,40 +148,9 @@ const MovieSearch = () => {
     setSuccessOpen(false);
   };
 
-  const loadPopular = async () => {
-    const popular_url = `https://api.themoviedb.org/3/movie/popular?api_key=${movie_api_key}&include_video=false`;
-
-    return fetch(popular_url)
-      .then(async (res) => {
-        const json = await res.json();
-        return json;
-      })
-      .then(async (popularRes) => {
-        const trendingResults: any[] = await Promise.all(
-          popularRes.results.slice(0,8).map((item: { id: unknown; }) => {
-            return fetch(
-              `https://api.themoviedb.org/3/movie/${item.id}/watch/providers?api_key=${movie_api_key}&external_source=imdb_id`
-            )
-            .then((res) => res.json())
-            .then((providers) => {
-              const newMovie = {
-                ...item,
-                movieId: item.id,
-                providers: providers.results.US ?? [],
-              };
-    
-              return newMovie;
-            });
-          }
-        ));
-        
-        return setEverything(trendingResults);
-      });
-  };
-
   React.useEffect(() => {
-    loadPopular();
-  }, []);
+    setEverything(trendingResults);
+  }, [trendingResults]);
 
   return (
       <Box
@@ -223,14 +188,17 @@ const MovieSearch = () => {
         <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
           <Tabs
             value={value}
-            onChange={handleChange}
+            onChange={handleTabChange}
             aria-label="basic tabs example"
           >
             <Tab label={tabOneTitle} id="tab-0" aria-controls="tabpanel-0" />
             <Tab label="Movies" id="tab-1" aria-controls="tabpanel-1" />
             <Tab label="TV" id="tab-2" aria-controls="tabpanel-2" />
+            {currentUser !== null ? <Tab label="Watchlist" id="tab-3" aria-controls="tabpanel-4" /> : null}
           </Tabs>
         </Box>
+
+        {/* Always show */}
         <TabPanel value={value} index={0}>
           <Results movies={everything} bookmarkClicked={addToWatchList} />
         </TabPanel>
@@ -240,6 +208,11 @@ const MovieSearch = () => {
         <TabPanel value={value} index={2}>
           <Results movies={tvShows} bookmarkClicked={addToWatchList} />
         </TabPanel>
+        
+        {/* Only show if logged in */}
+        <TabPanel value={value} index={3}>
+            <Results movies={movies} bookmarkClicked={addToWatchList} />
+          </TabPanel>
         <Paper
           sx={{
             position: "fixed",

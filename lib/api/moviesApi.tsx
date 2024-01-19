@@ -24,3 +24,4 @@ export const getMovies = async (uid: string) => {
     return await deleteDoc(doc(db, path, `${movie.id}`))
   };
   
+  
