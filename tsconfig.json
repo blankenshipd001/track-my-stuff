@@ -34,8 +34,8 @@
     "lib/shared/GlobalState.jsx",
     "lib/shared/GlobalContextHOC.jsx",
     "lib/shared/AppReducer.ts",
-    "lib/context/auth-provider.tsx",
-    "lib/context/providers.tsx",
+    "app/context/auth-provider.tsx",
+    "app/context/providers.tsx",
   ],
   "exclude": ["node_modules"]
 }

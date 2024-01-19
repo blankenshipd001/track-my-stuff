@@ -1,6 +1,6 @@
 import { Roboto } from "next/font/google";
 import { CssBaseline } from "@mui/material";
-import { Providers } from "@/lib/context/providers";
+import { Providers } from "@/app/context/providers";
 
 import "./globals.css";
 

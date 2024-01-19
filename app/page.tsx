@@ -18,7 +18,7 @@ import Footer from "@/lib/shared/footer";
 import { Paper } from "@mui/material";
 import Header from "@/lib/shared/header";
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
-import { useAuthContext } from "@/lib/context/auth-provider";
+import { useAuthContext } from "@/app/context/auth-provider";
 import { useLoadPopular } from "@/lib/hooks/useLoadPopular";
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
   props,

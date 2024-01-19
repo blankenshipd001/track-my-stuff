@@ -1,6 +1,6 @@
 import React, { FC, ReactNode, useEffect, useState } from "react";
 import { User, onAuthStateChanged } from "firebase/auth";
-import { auth } from "../api/firestore";
+import { auth } from "../../lib/api/firestore";
 
 interface Props { children: ReactNode }
 
