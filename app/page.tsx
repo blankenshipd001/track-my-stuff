@@ -31,6 +31,7 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
 // const movie_api_key = process.env.NEXT_PUBLIC_THE_MOVIE_DB_API_KEY;
 
 const MovieSearch = () => {  
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const {popularMedia, fetchPopular} = useLoadPopular();
   const {moviesContent, tvContent, allContent, fetchContent} = useFindByTitle();
 
