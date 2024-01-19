@@ -20,6 +20,7 @@ import Header from "@/lib/shared/header";
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
 import { useAuthContext } from "@/app/context/auth-provider";
 import { useLoadPopular } from "@/lib/hooks/useLoadPopular";
+import { useFindByTitle } from "@/lib/hooks/useFindByTitle";
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
   props,
   ref,
@@ -27,10 +28,11 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-const movie_api_key = process.env.NEXT_PUBLIC_THE_MOVIE_DB_API_KEY;
+// const movie_api_key = process.env.NEXT_PUBLIC_THE_MOVIE_DB_API_KEY;
 
 const MovieSearch = () => {  
-  const trendingResults = useLoadPopular();
+  const {popularMedia, fetchPopular} = useLoadPopular();
+  const {moviesContent, tvContent, allContent, fetchContent} = useFindByTitle();
 
   const { currentUser  } = useAuthContext()
   const [everything, setEverything] = useState<any>([]);
@@ -47,73 +49,6 @@ const MovieSearch = () => {
     setValue(newValue);
   };
   
-  /**
-   * //TODO: Can we pull this out?
-   * Get all movies from the omdb api that match the search string provided
-   */
-  const findMovieByTitle = async (searchValue: string) => {
-    const getMovieUrl = `https://api.themoviedb.org/3/search/movie?api_key=${movie_api_key}&query=${searchValue}&include_adult=false&language=en-US&append_to_response=providers`;
-    const getTvUrl = `https://api.themoviedb.org/3/search/tv?api_key=${movie_api_key}&query=${searchValue}&include_adult=false&language=en-US&append_to_response=providers`;
-
-    Promise.all([fetch(getMovieUrl), fetch(getTvUrl)])
-      .then((results) => Promise.all(results.map((r) => r.json())))
-      .then(async ([movieResponseJson, tvResponseJson]) => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const moviesResult: any[] = await Promise.all(
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          movieResponseJson.results.map((movie: any) => {
-            return fetch(
-              `https://api.themoviedb.org/3/movie/${movie.id}/watch/providers?api_key=${movie_api_key}&external_source=imdb_id`
-            )
-              .then((res) => res.json())
-              .then((providers) => {
-                // console.log("providers", providers);
-                const newMovie = {
-                  ...movie,
-                  movieId: movie.id,
-                  // For now we only care about US but we could expand
-                  providers: providers.results.US ?? [],
-                };
-
-                return newMovie;
-              });
-          })
-        );
-
-        setMovies(moviesResult);
-        
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const tvResult: any[] = await Promise.all(
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          tvResponseJson.results.map((tv: any) => {
-            return fetch(
-              `https://api.themoviedb.org/3/tv/${tv.id}/watch/providers?api_key=${movie_api_key}&external_source=imdb_id`
-            )
-              .then((res) => res.json())
-              .then((providers) => {
-                // console.log("providers", providers);
-                const newShow = {
-                  ...tv,
-                  movieId: tv.id,
-                  // For now we only care about US but we could expand
-                  providers: providers.results.US ?? [],
-                };
-
-                return newShow;
-              });
-          })
-        );
-
-        setTvShows(tvResult);
-
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const everything: any = [...moviesResult, ...tvResult];
-        setTabOneTitle("All");
-        return setEverything(everything);
-      });
-  };
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const addToWatchList = async (movie: any) => {
     // Send them to login!
     if (currentUser == null) {
@@ -149,8 +84,20 @@ const MovieSearch = () => {
   };
 
   React.useEffect(() => {
-    setEverything(trendingResults);
-  }, [trendingResults]);
+    setMovies(moviesContent);
+    setTvShows(tvContent);
+    setEverything(allContent);
+
+    if (allContent.length > 0) {
+      setTabOneTitle("All");
+    } else {
+      setTabOneTitle("Trending");
+    }
+  }, [allContent]);
+
+  React.useEffect(() => {
+    setEverything(popularMedia);
+  }, [popularMedia]);
 
   return (
       <Box
@@ -183,7 +130,7 @@ const MovieSearch = () => {
           </p>
         </Box>
         <SearchBox
-          searchForMovie={findMovieByTitle}
+          searchForMovie={fetchContent}
         />
         <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
           <Tabs

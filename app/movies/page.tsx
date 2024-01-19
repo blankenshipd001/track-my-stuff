@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 
 import Results from "@/lib/movies/results";
 import Footer from "@/lib/shared/footer";
-import { getMovies, requestRemoveFromWatchList } from "@/lib/api/moviesApi";
+import { getContent, requestRemoveFromWatchList } from "@/lib/api/contentApi";
 import { auth } from "@/lib/api/firestore";
 import { User as FirebaseUser } from "firebase/auth";
 import Header from "@/lib/shared/header";
@@ -36,7 +36,7 @@ const MoviesApp = () => {
         // User is signed in.
         setUser(user);
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        getMovies(user?.uid)
+        getContent(user?.uid)
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           .then((data: any) => {
             console.log("setting watch list");
