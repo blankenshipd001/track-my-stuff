@@ -9,7 +9,8 @@
         "fontsource",
         "roboto",
         "WATCHLIST",
-        "watchlists"
+        "watchlists",
+        "clickaway"
     ],
     "ignoreWords": [],
     "import": []
