@@ -45,6 +45,7 @@ const Header = () => {
       if (user) {
         setUser(user);
       } else {
+        console.log('no one');
         setUser(null);
       }
     });
