@@ -19,10 +19,10 @@ const roboto = Roboto({
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <Providers>
-        <CssBaseline />
-        <body className={roboto.className}>{children}</body>
-      </Providers>
+      <CssBaseline />
+      <body className={roboto.className}>
+        <Providers>{children}</Providers>
+      </body>
     </html>
   );
 }
