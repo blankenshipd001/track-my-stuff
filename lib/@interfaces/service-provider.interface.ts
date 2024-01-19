@@ -1,7 +1,7 @@
 /**
  * Provider represents a streaming, rental or purchase provider for a movie
  */
-export interface Provider {
+export interface ServiceProvider {
     // path (without the baseUrl) to the logo
     logo_path: string,
     // id of the provider in case we need to go get more details

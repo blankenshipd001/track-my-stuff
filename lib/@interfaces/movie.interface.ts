@@ -1,4 +1,4 @@
-import { Provider } from "./provider.interface"
+import { ServiceProvider } from "./service-provider.interface"
 
 export interface Movie {
     adult: boolean,
@@ -12,10 +12,10 @@ export interface Movie {
     popularity: number,
     poster_path: string,
     providers: {
-        buy: [Provider],
+        buy: [ServiceProvider],
         link: string,
-        rent: [Provider],
-        flatrate: [Provider],
+        rent: [ServiceProvider],
+        flatrate: [ServiceProvider],
     }
     release_date: string,
     title: string,
