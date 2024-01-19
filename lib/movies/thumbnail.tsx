@@ -20,7 +20,6 @@ const Thumbnail = forwardRef(({ movie, bookmarkClicked }: thumbnail, ref: Ref<HT
   const BASE_URL = process.env.NEXT_PUBLIC_THE_MOVIE_DB_BASE_URL;
   const router = useRouter();
   const poster = movie.poster_path ?? movie.backdrop_path;
-
   const Movie = styled(Box)(() => ({
     alignItems: "center",
     flexDirection: "column",

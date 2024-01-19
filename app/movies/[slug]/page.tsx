@@ -32,6 +32,7 @@ export default function Page({ params }: { params: { slug: string } }) {
   const [errorOpen, setErrorOpen] = useState(false);
   const [user, setUser] = useState<FirebaseUser | null>(null);
   const [alertMessage, setAlertMessage] = useState("");
+
   useEffect(() => {
     auth.onAuthStateChanged(function (user) {
       if (user) {
@@ -63,10 +64,45 @@ export default function Page({ params }: { params: { slug: string } }) {
 
   const provider = (provider: any) => {
     return (
-      <Box display="flex" key={provider.provider_id} sx={{ paddingRight: "10px", paddingTop: "10px" }}>
+      <Box display="flex" key={provider.provider_id} sx={{ paddingRight: "10px", marginLeft: "10px", paddingTop: "10px" }}>
         <Image style={{ borderRadius: "10px" }} src={`${BASE_URL}${provider.logo_path}`} alt={provider.provider_name} height={40} width={50} />
         <span style={{ paddingLeft: "10px", paddingTop: "10px" }}>{provider.provider_name}</span>
       </Box>
+    );
+  };
+
+  const ProviderWrapper = (title: string, items: any) => {
+    return (
+      <Grid item xs={4}>
+        <Paper
+          sx={{
+            backgroundColor: "#3D3D3D",
+            textAlign: "left",
+          }}
+        >
+          <Box
+            sx={{
+              paddingBottom: "10px"
+            }}
+          >
+          <div
+            style={{
+              fontWeight: "400",
+              fontSize: "18px",
+              marginLeft: "10px",
+              paddingBottom: "7px",
+              paddingTop: "6px",
+            }}
+          >
+            Buy
+          </div>
+          <Divider />
+          {items?.length > 0 && items.map((p: any) => {
+              return provider(p);
+            })}
+        </Box>
+        </Paper>
+      </Grid>
     );
   };
 
@@ -91,7 +127,7 @@ export default function Page({ params }: { params: { slug: string } }) {
       });
   };
 
-  const getRecommended = (movie: any) => {
+  const getRecommended = async (movie: any) => {
     const genre = movie?.genres[0]?.id;
     const url = `https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&sort_by=popularity.desc&with_genres=${genre}&api_key=${movie_api_key}`;
     return fetch(url)
@@ -242,7 +278,7 @@ export default function Page({ params }: { params: { slug: string } }) {
                     {details?.overview}
                   </Box>
 
-                  <Grid item container spacing={3} sx={{paddingTop: "16px", alignItems: "center"}}>
+                  <Grid item container spacing={3} sx={{ paddingTop: "16px", alignItems: "center" }}>
                     <Grid item>
                       <Box
                         style={{
@@ -318,84 +354,9 @@ export default function Page({ params }: { params: { slug: string } }) {
 
       {/* Lower Grid for providers */}
       <Grid sx={{ flexGrow: 1 }} style={{ paddingLeft: "20px", paddingRight: "20px" }} container spacing={5}>
-        <Grid item xs={4}>
-          <Paper
-            sx={{
-              backgroundColor: "#3D3D3D",
-              // ...theme.typography.body2,
-              // padding: theme.spacing(3),
-              textAlign: "left",
-              // color: theme.palette.text.secondary,
-            }}
-          >
-            <div
-              style={{
-                fontWeight: "400",
-                fontSize: "18px",
-                paddingBottom: "15px",
-              }}
-            >
-              Buy
-            </div>
-            <Divider />
-            {details?.providers?.buy?.length > 0 &&
-              details?.providers?.buy?.map((p: any) => {
-                return provider(p);
-              })}
-          </Paper>
-        </Grid>
-        <Grid item xs={4}>
-          <Paper
-            sx={{
-              backgroundColor: "#3D3D3D",
-              // ...theme.typography.body2,
-              // padding: theme.spacing(3),
-              textAlign: "left",
-              // color: theme.palette.text.secondary,
-            }}
-          >
-            <div
-              style={{
-                fontWeight: "400",
-                fontSize: "18px",
-                paddingBottom: "15px",
-              }}
-            >
-              Rent
-            </div>
-            <Divider />
-            {details?.providers?.rent?.length > 0 &&
-              details?.providers?.rent?.map((p: any) => {
-                return provider(p);
-              })}
-          </Paper>
-        </Grid>
-        <Grid item xs={4}>
-          <Paper
-            sx={{
-              backgroundColor: "#3D3D3D",
-              // ...theme.typography.body2,
-              // padding: theme.spacing(3),
-              textAlign: "left",
-              // color: theme.palette.text.secondary,
-            }}
-          >
-            <div
-              style={{
-                fontWeight: "400",
-                fontSize: "18px",
-                paddingBottom: "15px",
-              }}
-            >
-              Subscribe
-            </div>
-            <Divider />
-            {details?.providers?.flatrate?.length > 0 &&
-              details?.providers?.flatrate?.map((p: any) => {
-                return provider(p);
-              })}
-          </Paper>
-        </Grid>
+        {ProviderWrapper("Buy", details?.providers?.buy)}
+        {ProviderWrapper("Rent", details?.providers?.rent)}
+        {ProviderWrapper("Subscribe", details?.providers?.flatrate)}\
       </Grid>
 
       {/* Results for Recommendations */}

@@ -84,7 +84,16 @@ const Header = () => {
             {!user ? (
               <Button
                 variant="contained"
-                style={loginButton}
+                style={{
+                  color: "white",
+                  background: "#782FEF",
+                  width: "105px",
+                  height: "48px",
+                  top: "6px",
+                  borderRadius: "100px",
+                  gap: "8px",
+                  padding: "13px 32px 13px 32px",
+                }}
                 onClick={() => signIn()}
               >
                 Login

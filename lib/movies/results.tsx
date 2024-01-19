@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, styled } from "@mui/material";
+// import { Box, styled } from "@mui/material";
 import Thumbnail from "./thumbnail";
 import Carousel from "../components/carousel/carousel";
 // import ProviderComponent from "../components/misc/provider-component";

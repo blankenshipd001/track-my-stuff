@@ -19,7 +19,7 @@ import { Paper } from "@mui/material";
 import Header from "@/lib/shared/header";
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
 import { useAuthContext } from "@/lib/context/auth-provider";
-
+import { useLoadPopular } from "@/lib/hooks/useLoadPopular";
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
   props,
   ref,
@@ -30,6 +30,8 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
 const movie_api_key = process.env.NEXT_PUBLIC_THE_MOVIE_DB_API_KEY;
 
 const MovieSearch = () => {  
+  const trendingResults = useLoadPopular();
+
   const { currentUser  } = useAuthContext()
   const [everything, setEverything] = useState<any>([]);
   const [value, setValue] = useState(0);
@@ -41,7 +43,7 @@ const MovieSearch = () => {
   const [tabOneTitle, setTabOneTitle] = useState<string>("Trending");
   const router = useRouter()
 
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
   
@@ -146,40 +148,9 @@ const MovieSearch = () => {
     setSuccessOpen(false);
   };
 
-  const loadPopular = async () => {
-    const popular_url = `https://api.themoviedb.org/3/movie/popular?api_key=${movie_api_key}&include_video=false`;
-
-    return fetch(popular_url)
-      .then(async (res) => {
-        const json = await res.json();
-        return json;
-      })
-      .then(async (popularRes) => {
-        const trendingResults: any[] = await Promise.all(
-          popularRes.results.map((item: { id: unknown; }) => {
-            return fetch(
-              `https://api.themoviedb.org/3/movie/${item.id}/watch/providers?api_key=${movie_api_key}&external_source=imdb_id`
-            )
-            .then((res) => res.json())
-            .then((providers) => {
-              const newMovie = {
-                ...item,
-                movieId: item.id,
-                providers: providers.results.US ?? [],
-              };
-    
-              return newMovie;
-            });
-          }
-        ));
-        
-        return setEverything(trendingResults);
-      });
-  };
-
   React.useEffect(() => {
-    loadPopular();
-  }, []);
+    setEverything(trendingResults);
+  }, [trendingResults]);
 
   return (
       <Box
@@ -217,14 +188,17 @@ const MovieSearch = () => {
         <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
           <Tabs
             value={value}
-            onChange={handleChange}
+            onChange={handleTabChange}
             aria-label="basic tabs example"
           >
             <Tab label={tabOneTitle} id="tab-0" aria-controls="tabpanel-0" />
             <Tab label="Movies" id="tab-1" aria-controls="tabpanel-1" />
             <Tab label="TV" id="tab-2" aria-controls="tabpanel-2" />
+            {currentUser !== null ? <Tab label="Watchlist" id="tab-3" aria-controls="tabpanel-4" /> : null}
           </Tabs>
         </Box>
+
+        {/* Always show */}
         <TabPanel value={value} index={0}>
           <Results movies={everything} bookmarkClicked={addToWatchList} />
         </TabPanel>
@@ -234,6 +208,11 @@ const MovieSearch = () => {
         <TabPanel value={value} index={2}>
           <Results movies={tvShows} bookmarkClicked={addToWatchList} />
         </TabPanel>
+        
+        {/* Only show if logged in */}
+        <TabPanel value={value} index={3}>
+            <Results movies={movies} bookmarkClicked={addToWatchList} />
+          </TabPanel>
         <Paper
           sx={{
             position: "fixed",
