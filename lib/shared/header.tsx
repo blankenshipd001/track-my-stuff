@@ -1,56 +1,49 @@
 "use client";
 
-import { User as FirebaseUser } from "firebase/auth";
+import React from "react";
+// import { User as FirebaseUser } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { useEffect, useState } from "react";
-import { auth } from "../api/firestore";
-import { signIn } from "@/lib/api/firestore";
+// import { useEffect, useState } from "react";
+import { Box, IconButton, Drawer, List, ListItemText, Divider, ListItemButton } from "@mui/material";
+import MenuIcon from "@mui/icons-material/Menu";
+import { StandardButton } from "../components/standard-button";
 import Logo from "../assets/logo.svg";
-import { Button } from "@mui/material";
+
+import { UserAuth } from "@/app/context/auth-provider";
 // TODO Is this needed?
 // import { Libre_Barcode_EAN13_Text } from "next/font/google";
 
 const Header = () => {
   const router = useRouter();
-
-  const [navbarOpen, setNavbarOpen] = useState(false);
-  const [user, setUser] = useState<FirebaseUser | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  const loginButton = {
-    color: "white",
-    background: "#782FEF",
-    top: "16px",
-    borderRadius: "100px",
-    gap: "8px",
+  const { googleSignIn, logOut, user } = UserAuth();
+  const [loading, setLoading] = React.useState(true);
+  const [drawerOpen, setDrawerOpen] = React.useState(false);
+  // const [user, setUser] = useState<FirebaseUser | null>(null);
+ 
+  const handleSignIn = async () => {
+    try {
+      await googleSignIn();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
-  const setNavBar = () => {
-    setNavbarOpen(!navbarOpen);
+  const handleSignOut = async () => {
+    try {
+      await logOut();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
-  const logOut = () => {
-    auth
-      .signOut()
-      .then(() => {
-        setUser(null);
-      })
-      .catch();
-  };
-
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged(function (user) {
-      setLoading(false); // Set loading to false once the authentication state is checked
-      if (user) {
-        setUser(user);
-      } else {
-        console.log('no one');
-        setUser(null);
-      }
-    });
-    return () => unsubscribe();
-  }, [user, setUser]);
+  React.useEffect(() => {
+    const checkAuthentication = async () => {
+      await new Promise((resolve) => setTimeout(resolve, 50));
+      setLoading(false);
+    };
+    checkAuthentication();
+  }, [user]);
 
   /**
    * Send the user back to the homepage
@@ -59,74 +52,73 @@ const Header = () => {
     router.push(`/`, { scroll: false });
   };
 
+  // const logOut = () => {
+  //   auth
+  //     .signOut()
+  //     .then(() => {
+  //       setUser(null);
+  //     })
+  //     .catch();
+  // };
+
+  // useEffect(() => {
+  //   const unsubscribe = auth.onAuthStateChanged(function (user) {
+  //     setLoading(false); // Set loading to false once the authentication state is checked
+  //     if (user) {
+  //       setUser(user);
+  //     } else {
+  //       console.log("no one");
+  //       setUser(null);
+  //     }
+  //   });
+  //   return () => unsubscribe();
+  // }, [user, setUser]);
+
   return (
-    <header className="items-center w-screen">
-      <nav>
-        <ul className="flex px-5">
-          <li className="flex-auto pt-2">
-            <Image onClick={handleClickEvent} style={{ cursor: "pointer" }} src={Logo} alt="Logo" className="h-12 w-32 mr-2 mt-1" width={400} height={200} />
-          </li>
+    <header className="items-center">
+      {/* Logo */}
+      <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", p: 2 }}>
+        <Image onClick={handleClickEvent} src={Logo} alt="Logo" className="h-12 w-32 mr-2 mt-1 cursor-pointer" width={400} height={200} />
 
-          {/* <!-- Primary Navbar items --> */}
-          <li className="hidden md:flex align-middle">
-            {user ? (
-              <a href="/" className="pt-3 px-2 text-white font-semibold hover:text-reelPurple-500 transition duration-300 align-middle">
-                Search
-              </a>
-            ) : null}
-          </li>
-          <li className="hidden md:flex align-middle">
-            {user ? (
-              <a href="/movies" className="pt-3 px-2 text-white font-semibold hover:text-reelPurple-500 transition duration-300 align-middle">
-                Watchlist
-              </a>
-            ) : null}
-          </li>
-          <li>
-            {loading ? (
-              <div>...</div>
-            ) : user ? (
-              <button onClick={logOut} className="pt-3 px-2 text-white font-semibold hover:text-reelPurple-500 transition duration-300">
-                Log Out
-              </button>
-            ) : (
-              <Button
-                variant="contained"
-                style={loginButton}
-                onClick={() => signIn()}
-              >
-                Login
-              </Button>
-            )}
-          </li>
+        {/* Mobile navigation */}
+        <Box sx={{ display: { xs: "flex", md: "none" }, justifyContent: "flex-end" }}>
+          <IconButton onClick={() => setDrawerOpen(true)} sx={{ color: "white" }}>
+            <MenuIcon />
+          </IconButton>
+        </Box>
 
-          {/* <!-- Secondary Navbar items --> */}
-          {/* <div className="hidden md:flex items-center space-x-3 ">
-              <a href="" class="py-2 px-2 font-medium text-gray-500 rounded hover:bg-green-500 hover:text-white transition duration-300">Log In</a>
-						<a href="" class="py-2 px-2 font-medium text-white bg-green-500 rounded hover:bg-green-400 transition duration-300">Sign Up</a>
-            </div> */}
+        {/* Main navigation for desktop */}
+        <Box sx={{ display: { xs: "none", md: "flex" }, alignItems: "center", justifyContent: "flex-end", flex: 1 }}>
+          {user !== null ? <StandardButton label="Search" onClickAction={() => router.push("/")} /> : null}
+          {user !== null ? <StandardButton label="Watchlist" onClickAction={() => router.push("/movies")} /> : null}
+          {loading ? <div>...</div> : user !== null ? <StandardButton label="LOG OUT" onClickAction={handleSignOut} /> : <StandardButton label="LOG IN" onClickAction={() => handleSignIn()} />}
+        </Box>
+      </Box>
 
-          {/* <!-- Mobile menu button --> */}
-          <li className={`${navbarOpen ? "block" : "md:hidden"} flex items-center`}>
-            <button className="outline-none mobile-menu-button" onClick={setNavBar}>
-              <svg className=" w-16 h-16 text-gray-500 hover:text-green-500 " x-show="!showMenu" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
-                <path d="M4 6h16M4 12h16M4 18h16"></path>
-              </svg>
-            </button>
-          </li>
-        </ul>
+      {/* Drawer for mobile */}
+      <Drawer anchor="right" open={drawerOpen} onClose={() => setDrawerOpen(false)}>
+        <List sx={{ width: 250 }}>
+          <ListItemButton onClick={() => router.push("/")}>
+            <ListItemText primary="Search" />
+          </ListItemButton>
+          <ListItemButton onClick={() => router.push("/movies")}>
+            <ListItemText primary="Watchlist" />
+          </ListItemButton>
 
-        {/* <!-- mobile menu --> */}
-        <li className={`${navbarOpen ? "" : "hidden"} mobile-menu`}>
-          <ul className="">
-            <li className="nav-item">
-              <a className="px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug hover:text-green-500 text-white hover:opacity-75" href="/movies">
-                Movies
-              </a>
-            </li>
-          </ul>
-        </li>
-      </nav>
+          <Divider />
+          
+          {user !== null && (
+            <ListItemButton onClick={logOut}>
+              <ListItemText primary="Log Out" />
+            </ListItemButton>
+          )}
+          {!(user !== null) && (
+            <ListItemButton onClick={() => handleSignOut()}>
+              <ListItemText primary="Log In" />
+            </ListItemButton>
+          )}
+        </List>
+      </Drawer>
     </header>
   );
 };

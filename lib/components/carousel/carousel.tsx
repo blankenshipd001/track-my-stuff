@@ -57,7 +57,7 @@ const largeResponsive = {
   },
   mobile: {
     breakpoint: { max: 480, min: 0 },
-    items: 3,
+    items: 1,
   },
 };
 
@@ -112,7 +112,7 @@ const smallResponsive = {
   },
   mobile: {
     breakpoint: { max: 480, min: 0 },
-    items: 3,
+    items: 1,
   },
 };
 

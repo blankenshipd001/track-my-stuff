@@ -4,13 +4,15 @@
     "dictionaryDefinitions": [],
     "dictionaries": [],
     "words": [
+        "clickaway",
         "flagsmith",
         "flatrate",
         "fontsource",
+        "nextauth",
         "roboto",
+        "Signin",
         "WATCHLIST",
-        "watchlists",
-        "clickaway"
+        "watchlists"
     ],
     "ignoreWords": [],
     "import": []

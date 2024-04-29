@@ -13,7 +13,7 @@ import { Movie } from "../@interfaces/movie.interface";
 
 interface thumbnail {
   movie: Movie;
-  bookmarkClicked(movie: Movie): undefined;
+  bookmarkClicked(movie: Movie): void;
 }
 
 const Thumbnail = forwardRef(({ movie, bookmarkClicked }: thumbnail, ref: Ref<HTMLDivElement>): JSX.Element => {
@@ -68,7 +68,7 @@ const Thumbnail = forwardRef(({ movie, bookmarkClicked }: thumbnail, ref: Ref<HT
             alt="work portfolio"
           />
           <ActionItemsContainer className="action-items">
-            <ActionItems movie={movie} bookmarkClicked={bookmarkClicked} />
+            <ActionItems movie={movie} addClicked={bookmarkClicked} />
           </ActionItemsContainer>
         </ContainerStyled>
       </Movie>

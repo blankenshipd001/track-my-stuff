@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getAuth, GoogleAuthProvider, signInWithRedirect, signOut } from "firebase/auth";
+import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
 const isDev = false;
@@ -13,16 +13,24 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const googleProvider = new GoogleAuthProvider();
-// TODO: do we need to export these here?
+const auth = getAuth(app);
 const db = getFirestore(app);
-const auth = getAuth();
 
-const signIn = () => {
-  return signInWithRedirect(auth, googleProvider)
-    .then(() => {})
-    .catch(() => {});
-};
+// const googleProvider = new GoogleAuthProvider();
+// googleProvider.setCustomParameters({prompt: "select_account"});
+
+// TODO: do we need to export these here?
+// const signIn = () => {
+//   return signInWithPopup(auth, googleProvider);
+//   // TODO: Do we want to redirect to a page or just use the popup?
+//   // return signInWithRedirect(auth, googleProvider)
+//   //   .then(() => {})
+//   //   .catch(() => {});
+// };
+
+// const logout = () => {
+//   signOut(auth);
+// };
 
 // const redirectToSignIn = async () => {
 //   try {
@@ -68,8 +76,6 @@ const signIn = () => {
 //   }
 // };
 
-const logout = () => {
-  signOut(auth);
-};
 
-export { auth, db, signIn, logout };
+
+export { auth, db };

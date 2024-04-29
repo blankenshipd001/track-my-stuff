@@ -1,40 +1,56 @@
-import React, { FC, ReactNode, useEffect, useState } from "react";
-import { User, onAuthStateChanged } from "firebase/auth";
+import React, { FC, ReactNode, useContext, useEffect, useState } from "react";
 import { auth } from "../../lib/api/firestore";
+import { User, signInWithPopup, signOut, onAuthStateChanged, GoogleAuthProvider } from "firebase/auth";
 
-interface Props { children: ReactNode }
+interface Props {
+  children: ReactNode;
+}
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const AuthContext = React.createContext<any>(null);
 
-export const useAuthContext = () => React.useContext(AuthContext);
+// export const useAuthContext = () => React.useContext(AuthContext);
 
 export const AuthProvider: FC<Props> = ({ children }: Props) => {
-    //TODO how can we type this?
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const [currentUser, setCurrentUser] = useState<any>(null);
+  //TODO how can we type this?
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [user, setUser] = useState<User | null>();
 
-    useEffect(() => {
-        onAuthStateChanged(auth, (user: User | null) => {
-            if (user) {
-                setCurrentUser(user);
-            } else {
-                setCurrentUser(null);
-            }
-        });
-    }, [currentUser]);
+  const googleSignIn = () => {
+    const provider = new GoogleAuthProvider();
+    return signInWithPopup(auth, provider);
+    // TODO: Do we want to redirect to a page or just use the popup?
+    // return signInWithRedirect(auth, googleProvider)
+    //   .then(() => {})
+    //   .catch(() => {});
+  };
 
-    useEffect(() => {
-        if (currentUser !== null) {
-        console.log(currentUser.email, 'user is set')
-        } else {
-            console.log('no user')
-        }
-    }, [currentUser])
+  const logOut = () => {
+    signOut(auth);
+  };
 
-    return (
-        <AuthContext.Provider value={{ currentUser }}>
-          {children}
-        </AuthContext.Provider>
-      );
-}
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser: User | null) => {
+      //   if (user) {
+      setUser(currentUser);
+      //   } else {
+      //     setCurrentUser(null);
+      //   }
+    });
+    return () => unsubscribe();
+  }, [user]);
+
+  useEffect(() => {
+    if (user !== null) {
+      console.log(user?.email, "user is set");
+    } else {
+      console.log("no user");
+    }
+  }, [user]);
+
+  return <AuthContext.Provider value={{ user, googleSignIn, logOut }}>{children}</AuthContext.Provider>;
+};
+
+export const UserAuth = () => {
+  return useContext(AuthContext);
+};

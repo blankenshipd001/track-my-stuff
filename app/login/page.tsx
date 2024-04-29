@@ -3,7 +3,7 @@ import React from "react";
 import Footer from "@/lib/shared/footer";
 // import { useEffect, useState } from "react";
 import Link from "next/link";
-import { signIn } from "@/lib/api/firestore";
+// import { signIn } from "@/lib/api/firestore";
 // import { User as FirebaseUser } from "firebase/auth";
 // import { useRouter } from 'next/navigation'
 import Header from "@/lib/shared/header";
@@ -32,9 +32,9 @@ const Login = () => {
           <div className="w-full max-w-xs">
             <form className="bg-white shadow-md rounded px-8 pt-6 pb-4 mb-2">
               <div className="flex items-center justify-between">
-                <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button" onClick={signIn}>
+                {/* <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button" onClick={signIn}>
                   Sign In With Google
-                </button>
+                </button> */}
               </div>
             </form>
             <div className="pb-2">

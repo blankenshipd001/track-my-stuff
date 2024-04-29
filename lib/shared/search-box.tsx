@@ -14,9 +14,10 @@ interface searchBox {
   searchForMovie: (value: string) => void
 }
 
+// TODO: Fix this to be more inline with MUI using containers so it flows for mobile
 const SearchBox = ({ searchForMovie }: searchBox ): JSX.Element => {
     return (
-      <div className="p-12">
+      <div className="p-4">
         <div className="pt-2 relative mx-auto text-gray-600">
           <SearchInput
             type="search"

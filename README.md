@@ -53,6 +53,8 @@ https://firebase.google.com/docs/web/modular-upgrade#example_2_refactoring_a_fun
 https://console.cloud.google.com/apis/api/firebasedatabase.googleapis.com/credentials?project=code-monkey-292017
 https://travis.media/how-to-use-firebase-with-react/
 
+TODO: some nice setup/styles to use
+https://github.com/wdevon99/Next-js-starter/tree/main/src
 
 Building a movies page:
 https://www.freecodecamp.org/news/react-movie-app-tutorial/
@@ -75,4 +77,3 @@ https://app.flagsmith.com/project/11256/environment/DeXpwrBU9vViXjt3ZrwJK2/featu
 Global State provider with Gastby: https://dev.to/changoman/gatsby-js-global-state-w-react-context-usereducer-3c1
 
 ## ISSUES
-Currently @testing-library/jest-dom v6.X has an issue with expect not known so we are on @5.16

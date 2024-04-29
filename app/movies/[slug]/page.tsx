@@ -94,7 +94,7 @@ export default function Page({ params }: { params: { slug: string } }) {
               paddingTop: "6px",
             }}
           >
-            Buy
+            {title}
           </div>
           <Divider />
           {items?.length > 0 && items.map((p: any) => {

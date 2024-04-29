@@ -1,8 +1,6 @@
 "use client";
-
 import React, { useState, useEffect } from "react";
 
-import Results from "@/lib/movies/results";
 import Footer from "@/lib/shared/footer";
 import { getContent, requestRemoveFromWatchList } from "@/lib/api/contentApi";
 import { auth } from "@/lib/api/firestore";
@@ -14,9 +12,8 @@ import { Movie } from "@/lib/@interfaces/movie.interface";
 import Box from "@mui/material/Box";
 import SearchBox from "@/lib/shared/search-box";
 import { Paper } from "@mui/material";
+import MovieGrid from "@/lib/movies/movie-grid";
 // import { useAuthContext } from "@/lib/context/auth-provider";
-
-
 
 const movie_api_key = process.env.NEXT_PUBLIC_THE_MOVIE_DB_API_KEY;
 
@@ -128,7 +125,6 @@ const MoviesApp = () => {
       });
   };
 
-
   return (
     <Box
       component="section"
@@ -156,7 +152,7 @@ const MoviesApp = () => {
         <p className="text-white">Search a title and see where it’s available to buy, rent, or stream.</p>
       </Box>
       <SearchBox searchForMovie={findMovieByTitle} />
-      <Results movies={watchList} bookmarkClicked={removeFromWatchList} />
+        <MovieGrid movies={watchList} removeClicked={removeFromWatchList} />
       <Paper
         sx={{
           position: "fixed",
