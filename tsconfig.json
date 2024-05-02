@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "baseUrl": "src",
     "target": "es5",
     "lib": ["es6", "dom", "dom.iterable", "esnext"],
     "noImplicitAny": true,
@@ -23,7 +24,10 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "@components/*": ["components/*"],
+      "@data-models/*": ["data-models/*"],
+      "@utils/*": ["utils/*"],
     }
   },
   "include": [
