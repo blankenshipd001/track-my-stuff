@@ -72,8 +72,10 @@ export const Header = () => {
 
         {/* Main navigation for desktop */}
         <Box sx={{ display: { xs: "none", md: "flex" }, alignItems: "center", justifyContent: "flex-end", flex: 1 }}>
-          {user !== null ? <StandardButton label="Search" onClickAction={() => router.push("/")} /> : null}
+          <StandardButton label="Search" onClickAction={() => router.push("/")} />
           {user !== null ? <StandardButton label="Watchlist" onClickAction={() => router.push("/movies/watched")} /> : null}
+          <StandardButton label="About" onClickAction={() => router.push("/about")} />
+
           {loading ? <div>...</div> : user !== null ? <StandardButton label="LOG OUT" onClickAction={handleSignOut} /> : <StandardButton label="LOG IN" onClickAction={() => handleSignIn()} />}
         </Box>
       </Box>
@@ -82,12 +84,17 @@ export const Header = () => {
       <Drawer anchor="right" open={drawerOpen} onClose={() => setDrawerOpen(false)}>
         <List sx={{ width: 250 }}>
           <ListItemButton onClick={() => router.push("/")}>
+            <ListItemText primary="Home" />
+          </ListItemButton>
+          <ListItemButton onClick={() => router.push("/")}>
             <ListItemText primary="Search" />
           </ListItemButton>
           <ListItemButton onClick={() => router.push("/movies/watched")}>
             <ListItemText primary="Watchlist" />
           </ListItemButton>
-
+          <ListItemButton onClick={() => router.push("/about")}>
+            <ListItemText primary="About" />
+          </ListItemButton>
           <Divider />
 
           {user !== null && (
