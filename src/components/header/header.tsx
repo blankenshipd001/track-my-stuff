@@ -9,12 +9,20 @@ import Logo from "@utils/assets/logo.svg";
 import { StandardButton } from "@components/buttons";
 import { UserAuth } from "@utils/providers/auth-provider";
 
+const styles = {
+  logo: {
+    cursor: "pointer",
+    maxWidth: "100%",
+    height: "auto",
+  },
+};
+
 export const Header = () => {
   const router = useRouter();
   const { googleSignIn, logOut, user } = UserAuth();
   const [loading, setLoading] = React.useState(true);
   const [drawerOpen, setDrawerOpen] = React.useState(false);
- 
+
   const handleSignIn = async () => {
     try {
       await googleSignIn();
@@ -49,8 +57,11 @@ export const Header = () => {
   return (
     <header className="items-center">
       {/* Logo */}
+
       <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", p: 2 }}>
-        <Image onClick={handleClickEvent} src={Logo} alt="Logo" className="h-12 w-32 mr-2 mt-1 cursor-pointer" width={400} height={200} />
+        <div onClick={handleClickEvent} style={styles.logo}>
+          <Image src={Logo} alt="Logo" width={200} height={100} />
+        </div>
 
         {/* Mobile navigation */}
         <Box sx={{ display: { xs: "flex", md: "none" }, justifyContent: "flex-end" }}>
@@ -62,7 +73,7 @@ export const Header = () => {
         {/* Main navigation for desktop */}
         <Box sx={{ display: { xs: "none", md: "flex" }, alignItems: "center", justifyContent: "flex-end", flex: 1 }}>
           {user !== null ? <StandardButton label="Search" onClickAction={() => router.push("/")} /> : null}
-          {user !== null ? <StandardButton label="Watchlist" onClickAction={() => router.push("/movies")} /> : null}
+          {user !== null ? <StandardButton label="Watchlist" onClickAction={() => router.push("/movies/watched")} /> : null}
           {loading ? <div>...</div> : user !== null ? <StandardButton label="LOG OUT" onClickAction={handleSignOut} /> : <StandardButton label="LOG IN" onClickAction={() => handleSignIn()} />}
         </Box>
       </Box>
@@ -78,7 +89,7 @@ export const Header = () => {
           </ListItemButton>
 
           <Divider />
-          
+
           {user !== null && (
             <ListItemButton onClick={logOut}>
               <ListItemText primary="Log Out" />

@@ -3,6 +3,7 @@ import { CssBaseline } from "@mui/material";
 
 import "./globals.css";
 import { Providers } from "@utils/providers/providers";
+import { Header } from "@/components/header";
 
 const roboto = Roboto({
   weight: ["300", "400", "500", "700"],
@@ -12,16 +13,19 @@ const roboto = Roboto({
 });
 
 export const metadata = {
-  title: 'ReelTime',
-  description: 'ReelTime brings all your TV and movie watch lists together in one place.',
-}
+  title: "ReelTime",
+  description: "ReelTime brings all your TV and movie watch lists together in one place.",
+};
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <CssBaseline />
       <body className={roboto.className}>
-        <Providers>{children}</Providers>
+        <Providers>
+          <Header />
+          {children}
+        </Providers>
       </body>
     </html>
   );

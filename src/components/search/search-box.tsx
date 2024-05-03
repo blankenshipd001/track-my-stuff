@@ -1,5 +1,6 @@
 import { ChangeEvent } from "react";
-import { OutlinedInput, styled } from "@mui/material";
+import { OutlinedInput, InputAdornment, IconButton, styled, debounce } from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
 
 const SearchInput = styled(OutlinedInput)(() => ({
   width: "100%",
@@ -9,21 +10,38 @@ const SearchInput = styled(OutlinedInput)(() => ({
   borderRadius: "25px",
 }));
 
-interface searchBox {
-  searchForMovie: (value: string) => void;
-}
+export const SearchBox = ({ searchForMovie }: { searchForMovie: (value: string) => void }): JSX.Element => {
+  const debounceSearch = debounce(searchForMovie, 150); // TODO find a good tolerance
 
-// TODO: Fix this to be more inline with MUI using containers so it flows for mobile
-export const SearchBox = ({ searchForMovie }: searchBox): JSX.Element => {
+  const handleInputChange = (event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+    const { value } = event.target;
+    debounceSearch(value);
+  }
+
   return (
-    <div className="p-4">
-      <div className="pt-2 relative mx-auto text-gray-600">
+    <div style={{ padding: "16px" }}>
+      <div style={{ position: "relative", margin: "auto", width: "100%", maxWidth: "800px" }}>
         <SearchInput
+          fullWidth
           type="search"
           name="search"
           placeholder="Search title..."
-          onChange={(event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-            searchForMovie(event.target.value);
+          onChange={handleInputChange}
+          endAdornment={
+            <InputAdornment position="end">
+              <IconButton edge="end" aria-label="search">
+                <SearchIcon />
+              </IconButton>
+            </InputAdornment>
+          }
+          sx={{
+            "& fieldset": {
+              borderColor: "#1A1A1A",
+              borderRadius: "25px",
+            },
+            "& input": {
+              padding: "12px",
+            },
           }}
         />
       </div>

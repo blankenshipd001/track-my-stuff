@@ -1,38 +1,30 @@
 "use client";
 import React, { useState, useEffect } from "react";
-
+import { db } from "@/config/firebase";
 import { collection, addDoc } from "firebase/firestore";
-import { User as FirebaseUser } from "firebase/auth";
-
 import { redirect, useRouter } from "next/navigation";
-
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import { Box, Container } from "@mui/material";
-
 import { SearchBox } from "@components/search";
 import { UserAuth } from "@/utils/providers/auth-provider";
-
-import { Movie } from "@/data-models/movie.interface";
-import { TabPanel } from "../panels";
-
-import { auth, db } from "@/config/firebase";
 import { getContent, requestRemoveFromWatchList } from "@/utils/api/contentApi";
-import { MovieGrid } from "./movie-grid";
 import { useLoadPopular } from "@/hooks/useLoadPopular";
 import { useFindByTitle } from "@/hooks/useFindByTitle";
 import useNotificationBar from "@/hooks/useNotificationBar";
+import { Movie } from "@/data-models/movie.interface";
+import { TabPanel } from "../panels";
+import { MovieGrid } from "./movie-grid";
 
 export const MovieContent = () => {
   const router = useRouter();
-  const { currentUser } = UserAuth();
+  const { googleSignIn, user } = UserAuth();
 
   const [tabNumber, setTabNumber] = useState(0);
   const [movies, setMovies] = useState<Movie[]>([]);
   const [tvShows, setTvShows] = useState<Movie[]>([]);
   const [everything, setEverything] = useState<Movie[]>([]);
   const [watchList, setWatchList] = useState<Movie[]>([]);
-  const [user, setUser] = useState<FirebaseUser | null>(null);
   const [tabOneTitle, setTabOneTitle] = useState<string>("Trending");
 
   const { popularMedia } = useLoadPopular();
@@ -43,10 +35,7 @@ export const MovieContent = () => {
    * Loads movies when the page loads
    */
     useEffect(() => {
-      auth.onAuthStateChanged(function (user) {
-        if (user) {
-          // User is signed in.
-          setUser(user);
+        if (user !== null) {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           getContent(user?.uid)
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -64,8 +53,7 @@ export const MovieContent = () => {
           console.log("no one home");
           router.push("/");
         }
-      });
-    }, []);
+    }, [user]);
 
   /**
    * Handle changing tabs
@@ -77,15 +65,16 @@ export const MovieContent = () => {
   };
 
   const addToWatchList = async (movie: Movie) => {
-    // Send them to login!
-    if (currentUser == null) {
-      router.push("/login");
+    if (user === null) {
+      await googleSignIn();
     }
+    
+    console.log('user', user);
 
     // Delete the id from the movies database so we can use the documents ID that's set by firebase
     delete movie.id;
 
-    const path = "users/" + currentUser?.uid + "/movies";
+    const path = "users/" + user?.uid + "/movies";
     // TODO do we need the docRef response
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const docRef:any =  await addDoc(collection(db, path), {
@@ -142,7 +131,7 @@ export const MovieContent = () => {
           <Tab label={tabOneTitle} id="tab-0" aria-controls="tabpanel-0" />
           <Tab label="Movies" id="tab-1" aria-controls="tabpanel-1" />
           <Tab label="TV" id="tab-2" aria-controls="tabpanel-2" />
-          {currentUser !== null ? <Tab label="Watchlist" id="tab-3" aria-controls="tabpanel-4" /> : null}
+          {user !== null ? <Tab label="Watchlist" id="tab-3" aria-controls="tabpanel-4" /> : null}
         </Tabs>
       </Box>
 

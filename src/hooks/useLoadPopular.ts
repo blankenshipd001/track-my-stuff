@@ -21,6 +21,7 @@ export const useLoadPopular = () => {
             return fetch(`https://api.themoviedb.org/3/movie/${item.id}/watch/providers?api_key=${movie_api_key}&external_source=imdb_id`)
               .then((res) => res.json())
               .then((providers) => {
+                console.log('popular providers: ', providers)
                 const newMovie = {
                   ...item,
                   movieId: item.id,

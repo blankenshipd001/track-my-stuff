@@ -1,40 +1,28 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import { collection, addDoc } from "firebase/firestore";
-import { User as FirebaseUser } from "firebase/auth";
-import { Box, Container, Grid, Paper } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { auth, db } from "@/config/firebase";
+import { db } from "@/config/firebase";
+import { collection, addDoc } from "firebase/firestore";
+import { Box, Container, Grid, Paper, Typography, useMediaQuery } from "@mui/material";
 import { Details, MovieGrid } from "@/components/movies";
 import { ProviderGrid } from "@/components/provider";
-import { Movie } from "@/data-models/movie.interface";
 import useNotificationBar from "@/hooks/useNotificationBar";
 import { BackButton } from "@/components/buttons/back-button";
-import { Header } from "@/components/header";
+import { UserAuth } from "@/utils/providers/auth-provider";
+import { Movie } from "@/data-models/movie.interface";
+import { darkTheme } from "@/utils/themes/theme";
 
 const movie_api_key = process.env.NEXT_PUBLIC_THE_MOVIE_DB_API_KEY;
 
-//TODO: Refactor the header to use Box/Paper/Containers/Flex layouts not absolute
 export default function Page({ params }: { params: { slug: string } }) {
   const router = useRouter();
+  const { googleSignIn, user } = UserAuth();
+  const isMobile = useMediaQuery(darkTheme.breakpoints.down("sm"));
 
   const { enqueueNotificationBar, NotificationBarComponent } = useNotificationBar();
 
   const [details, setDetails] = useState<Movie>();
-  const [recommended, setRecommended] = useState<any>([]);
-  const [user, setUser] = useState<FirebaseUser | null>(null);
-
-  useEffect(() => {
-    auth.onAuthStateChanged(function (user) {
-      if (user) {
-        setUser(user);
-      } else {
-        // No user is signed in.
-        setUser(null);
-      }
-    });
-  }, []);
+  const [recommended, setRecommended] = useState<Movie[]>([]);
 
   useEffect(() => {
     getItem();
@@ -45,25 +33,11 @@ export default function Page({ params }: { params: { slug: string } }) {
     router.push("/");
   };
 
-  const commonStyles = {
-    providerBox: {
-      display: "flex",
-      paddingRight: "10px",
-      marginLeft: "10px",
-      paddingTop: "10px",
-    },
-    paperRoot: {
-      p: 2,
-      margin: "auto",
-      maxWidth: "100%",
-      flexGrow: 1,
-      marginBottom: "2rem",
-      backgroundColor: "#1A1A1A",
-    },
-  };
+  const addToWatchList = async (movie: Movie) => {
+    if (user === null) {
+      await googleSignIn();
+    }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const addToWatchList = async (movie: any) => {
     // Delete the id from the movies database so we can use the documents ID that's set by firebase
     delete movie.id;
     const path = "users/" + user?.uid + "/movies";
@@ -75,12 +49,13 @@ export default function Page({ params }: { params: { slug: string } }) {
       .then(() => {
         enqueueNotificationBar("Successfully added to your watch list", "success");
       })
-      .catch((err: any) => {
+      .catch((err: unknown) => {
         enqueueNotificationBar(`Failure adding to your watch list: ${err}`, "error");
       });
   };
 
-  const getRecommended = async (movie: any) => {
+  const getRecommended = async (movie: Movie) => {
+    console.log("movie: ", movie);
     const genre = movie?.genres[0]?.id;
     const url = `https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&sort_by=popularity.desc&with_genres=${genre}&api_key=${movie_api_key}`;
     return fetch(url)
@@ -139,38 +114,41 @@ export default function Page({ params }: { params: { slug: string } }) {
   };
 
   return (
-    <Container>
-    <Header />
-      <Box>
-        <Paper sx={commonStyles.paperRoot}>
+    <Container maxWidth="lg">
+      <Box sx={{ padding: isMobile ? 1 : 3 }}>
+        <Paper elevation={3} sx={{ padding: isMobile ? 1 : 3 }}>
           <Grid container spacing={2}>
-            <Grid item>
+            <Grid item xs={12}>
               <BackButton buttonClick={() => goBack()} />
             </Grid>
-            {details ? <Details movie={details} /> : null}
+            {details && (
+              <Grid item xs={12}>
+                <Details movie={details} />
+              </Grid>
+            )}
           </Grid>
         </Paper>
 
         {/* Providers */}
-        <Grid container spacing={5}>
+        <Grid container spacing={isMobile ? 2 : 5} sx={{ marginTop: 2 }}>
           <ProviderGrid title="Buy" items={details?.providers?.buy || []} />
           <ProviderGrid title="Rent" items={details?.providers?.rent || []} />
           <ProviderGrid title="Subscribe" items={details?.providers?.flatrate || []} />
         </Grid>
 
-        <Box
+        <Typography
+          variant="h6"
           sx={{
             color: "white",
             fontWeight: "400",
             fontSize: "18px",
-            lineHeight: "24.51px",
-            paddingLeft: "28px",
-            // This is a hack for now
-            marginBottom: "-1rem",
+            lineHeight: "24px",
+            paddingLeft: isMobile ? 1 : 3,
+            marginBottom: 1, // Removed negative margin
           }}
         >
           You may also like...
-        </Box>
+        </Typography>
         <MovieGrid movies={recommended} addClicked={addToWatchList} />
         {NotificationBarComponent}
       </Box>

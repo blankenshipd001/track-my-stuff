@@ -5,11 +5,8 @@ import { Grid, Card, CardMedia, CardContent, Typography, Box, Container } from "
 // import ConnectedTvIcon from "@mui/icons-material/ConnectedTv";
 // import LiveTvIcon from "@mui/icons-material/LiveTv";
 import { Movie } from "@/data-models/movie.interface";
-// import { auth } from "@/config/firebase";
 import { useRouter } from "next/navigation";
 import { getContent } from "@/utils/api/contentApi";
-// import { User } from "firebase/auth";
-import { Header } from "@/components/header";
 import { UserAuth } from "@/utils/providers/auth-provider";
 import useUserSession from "@/hooks/useUserSession";
 
@@ -85,7 +82,6 @@ const MovieGrid = () => {
 
   return (
     <Container>
-      <Header />
       <Grid container spacing={4}>
         {watchList.map((movie: Movie, index: number) => (
           <Grid item xs={12} sm={6} md={4} lg={3} key={index}>

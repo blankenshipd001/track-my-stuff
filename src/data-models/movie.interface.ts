@@ -3,7 +3,10 @@ import { ServiceProvider } from "./service-provider.interface"
 export interface Movie {
     adult: boolean,
     backdrop_path: string,
-    genre_ids: [],
+    // genre_ids: [],
+    genres: [
+        {id: number, name: string}
+    ]
     id?: number,
     movieId: number,
     original_language: string,
