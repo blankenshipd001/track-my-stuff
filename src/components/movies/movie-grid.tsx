@@ -103,7 +103,9 @@ export const MovieGrid = forwardRef(({ movies, addClicked, removeClicked }: Movi
                     ))} */}
                     {movie?.providers?.flatrate?.length > 0 && (
                       <>
-                        <Typography variant="body2" sx={{ mt: 1, mb: 1, fontWeight: 'bold' }}>Stream:</Typography>
+                        <Typography variant="body2" sx={{ mt: 1, mb: 1, fontWeight: "bold" }}>
+                          Stream:
+                        </Typography>
                         {movie.providers.flatrate.map((provider, index) => (
                           <ProviderChip providerInfo={provider} key={index} />
                         ))}
@@ -111,7 +113,9 @@ export const MovieGrid = forwardRef(({ movies, addClicked, removeClicked }: Movi
                     )}
                     {movie?.providers?.rent?.length > 0 && (
                       <>
-                        <Typography variant="body2" sx={{ mt: 1, mb: 1, fontWeight: 'bold' }}>Rent:</Typography>
+                        <Typography variant="body2" sx={{ mt: 1, mb: 1, fontWeight: "bold" }}>
+                          Rent:
+                        </Typography>
                         {movie.providers.rent.map((provider, index) => (
                           <ProviderChip providerInfo={provider} key={index} />
                         ))}
@@ -119,7 +123,9 @@ export const MovieGrid = forwardRef(({ movies, addClicked, removeClicked }: Movi
                     )}
                     {movie?.providers?.buy?.length > 0 && (
                       <>
-                        <Typography variant="body2" sx={{ mt: 1, mb: 1, fontWeight: 'bold' }}>Buy:</Typography>
+                        <Typography variant="body2" sx={{ mt: 1, mb: 1, fontWeight: "bold" }}>
+                          Buy:
+                        </Typography>
                         {movie.providers.buy.map((provider, index) => (
                           <ProviderChip providerInfo={provider} key={index} />
                         ))}

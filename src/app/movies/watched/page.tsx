@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Grid, Card, CardMedia, CardContent, Typography, Box, Container } from "@mui/material";
+import { Grid, Card, CardMedia, CardContent, Typography, Container } from "@mui/material";
 // import TheatersIcon from "@mui/icons-material/Theaters";
 // import ConnectedTvIcon from "@mui/icons-material/ConnectedTv";
 // import LiveTvIcon from "@mui/icons-material/LiveTv";
@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { getContent } from "@/utils/api/contentApi";
 import { UserAuth } from "@/utils/providers/auth-provider";
 import useUserSession from "@/hooks/useUserSession";
+// import { ProviderChip } from "@/components/provider";
 
 const BASE_URL = process.env.NEXT_PUBLIC_THE_MOVIE_DB_BASE_URL;
 
@@ -16,6 +17,7 @@ interface movieCard {
   movie: Movie;
 }
 
+// const myPlatforms = ["Apple TV", "Amazon Prime Video", "Netflix", "AMC", "Peacock", "Paramount Plus", "MGM Plus"];
 // Mapping platforms to icons
 // const platformIcons = {
 //   rent: <LiveTvIcon />,
@@ -34,16 +36,31 @@ const MovieCard = ({ movie }: movieCard) => {
         <Typography gutterBottom variant="h5" component="div">
           {movie.title}
         </Typography>
-        <Typography variant="body2" color="text.secondary">
+        {/* <Typography variant="body2" color="text.secondary">
           {movie.overview}
-        </Typography>
-        <Box display="flex" justifyContent="start" mt={2}>
-          {/* {movie.providers.map(provider => (
+        </Typography> */}
+        {/* <Box display="flex" justifyContent="start" mt={2}> */}
+        {movie?.providers?.flatrate?.length > 0 && (
+          <>
+            <Typography variant="body2" sx={{ mt: 1, mb: 1, fontWeight: "bold" }}>
+              Stream:
+            </Typography>
+            {/* {movie.providers.flatrate.map((provider, index) => {
+              const providerName = provider.provider_name;
+              results = myPlatforms.filter(function (myPlatform) {
+                return myPlatform.includes(providerName)
+              });
+              
+              <ProviderChip providerInfo={provider} key={index} />    
+            })} */}
+          </>
+        )}
+        {/* {movie.providers.map(provider => (
           <Box key={provider} mr={1}>
             {platformIcons[platform]}
-          </Box>
-        ))} */}
-        </Box>
+          </Box> */}
+        {/* ))}
+        </Box> */}
       </CardContent>
     </Card>
   );
