@@ -11,7 +11,7 @@ try {
   });
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 } catch (error: any) {
-  console.log('Firebase admin initialization error', error.stack);
+  console.error('Firebase admin initialization error', error.stack);
 }
 
 export default admin;

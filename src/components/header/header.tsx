@@ -27,7 +27,7 @@ export const Header = () => {
     try {
       await googleSignIn();
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
@@ -35,7 +35,7 @@ export const Header = () => {
     try {
       await logOut();
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 

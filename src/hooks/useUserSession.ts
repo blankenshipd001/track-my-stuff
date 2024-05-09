@@ -19,7 +19,10 @@ const useUserSession= (initialUser: User) => {
 
     useEffect(() => {
         auth.onAuthStateChanged(authUser => {
-            if (user === undefined) return;
+            if (user === undefined) {
+                return;
+            }
+            
             if (user?.email !== authUser?.email) {
                 router.refresh();
             }

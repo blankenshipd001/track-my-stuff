@@ -51,7 +51,6 @@ export const MovieGrid = forwardRef(({ movies, addClicked, removeClicked }: Movi
   const BASE_URL = process.env.NEXT_PUBLIC_THE_MOVIE_DB_BASE_URL;
 
   const handleClickEvent = (movie: Movie) => {
-    console.log("ugh");
     router.push(`/movies/${movie.movieId}`, { scroll: false });
   };
 

@@ -13,7 +13,6 @@ export const HeaderDrawer = ({ drawerOpen }: headerDrawer) => {
   const { googleSignIn, logOut, user } = UserAuth();
 
   useEffect(() => {
-    console.log('drawer: ', drawerOpen)
     setIsOpen(drawerOpen);
   }, [isOpen]);
 
@@ -21,7 +20,7 @@ export const HeaderDrawer = ({ drawerOpen }: headerDrawer) => {
     try {
       await googleSignIn();
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
@@ -29,7 +28,7 @@ export const HeaderDrawer = ({ drawerOpen }: headerDrawer) => {
     try {
       await logOut();
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 

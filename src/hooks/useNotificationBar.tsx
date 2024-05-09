@@ -36,9 +36,7 @@ const useNotificationBar = () => {
   // }, [notificationPack]);
 
   useEffect(() => {
-    console.log(notificationPack.length)
     if ((notificationPack.length > 0) && !messageInfo) {
-      console.log('should open ')
       setMessageInfo({ ...notificationPack[0] });
       setOpen(true);
       //TODO: not sure this  is needed? Seems to work just fine.;

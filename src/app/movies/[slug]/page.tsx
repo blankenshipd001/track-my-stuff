@@ -55,13 +55,11 @@ export default function Page({ params }: { params: { slug: string } }) {
   };
 
   const getRecommended = async (movie: Movie) => {
-    console.log("movie: ", movie);
     const genre = movie?.genres[0]?.id;
     const url = `https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&sort_by=popularity.desc&with_genres=${genre}&api_key=${movie_api_key}`;
     return fetch(url)
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
         setRecommended(data.results);
       });
   };
@@ -81,14 +79,12 @@ export default function Page({ params }: { params: { slug: string } }) {
         return fetch(`https://api.themoviedb.org/3/movie/${results.id}/watch/providers?api_key=${movie_api_key}&external_source=imdb_id`)
           .then((res) => res.json())
           .then((providers) => {
-            // console.log("providers", providers);
             const newMovie = {
               ...results,
               movieId: results.id,
               // For now we only care about US but we could expand
               providers: providers.results.US ?? [],
             };
-            console.log(newMovie);
             setDetails(newMovie);
             getRecommended(newMovie);
           });
@@ -98,14 +94,12 @@ export default function Page({ params }: { params: { slug: string } }) {
         return fetch(`https://api.themoviedb.org/3/movie/${results.id}/watch/providers?api_key=${movie_api_key}&external_source=imdb_id`)
           .then((res) => res.json())
           .then((providers) => {
-            // console.log("providers", providers);
             const newMovie = {
               ...results,
               movieId: results.id,
               // For now we only care about US but we could expand
               providers: providers.results.US ?? [],
             };
-            console.log(newMovie);
             setDetails(newMovie);
             getRecommended(newMovie);
           });

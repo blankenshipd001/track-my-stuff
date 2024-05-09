@@ -1,14 +1,12 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { db } from "@/config/firebase";
-import { collection, addDoc } from "firebase/firestore";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import { Box, Container } from "@mui/material";
 import { SearchBox } from "@components/search";
 import { UserAuth } from "@/utils/providers/auth-provider";
-import { getContent, requestRemoveFromWatchList } from "@/utils/api/contentApi";
+import { addToWatchList, getContent, requestRemoveFromWatchList } from "@/utils/api/contentApi";
 import { useLoadPopular } from "@/hooks/useLoadPopular";
 import { useFindByTitle } from "@/hooks/useFindByTitle";
 import useNotificationBar from "@/hooks/useNotificationBar";
@@ -40,8 +38,6 @@ export const MovieContent = () => {
           getContent(user?.uid)
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             .then((data: any) => {
-              console.log("setting watch list");
-              console.log(data);
               setWatchList(data);
             })
             .catch((err) => {
@@ -50,7 +46,7 @@ export const MovieContent = () => {
             })
         } else {
           // No user is signed in.
-          console.log("no one home");
+          console.error("no one home");
           router.push("/");
         }
     }, [user]);
@@ -64,31 +60,25 @@ export const MovieContent = () => {
     setTabNumber(newTab);
   };
 
-  const addToWatchList = async (movie: Movie) => {
+  /**
+   * Handle the click to add to a watchlist
+   * @param movie {Movie} the move to add to the watchlist
+   */
+  const addToWatchListClickHandler = async (movie: Movie) => {
     if (user === null) {
       await googleSignIn();
     }
-    
-    console.log('user', user);
 
-    // Delete the id from the movies database so we can use the documents ID that's set by firebase
-    delete movie.id;
-
-    const path = "users/" + user?.uid + "/movies";
-    // TODO do we need the docRef response
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const docRef:any =  await addDoc(collection(db, path), {
-      ...movie,
-    })
-      .then(() => {
+    addToWatchList(user.uid, movie)
+    .then((docRef: Movie | string) => {
+      if(docRef != null && typeof docRef !== "string") {
         enqueueNotificationBar("Successfully added to your watch list", "success");
-      })
-      .catch((err: unknown) => {
-        enqueueNotificationBar(`Failure adding to your watch list: ${err}`, "error");
-      });
-
-      redirect(`/movies/${docRef.id}`)
-
+        router.push(`/movies/${docRef.id}`);
+      }
+    })
+    .catch((err: unknown) => {
+      enqueueNotificationBar(`Failure adding to your watch list: ${err}`, "error");
+    });
   };
 
     /**
@@ -137,13 +127,13 @@ export const MovieContent = () => {
 
       {/* Always show */}
       <TabPanel value={tabNumber} index={0}>
-        <MovieGrid movies={everything} addClicked={addToWatchList} />
+        <MovieGrid movies={everything} addClicked={addToWatchListClickHandler} />
       </TabPanel>
       <TabPanel value={tabNumber} index={1}>
-        <MovieGrid movies={movies} addClicked={addToWatchList} />
+        <MovieGrid movies={movies} addClicked={addToWatchListClickHandler} />
       </TabPanel>
       <TabPanel value={tabNumber} index={2}>
-        <MovieGrid movies={tvShows} addClicked={addToWatchList} />
+        <MovieGrid movies={tvShows} addClicked={addToWatchListClickHandler} />
       </TabPanel>
 
       {/* Only show if logged in */}

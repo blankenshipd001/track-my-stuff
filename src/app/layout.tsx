@@ -1,7 +1,5 @@
 import { Roboto } from "next/font/google";
-import { CssBaseline } from "@mui/material";
-
-import "./globals.css";
+import { Container, CssBaseline } from "@mui/material";
 import { Providers } from "@utils/providers/providers";
 import { Header } from "@/components/header";
 
@@ -20,13 +18,15 @@ export const metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <CssBaseline />
-      <body className={roboto.className}>
-        <Providers>
-          <Header />
-          {children}
-        </Providers>
-      </body>
+      <Providers>
+        <body className={roboto.className}>
+          <CssBaseline />
+          <Container>
+            <Header />
+            {children}
+          </Container>
+        </body>
+      </Providers>
     </html>
   );
 }
