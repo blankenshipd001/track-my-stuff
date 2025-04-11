@@ -1,4 +1,4 @@
-import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
+import { ArrowBackIos } from "@mui/icons-material";
 import { Box, Fab } from "@mui/material";
 
 interface backButton {
@@ -26,7 +26,7 @@ export const BackButton = ({ buttonClick }: backButton) => {
         }}
         aria-label="add"
       >
-        <ArrowBackIosIcon style={{ paddingLeft: "5px" }} />
+        <ArrowBackIos style={{ paddingLeft: "5px" }} />
       </Fab>
       Back
     </Box>

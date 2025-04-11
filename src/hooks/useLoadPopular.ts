@@ -9,7 +9,7 @@ export const useLoadPopular = () => {
 
   const popular_url = `https://api.themoviedb.org/3/movie/popular?api_key=${movie_api_key}&include_video=false`;
 
-  function fetchPopular() {
+  const fetchPopular = () => {
     fetch(popular_url)
       .then(async (res) => {
         const json = await res.json();

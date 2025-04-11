@@ -107,6 +107,19 @@ export const addToWatchList = async (uid: string, movie: Movie): Promise<Movie |
     });
   }
 
+  const movie_api_key = process.env.NEXT_PUBLIC_THE_MOVIE_DB_API_KEY;
+
+  if (movie.first_air_date !== null || movie.first_air_date !== undefined) {
+    const fetchMovie = await fetch(`https://api.themoviedb.org/3/movie/${movie.movieId}?api_key=${movie_api_key}`);
+    const json = await fetchMovie.json();
+    movie.imdb_id = json.imdb_id;
+  } else {
+    // If this is a TV show, we need to get the TV show ID
+    const fetchMovie = await fetch(`https://api.themoviedb.org/3/tv/${movie.movieId}?api_key=${movie_api_key}`);
+    const json = await fetchMovie.json();
+    movie.imdb_id = json.imdb_id;
+  }
+  
   const path: string = `users/${uid}/movies`;
   const documentRef: DocumentReference = doc(db, path, `${movie.id}`);
 
@@ -116,7 +129,10 @@ export const addToWatchList = async (uid: string, movie: Movie): Promise<Movie |
     ...movie,
   }).then(() => {
     docRef = movie;
-  });
+  }).catch(error => {
+    console.error("Error adding movie to watchlist: ", error);
+    docRef = movie;
+  })
 
   return docRef;
 };

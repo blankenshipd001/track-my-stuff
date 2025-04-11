@@ -26,8 +26,6 @@ const Watched = () => {
       getContent(user?.uid)
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         .then((data: any) => {
-          console.log("setting watch list");
-          // console.log(data);
           setWatchList(data);
         })
         .catch((err) => {
@@ -36,7 +34,6 @@ const Watched = () => {
         });
     } else {
       // No user is signed in.
-      console.log("no one home");
       router.push("/");
     }
   }, [user]);

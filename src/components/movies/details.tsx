@@ -1,67 +1,149 @@
 import { Movie } from "@/data-models/movie.interface";
 import Image from "next/image";
-import { Box, Container, Grid, Typography, useMediaQuery } from "@mui/material";
+import {
+  Box,
+  Container,
+  Grid,
+  Typography,
+  useMediaQuery,
+  useTheme,
+  IconButton as MuiIconButton,
+  Tooltip,
+} from "@mui/material";
 import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
 import CheckIcon from "@mui/icons-material/Check";
-import { IconButton, ThumbDownButton, ThumbUpButton } from "../buttons";
-import { darkTheme } from "@/utils/themes/theme";
+import ThumbUpIcon from "@mui/icons-material/ThumbUp";
+import ThumbDownIcon from "@mui/icons-material/ThumbDown";
 
-interface details {
+interface DetailsProps {
   movie: Movie;
 }
 
 const BASE_URL = process.env.NEXT_PUBLIC_THE_MOVIE_DB_BASE_URL;
 
-export const Details = ({ movie }: details) => {
-  const isMobile = useMediaQuery(darkTheme.breakpoints.down("sm"));
+export const Details = ({ movie }: DetailsProps) => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   return (
     <Container>
-      <Grid container spacing={2}>
+      <Grid container spacing={4}>
+        {/* Poster */}
         <Grid item xs={12} md={2}>
-          <Image src={`${BASE_URL}${movie?.poster_path}`} alt={movie?.title} layout="responsive" width="230" height="300" />
+          <Box
+            sx={{
+              width: "100%",
+              height: 0,
+              paddingTop: "130%", // maintains aspect ratio
+              position: "relative",
+              borderRadius: 4,
+              overflow: "hidden",
+            }}
+          >
+            <Image
+              src={`${BASE_URL}${movie?.poster_path}`}
+              alt={movie?.title}
+              fill
+              style={{ objectFit: "cover" }}
+              sizes="(max-width: 768px) 100vw, 230px"
+            />
+          </Box>
         </Grid>
 
-        <Grid item xs={12} md={10} container direction="column" spacing={2}>
-          <Box sx={{ 
-            paddingLeft: isMobile ? 1 : 4,
-            color: "#FFFFFF",
-            paddingBottom: 2,
-            paddingTop: isMobile ? 4 : 0,
-            display: 'flex',
-            flexWrap: isMobile ? 'wrap' : 'nowrap',
-            alignItems: 'baseline'
-          }}>
-            <Typography variant={isMobile ? 'h6' : 'h4'} component="h1" sx={{ fontWeight: 700, lineHeight: 'normal', flexShrink: 0 }}>
+        {/* Details */}
+        <Grid item xs={12} md={10}>
+          <Box
+            sx={{
+              pl: isMobile ? 1 : 4,
+              color: theme.palette.common.white,
+              pb: 2,
+              pt: isMobile ? 4 : 0,
+              display: "flex",
+              flexWrap: isMobile ? "wrap" : "nowrap",
+              alignItems: "baseline",
+              borderRadius: 6,
+            }}
+          >
+            <Typography
+              variant={isMobile ? "h6" : "h4"}
+              component="h1"
+              sx={{ fontWeight: 700, lineHeight: "normal", flexShrink: 0 }}
+            >
               {movie?.title}
             </Typography>
-            <Typography variant={isMobile ? 'subtitle2' : 'h6'} component="span" sx={{ fontWeight: 400, paddingLeft: 1 }}>
+            <Typography
+              variant={isMobile ? "subtitle2" : "h6"}
+              component="span"
+              sx={{ fontWeight: 400, pl: 1 }}
+            >
               ({movie?.release_date})
             </Typography>
           </Box>
 
-          <Box sx={{ paddingLeft: isMobile ? 1 : 4, color: "#FFFFFF", paddingBottom: 2, display: 'flex', alignItems: 'baseline' }}>
+          <Box
+            sx={{
+              pl: isMobile ? 1 : 4,
+              color: theme.palette.common.white,
+              pb: 2,
+            }}
+          >
             <Typography variant="body1" sx={{ whiteSpace: "pre-wrap" }}>
               {movie?.overview}
             </Typography>
           </Box>
 
-          <Grid item container spacing={2} sx={{ paddingTop: 2, alignItems: "center" }}>
-            <Grid item>
-              <IconButton label="WATCHED" buttonIcon={<CheckIcon />} />
-            </Grid>
-            <Grid item>
-              <IconButton label="WATCHLIST" buttonIcon={<PlaylistAddIcon />} />
-            </Grid>
-            <Grid item>
-              <ThumbUpButton movie={movie} />
-            </Grid>
-            <Grid item>
-              <ThumbDownButton movie={movie} />
-            </Grid>
-          </Grid>
+          {/* Action Buttons */}
+          <Box
+            sx={{
+              display: "flex",
+              gap: 2,
+              pl: isMobile ? 1 : 4,
+              pt: 2,
+              flexWrap: "wrap",
+              alignItems: "center",
+            }}
+          >
+            <ActionButton label="Watched" icon={<CheckIcon />} />
+            <ActionButton label="Watchlist" icon={<PlaylistAddIcon />} />
+            <ActionButton
+              label="Thumbs Up"
+              icon={<ThumbUpIcon />}
+              onClick={() => console.log("Liked:", movie.title)}
+            />
+            <ActionButton
+              label="Thumbs Down"
+              icon={<ThumbDownIcon />}
+              onClick={() => console.log("Disliked:", movie.title)}
+            />
+          </Box>
         </Grid>
       </Grid>
     </Container>
   );
 };
+
+interface ActionButtonProps {
+  label: string;
+  icon: React.ReactElement;
+  onClick?: () => void;
+}
+
+const ActionButton = ({ label, icon, onClick }: ActionButtonProps) => (
+  <Tooltip title={label}>
+    <MuiIconButton
+      onClick={onClick}
+      sx={{
+        color: "#fff",
+        border: "1px solid rgba(255, 255, 255, 0.3)",
+        borderRadius: 2,
+        padding: 1,
+        transition: "0.2s ease-in-out",
+        "&:hover": {
+          backgroundColor: "rgba(255, 255, 255, 0.1)",
+        },
+      }}
+    >
+      {icon}
+    </MuiIconButton>
+  </Tooltip>
+);

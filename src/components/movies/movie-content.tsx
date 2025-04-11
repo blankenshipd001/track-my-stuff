@@ -29,7 +29,7 @@ export const MovieContent = () => {
   const { moviesContent, tvContent, allContent, fetchContent } = useFindByTitle();
   const { enqueueNotificationBar, NotificationBarComponent } = useNotificationBar();
 
-    /**
+  /**
    * Loads movies when the page loads
    */
     useEffect(() => {
@@ -50,15 +50,6 @@ export const MovieContent = () => {
           router.push("/");
         }
     }, [user]);
-
-  /**
-   * Handle changing tabs
-   * @param event click event
-   * @param newTab the new tab number to swap to
-   */
-  const handleTabChange = (event: React.SyntheticEvent, newTab: number) => {
-    setTabNumber(newTab);
-  };
 
   /**
    * Handle the click to add to a watchlist
@@ -117,11 +108,11 @@ export const MovieContent = () => {
       <SearchBox searchForMovie={fetchContent} />
 
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-        <Tabs value={tabNumber} onChange={handleTabChange} aria-label="basic tabs example">
+        <Tabs value={tabNumber} onChange={(e, newTab) => setTabNumber(newTab)} aria-label="basic tabs example">
           <Tab label={tabOneTitle} id="tab-0" aria-controls="tabpanel-0" />
           <Tab label="Movies" id="tab-1" aria-controls="tabpanel-1" />
           <Tab label="TV" id="tab-2" aria-controls="tabpanel-2" />
-          {user !== null ? <Tab label="Watchlist" id="tab-3" aria-controls="tabpanel-4" /> : null}
+          {user !== null ? <Tab label="Watchlist" id="tab-3" aria-controls="tabpanel-3" /> : null}
         </Tabs>
       </Box>
 
@@ -140,7 +131,6 @@ export const MovieContent = () => {
       <TabPanel value={tabNumber} index={3}>
         <MovieGrid movies={watchList} removeClicked={removeFromWatchList} />
       </TabPanel>
-      
       {NotificationBarComponent}
 
     </Container>

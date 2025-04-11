@@ -9,14 +9,6 @@ import Logo from "@utils/assets/logo.svg";
 import { StandardButton } from "@components/buttons";
 import { UserAuth } from "@utils/providers/auth-provider";
 
-const styles = {
-  logo: {
-    cursor: "pointer",
-    maxWidth: "100%",
-    height: "auto",
-  },
-};
-
 export const Header = () => {
   const router = useRouter();
   const { googleSignIn, logOut, user } = UserAuth();
@@ -59,9 +51,9 @@ export const Header = () => {
       {/* Logo */}
 
       <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", p: 2 }}>
-        <div onClick={handleClickEvent} style={styles.logo}>
+        <Box onClick={handleClickEvent} sx={{ cursor: "pointer", maxWidth: "100%", height: "auto" }}>
           <Image src={Logo} alt="Logo" width={200} height={100} />
-        </div>
+        </Box>
 
         {/* Mobile navigation */}
         <Box sx={{ display: { xs: "flex", md: "none" }, justifyContent: "flex-end" }}>
@@ -74,6 +66,7 @@ export const Header = () => {
         <Box sx={{ display: { xs: "none", md: "flex" }, alignItems: "center", justifyContent: "flex-end", flex: 1 }}>
           <StandardButton label="Search" onClickAction={() => router.push("/")} />
           {user !== null ? <StandardButton label="Watchlist" onClickAction={() => router.push("/movies/watched")} /> : null}
+          {user !== null ? <StandardButton label="Streaming" onClickAction={() => router.push("/movies/streaming")} /> : null}
           <StandardButton label="About" onClickAction={() => router.push("/about")} />
 
           {loading ? <div>...</div> : user !== null ? <StandardButton label="LOG OUT" onClickAction={handleSignOut} /> : <StandardButton label="LOG IN" onClickAction={() => handleSignIn()} />}
@@ -91,6 +84,9 @@ export const Header = () => {
           </ListItemButton>
           <ListItemButton onClick={() => router.push("/movies/watched")}>
             <ListItemText primary="Watchlist" />
+          </ListItemButton>
+          <ListItemButton onClick={() => router.push("/movies/streaming")}>
+            <ListItemText primary="Streaming" />
           </ListItemButton>
           <ListItemButton onClick={() => router.push("/about")}>
             <ListItemText primary="About" />

@@ -11,6 +11,8 @@ export const darkTheme = createTheme({
         },
     },
     typography: {
+        fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
+        
         // Override the default typography variant to use white text
         allVariants: {
           color: '#ffffff', // White text color

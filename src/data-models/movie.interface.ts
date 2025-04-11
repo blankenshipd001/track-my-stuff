@@ -6,11 +6,14 @@ export interface Movie {
     // genre_ids: [],
     genres: [
         {id: number, name: string}
-    ]
+    ],
     id?: number,
+    imdb_id: string,
+    name: string,
     movieId: number,
     original_language: string,
     original_title: string,
+    original_name: string,
     overview: string,
     popularity: number,
     poster_path: string,
@@ -19,7 +22,7 @@ export interface Movie {
         link: string,
         rent: [ServiceProvider],
         flatrate: [ServiceProvider],
-    }
+    },
     release_date: string,
     title: string,
     video: boolean,

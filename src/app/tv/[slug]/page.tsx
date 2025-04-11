@@ -48,7 +48,7 @@ export default function MovieDetailsPage({ params }: { params: { slug: string } 
 
   const fetchRecommendedMovies = async (movie: Movie) => {
     const genreId = movie?.genres[0]?.id;
-    const url = `https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&sort_by=popularity.desc&with_genres=${genreId}&api_key=${movie_api_key}`;
+    const url = `https://api.themoviedb.org/3/discover/tv?include_adult=false&include_video=false&language=en-US&page=1&sort_by=popularity.desc&with_genres=${genreId}&api_key=${movie_api_key}`;
 
     const res = await fetch(url);
     const data = await res.json();
@@ -56,18 +56,20 @@ export default function MovieDetailsPage({ params }: { params: { slug: string } 
   };
 
   const fetchMovieOrTvDetails = async () => {
-    const getMovieUrl = `https://api.themoviedb.org/3/movie/${params.slug}?api_key=${movie_api_key}`;
+    const getTvUrl = `https://api.themoviedb.org/3/tv/${params.slug}?api_key=${movie_api_key}`;
 
-    const movieRes = await fetch(getMovieUrl);
+    const tvRes = await fetch(getTvUrl);
 
-    if (movieRes.ok) {
-      const movie = await movieRes.json();
-      return handleMovieOrTvResponse(movie, "movie");
+    if (tvRes.ok) {
+      const tv = await tvRes.json();
+      console.log("TV Details: ", tv);
+      return handleMovieOrTvResponse(tv, "tv");
     }
   };
 
   const handleMovieOrTvResponse = async (media: Movie, type: "movie" | "tv") => {
     const providerUrl = `https://api.themoviedb.org/3/${type}/${media.id}/watch/providers?api_key=${movie_api_key}`;
+
     const res = await fetch(providerUrl);
     const providerData = await res.json();
 
@@ -99,7 +101,7 @@ export default function MovieDetailsPage({ params }: { params: { slug: string } 
             </Grid>
             <Grid item xs={12} md={8}>
               <Typography variant="h4" gutterBottom color="white">
-                {details.title} ({new Date(details.release_date).getFullYear()})
+                {details.title ?? details.name} ({new Date(details.release_date).getFullYear()})
               </Typography>
               <Box mb={2}>
                 {details.genres.map((genre) => (

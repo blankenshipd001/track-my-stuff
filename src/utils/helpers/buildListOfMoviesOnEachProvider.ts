@@ -46,9 +46,9 @@ export const buildListOfMoviesOnEachProvider = (watchList: Movie[], providerList
 
   if (watchList.length > 0 && providerList.length > 0) {
     watchList.forEach((movie) => {
-      lists.purchase = addMovieToProviderList(movie.providers.buy, movie, providerList, moviesByPurchaseProvider);
-      lists.rental = addMovieToProviderList(movie.providers.rent, movie, providerList, moviesByRentalProvider);
-      lists.streamer = addMovieToProviderList(movie.providers.flatrate, movie, providerList, moviesByStreamingProvider);
+      lists.purchase = addMovieToProviderList(movie?.providers?.buy, movie, providerList, moviesByPurchaseProvider);
+      lists.rental = addMovieToProviderList(movie?.providers?.rent, movie, providerList, moviesByRentalProvider);
+      lists.streamer = addMovieToProviderList(movie?.providers?.flatrate, movie, providerList, moviesByStreamingProvider);
     });
   }
 

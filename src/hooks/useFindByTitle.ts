@@ -26,38 +26,32 @@ export const useFindByTitle = () => {
       .then((results) => Promise.all(results.map((r) => r.json())))
       .then(async ([movieResponseJson, tvResponseJson]) => {
         const moviesResult: Movie[] = await Promise.all(
-          movieResponseJson.results.map((movie: Movie) => {
-            return fetch(`https://api.themoviedb.org/3/movie/${movie.id}/watch/providers?api_key=${movie_api_key}&external_source=imdb_id`)
-              .then((res) => res.json())
-              .then((providers) => {
-                const newMovie = {
-                  ...movie,
-                  movieId: movie.id,
-                  // For now we only care about US but we could expand
-                  providers: providers.results.US ?? [],
-                };
-
-                return newMovie;
-              });
+          movieResponseJson.results.map(async (movie: Movie) => {
+            const res = await fetch(`https://api.themoviedb.org/3/movie/${movie.id}/watch/providers?api_key=${movie_api_key}&external_source=imdb_id`);
+            const providers = await res.json();
+            const newMovie = {
+              ...movie,
+              movieId: movie.id,
+              // For now we only care about US but we could expand
+              providers: providers.results.US ?? [],
+            };
+            return newMovie;
           })
         );
 
         setMovies(moviesResult);
 
         const tvResult: Movie[] = await Promise.all(
-          tvResponseJson.results.map((tv: Movie) => {
-            return fetch(`https://api.themoviedb.org/3/tv/${tv.id}/watch/providers?api_key=${movie_api_key}&external_source=imdb_id`)
-              .then((res) => res.json())
-              .then((providers) => {
-                const newShow = {
-                  ...tv,
-                  movieId: tv.id,
-                  // For now we only care about US but we could expand
-                  providers: providers.results.US ?? [],
-                };
-
-                return newShow;
-              });
+          tvResponseJson.results.map(async (tv: Movie) => {
+            const res = await fetch(`https://api.themoviedb.org/3/tv/${tv.id}/watch/providers?api_key=${movie_api_key}&external_source=imdb_id`);
+            const providers = await res.json();
+            const newShow = {
+              ...tv,
+              movieId: tv.id,
+              // For now we only care about US but we could expand
+              providers: providers.results.US ?? [],
+            };
+            return newShow;
           })
         );
 
