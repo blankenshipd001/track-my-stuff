@@ -2,15 +2,16 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { db } from "@/config/firebase";
-import { collection, addDoc } from "firebase/firestore";
+import {
+  addToWatchList,
+} from "@/utils/api/contentApi";
 import Image from "next/image";
 import { Box, Container, Grid, Paper, Typography, Chip, Button } from "@mui/material";
 import useNotificationBar from "@/hooks/useNotificationBar";
 // import { BackButton } from "@/components/buttons/back-button";
-import { UserAuth } from "@/utils/providers/auth-provider";
 import { Movie } from "@/data-models/movie.interface";
-import { ArrowBack } from "@mui/icons-material";
+import { ArrowBack, BookmarkAdd } from "@mui/icons-material";
+import { useCurrentUser } from "@/hooks/useCurrentUser";
 
 // const movie_api_key = process.env.NEXT_PUBLIC_THE_MOVIE_DB_API_KEY;
 const BASE_URL = process.env.NEXT_PUBLIC_THE_MOVIE_DB_BASE_URL;
@@ -18,7 +19,8 @@ const movie_api_key = process.env.NEXT_PUBLIC_THE_MOVIE_DB_API_KEY;
 
 export default function MovieDetailsPage({ params }: { params: { slug: string } }) {
   const router = useRouter();
-  const { googleSignIn, user } = UserAuth();
+  const { login, user } = useCurrentUser();
+  
   // const isMobile = useMediaQuery(darkTheme.breakpoints.down("sm"));
 
   const { enqueueNotificationBar, NotificationBarComponent } = useNotificationBar();
@@ -30,19 +32,20 @@ export default function MovieDetailsPage({ params }: { params: { slug: string } 
     fetchMovieOrTvDetails();
   }, []);
 
-  const addToWatchList = async (movie: Movie) => {
-    if (user === null) {
-      await googleSignIn();
+  const addToWatchListClickHandler = async (movie: Movie) => {
+    if (!user) {
+      enqueueNotificationBar("Please log in to save movies.", "info");
+      return;
     }
 
-    delete movie.id;
-    const path = `users/${user?.uid}/movies`;
-
     try {
-      await addDoc(collection(db, path), { movie });
-      enqueueNotificationBar("Successfully added to your watch list", "success");
+      const docRef = await addToWatchList(user.uid, movie);
+      if (docRef && typeof docRef !== "string") {
+        enqueueNotificationBar("Added to your watch list!", "success");
+        router.push(`/movies/${docRef.id}`);
+      }
     } catch (err) {
-      enqueueNotificationBar(`Failure adding to your watch list: ${err}`, "error");
+      enqueueNotificationBar(`Error: ${err}`, "error");
     }
   };
 
@@ -92,7 +95,7 @@ export default function MovieDetailsPage({ params }: { params: { slug: string } 
           </Button>
           {/* temporary spacing as these buttons will move */}
           &nbsp;&nbsp;&nbsp;
-          <Button startIcon={<ArrowBack />} variant="contained" sx={{ mb: 2 }} onClick={() => addToWatchList(details)}>
+          <Button startIcon={<BookmarkAdd />} variant="contained" sx={{ mb: 2 }} onClick={() => addToWatchListClickHandler(details)}>
             Add to Watchlist
           </Button>
           <Grid container spacing={4}>

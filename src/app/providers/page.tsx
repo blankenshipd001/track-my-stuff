@@ -5,9 +5,9 @@ import { Container, Typography, List, ListItemButton, Checkbox, ListItemText, Bu
 import { ServiceProvider } from "@/data-models/service-provider.interface";
 import useFetchAllAvailableProviders from "@/hooks/useFetchAllAvailableProviders";
 import { saveMyProviders } from "@utils/api/contentApi";
-import { UserAuth } from "@/utils/providers/auth-provider";
 import { LoadingScreen } from "@/components/loading";
 import useGetMyFavoriteProviders from "@/hooks/useGetMyFavoriteProviders";
+import { useCurrentUser } from "@/hooks/useCurrentUser";
 
 /**
  * Providers Page
@@ -15,24 +15,45 @@ import useGetMyFavoriteProviders from "@/hooks/useGetMyFavoriteProviders";
  * @returns {React.FC}
  */
 const Preferences: React.FC = () => {
-  const { googleSignIn, user } = UserAuth();
+  const { user, loading: authLoading, login } = useCurrentUser();
   const { allProviders } = useFetchAllAvailableProviders();
+
+  // Always call hook at top-level to avoid conditional hook usage
   const { isLoading, myFavoriteProviders } = useGetMyFavoriteProviders(user?.uid);
+
   const [selectedProviders, setSelectedProviders] = useState<ServiceProvider[]>([]);
   const [selectedProviderId, setSelectedProviderId] = useState<number[]>([]);
 
+  // If auth is still initializing, show a loading screen
+  if (authLoading) {
+    return <LoadingScreen />;
+  }
+
+  // If user is not logged in, prompt them to log in
+  if (!user) {
+    return (
+      <Container sx={{ textAlign: "center", py: 8 }}>
+        <Typography variant="h5" gutterBottom>
+          Please log in to manage your preferences
+        </Typography>
+        <Button variant="contained" color="primary" onClick={login}>
+          Log In
+        </Button>
+      </Container>
+    );
+  }
+
   /**
-   * Handle adding the provider to the list of selected providers
-   * @param providerId {number} id of the selected provider
+   * Handle adding/removing the provider to/from the list of selected providers
    */
-  const handleProviderSelect = async (provider: ServiceProvider) => {
+  const handleProviderSelect = (provider: ServiceProvider) => {
     const isSelected = selectedProviderId.includes(provider.provider_id);
     if (isSelected) {
-      setSelectedProviderId(selectedProviderId.filter((id) => id !== provider.provider_id));
-      setSelectedProviders(selectedProviders.filter((p) => p.provider_id !== provider.provider_id));
+      setSelectedProviderId((prev) => prev.filter((id) => id !== provider.provider_id));
+      setSelectedProviders((prev) => prev.filter((p) => p.provider_id !== provider.provider_id));
     } else {
-      setSelectedProviderId([...selectedProviderId, provider.provider_id]);
-      setSelectedProviders([...selectedProviders, provider]);
+      setSelectedProviderId((prev) => [...prev, provider.provider_id]);
+      setSelectedProviders((prev) => [...prev, provider]);
     }
   };
 
@@ -40,53 +61,95 @@ const Preferences: React.FC = () => {
    * Handle saving my list of favorites to the database
    */
   const handleAddToFavorites = async () => {
-    if (user === null) {
-      await googleSignIn();
-    }
-
     await saveMyProviders(user.uid, selectedProviders);
   };
 
-  useEffect(() => {    
-    setSelectedProviders([...selectedProviders, ...myFavoriteProviders]);
+  // Initialize the selected providers with existing favorites
+  useEffect(() => {
+    if (myFavoriteProviders?.length) {
+      setSelectedProviders(myFavoriteProviders);
+      setSelectedProviderId(myFavoriteProviders.map((p) => p.provider_id));
+    }
   }, [myFavoriteProviders]);
 
   return (
-    <Container sx={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: "100vh" }}>
+    <Container
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        minHeight: "100vh",
+      }}
+    >
       <Typography variant="h4" gutterBottom>
         Select Your Favorite Streaming Providers
       </Typography>
-      <Button variant="contained" color="primary" onClick={handleAddToFavorites} disabled={selectedProviders.length < 1}>
-        Add to Favorites
+
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={handleAddToFavorites}
+        disabled={selectedProviders.length < 1}
+        sx={{ mb: 2 }}
+      >
+        Save Favorites
       </Button>
+
       {isLoading ? (
         <LoadingScreen />
       ) : (
         <Grid container spacing={2}>
           <Grid item xs={12} md={6} sx={{ display: "flex", justifyContent: "center" }}>
             <List>
-              {allProviders.slice(0, Math.ceil(allProviders.length / 2)).map((provider: ServiceProvider, index: number) => (
-                <ListItemButton key={`${provider.provider_id} - ${index}`} onClick={() => handleProviderSelect(provider)}>
-                  <ListItemText primary={provider.provider_name} />
-                  <Checkbox checked={selectedProviderId.includes(provider.provider_id)} color="primary" onChange={() => handleProviderSelect(provider)} />
-                </ListItemButton>
-              ))}
+              {allProviders
+                .slice(0, Math.ceil(allProviders.length / 2))
+                .map((provider, index) => (
+                  <ListItemButton
+                    key={`${provider.provider_id}-${index}`}
+                    onClick={() => handleProviderSelect(provider)}
+                  >
+                    <ListItemText primary={provider.provider_name} />
+                    <Checkbox
+                      checked={selectedProviderId.includes(provider.provider_id)}
+                      color="primary"
+                      onChange={() => handleProviderSelect(provider)}
+                    />
+                  </ListItemButton>
+                ))}
             </List>
           </Grid>
+
           <Grid item xs={12} md={6} sx={{ display: "flex", justifyContent: "center" }}>
             <List>
-              {allProviders.slice(Math.ceil(allProviders.length / 2)).map((provider: ServiceProvider, index: number) => (
-                <ListItemButton key={`${provider.provider_id} - ${index}`} onClick={() => handleProviderSelect(provider)}>
-                  <ListItemText primary={provider.provider_name} />
-                  <Checkbox checked={selectedProviderId.includes(provider.provider_id)} color="primary" onChange={() => handleProviderSelect(provider)} />
-                </ListItemButton>
-              ))}
+              {allProviders
+                .slice(Math.ceil(allProviders.length / 2))
+                .map((provider, index) => (
+                  <ListItemButton
+                    key={`${provider.provider_id}-${index}`}
+                    onClick={() => handleProviderSelect(provider)}
+                  >
+                    <ListItemText primary={provider.provider_name} />
+                    <Checkbox
+                      checked={selectedProviderId.includes(provider.provider_id)}
+                      color="primary"
+                      onChange={() => handleProviderSelect(provider)}
+                    />
+                  </ListItemButton>
+                ))}
             </List>
           </Grid>
         </Grid>
       )}
-      <Button variant="contained" color="primary" onClick={handleAddToFavorites} disabled={selectedProviders.length < 1}>
-        Add to Favorites
+
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={handleAddToFavorites}
+        disabled={selectedProviders.length < 1}
+        sx={{ mt: 2 }}
+      >
+        Save Favorites
       </Button>
     </Container>
   );

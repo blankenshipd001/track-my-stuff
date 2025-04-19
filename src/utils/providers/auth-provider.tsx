@@ -1,6 +1,6 @@
 import React, { FC, ReactNode, useContext, useEffect, useState } from "react";
 import { User, signInWithPopup, signOut, onAuthStateChanged, GoogleAuthProvider } from "firebase/auth";
-import { auth } from "@/config/firebase";
+import { auth } from "@/utils/firebase/firebase";
 
 
 interface Props {

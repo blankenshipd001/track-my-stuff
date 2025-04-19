@@ -1,22 +1,38 @@
 "use client";
+
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
-import { Box, Container } from "@mui/material";
+import {
+  Tabs,
+  Tab,
+  Box,
+  Container,
+  useTheme,
+  useMediaQuery,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+} from "@mui/material";
 import { SearchBox } from "@components/search";
-import { UserAuth } from "@/utils/providers/auth-provider";
-import { addToWatchList, getContent, requestRemoveFromWatchList } from "@/utils/api/contentApi";
-import { useLoadPopular } from "@/hooks/useLoadPopular";
+import {
+  addToWatchList,
+  getContent,
+  requestRemoveFromWatchList,
+} from "@/utils/api/contentApi";
 import { useFindByTitle } from "@/hooks/useFindByTitle";
 import useNotificationBar from "@/hooks/useNotificationBar";
 import { Movie } from "@/data-models/movie.interface";
 import { TabPanel } from "../panels";
 import { MovieGrid } from "./movie-grid";
 
-export const MovieContent = () => {
+interface MovieContentProps {
+  popularMedia: Movie[];
+  user?: { uid: string; email?: string } | null;
+}
+
+export const MovieContent = ({ popularMedia, user }: MovieContentProps) => {
   const router = useRouter();
-  const { googleSignIn, user } = UserAuth();
 
   const [tabNumber, setTabNumber] = useState(0);
   const [movies, setMovies] = useState<Movie[]>([]);
@@ -25,98 +41,101 @@ export const MovieContent = () => {
   const [watchList, setWatchList] = useState<Movie[]>([]);
   const [tabOneTitle, setTabOneTitle] = useState<string>("Trending");
 
-  const { popularMedia } = useLoadPopular();
   const { moviesContent, tvContent, allContent, fetchContent } = useFindByTitle();
   const { enqueueNotificationBar, NotificationBarComponent } = useNotificationBar();
 
-  /**
-   * Loads movies when the page loads
-   */
-    useEffect(() => {
-        if (user !== null) {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          getContent(user?.uid)
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            .then((data: any) => {
-              setWatchList(data);
-            })
-            .catch((err) => {
-              console.error("Error making async call: " + err);
-              router.push("/");
-            })
-        } else {
-          // No user is signed in.
-          console.error("no one home");
-          router.push("/");
-        }
-    }, [user]);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const [isClient, setIsClient] = useState(false);
 
-  /**
-   * Handle the click to add to a watchlist
-   * @param movie {Movie} the move to add to the watchlist
-   */
-  const addToWatchListClickHandler = async (movie: Movie) => {
-    if (user === null) {
-      await googleSignIn();
-    }
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
-    addToWatchList(user.uid, movie)
-    .then((docRef: Movie | string) => {
-      if(docRef != null && typeof docRef !== "string") {
-        enqueueNotificationBar("Successfully added to your watch list", "success");
-        router.push(`/movies/${docRef.id}`);
-      }
-    })
-    .catch((err: unknown) => {
-      enqueueNotificationBar(`Failure adding to your watch list: ${err}`, "error");
-    });
-  };
+  useEffect(() => {
+    if (!user) return;
+    getContent(user.uid)
+      .then((data: any) => setWatchList(data))
+      .catch(() => router.push("/"));
+  }, [user]);
 
-    /**
-   * Remove this movie from the watch list
-   * @param {*} movie
-   */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const removeFromWatchList = async (movie: any) => {
-    requestRemoveFromWatchList(user?.uid, movie).then(() => {
-      const newWatchList = watchList.filter(
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (item: any) => item.id !== movie.id
-      );
-      setWatchList(newWatchList);
-    });
-  };
-
-  React.useEffect(() => {
+  useEffect(() => {
     setMovies(moviesContent);
     setTvShows(tvContent);
     setEverything(allContent);
-
-    if (allContent.length > 0) {
-      setTabOneTitle("All");
-    } else {
-      setTabOneTitle("Trending");
-    }
+    setTabOneTitle(allContent.length > 0 ? "All" : "Trending");
   }, [allContent]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     setEverything(popularMedia);
   }, [popularMedia]);
 
-  return (
-    <Container>
-      <SearchBox searchForMovie={fetchContent} />
+  const addToWatchListClickHandler = async (movie: Movie) => {
+    if (!user) {
+      enqueueNotificationBar("Please log in to save movies.", "info");
+      return;
+    }
+    try {
+      const docRef = await addToWatchList(user.uid, movie);
+      if (docRef && typeof docRef !== "string") {
+        enqueueNotificationBar("Added to your watch list!", "success");
+        router.push(`/movies/${docRef.id}`);
+      }
+    } catch (err) {
+      enqueueNotificationBar(`Error: ${err}`, "error");
+    }
+  };
 
-      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-        <Tabs value={tabNumber} onChange={(e, newTab) => setTabNumber(newTab)} aria-label="basic tabs example">
-          <Tab label={tabOneTitle} id="tab-0" aria-controls="tabpanel-0" />
-          <Tab label="Movies" id="tab-1" aria-controls="tabpanel-1" />
-          <Tab label="TV" id="tab-2" aria-controls="tabpanel-2" />
-          {user !== null ? <Tab label="Watchlist" id="tab-3" aria-controls="tabpanel-3" /> : null}
-        </Tabs>
+  const removeFromWatchList = async (movie: Movie) => {
+    if (!user) return;
+    await requestRemoveFromWatchList(user.uid, movie);
+    setWatchList((prev) => prev.filter((item) => item.id !== movie.id));
+  };
+
+  // --- Mobile-friendly tab selector ---
+  const renderTabSelector = () => (
+    <FormControl fullWidth size="small" sx={{ mb: 2 }}>
+      <InputLabel id="tab-select-label">View</InputLabel>
+      <Select
+        labelId="tab-select-label"
+        value={tabNumber}
+        label="View"
+        onChange={(e) => setTabNumber(Number(e.target.value))}
+      >
+        <MenuItem value={0}>{tabOneTitle}</MenuItem>
+        <MenuItem value={1}>Movies</MenuItem>
+        <MenuItem value={2}>TV</MenuItem>
+        {user && <MenuItem value={3}>Watchlist</MenuItem>}
+      </Select>
+    </FormControl>
+  );
+
+  return (
+    <Container maxWidth="lg" sx={{ py: isClient && isMobile ? 2 : 4 }}>
+      <Box sx={{ mb: 2 }}>
+        <SearchBox searchForMovie={fetchContent} />
       </Box>
 
-      {/* Always show */}
+      {isClient && isMobile ? (
+        renderTabSelector()
+      ) : (
+        <Box sx={{ borderBottom: 1, borderColor: "divider", overflowX: "auto" }}>
+          <Tabs
+            value={tabNumber}
+            onChange={(e, newTab) => setTabNumber(newTab)}
+            variant="scrollable"
+            scrollButtons="auto"
+            aria-label="movie content tabs"
+            sx={{ minHeight: 48 }}
+          >
+            <Tab label={tabOneTitle} sx={{ minWidth: 80 }} />
+            <Tab label="Movies" sx={{ minWidth: 80 }} />
+            <Tab label="TV" sx={{ minWidth: 80 }} />
+            {user && <Tab label="Watchlist" sx={{ minWidth: 80 }} />}
+          </Tabs>
+        </Box>
+      )}
+
       <TabPanel value={tabNumber} index={0}>
         <MovieGrid movies={everything} addClicked={addToWatchListClickHandler} />
       </TabPanel>
@@ -126,13 +145,13 @@ export const MovieContent = () => {
       <TabPanel value={tabNumber} index={2}>
         <MovieGrid movies={tvShows} addClicked={addToWatchListClickHandler} />
       </TabPanel>
+      {user && (
+        <TabPanel value={tabNumber} index={3}>
+          <MovieGrid movies={watchList} removeClicked={removeFromWatchList} />
+        </TabPanel>
+      )}
 
-      {/* Only show if logged in */}
-      <TabPanel value={tabNumber} index={3}>
-        <MovieGrid movies={watchList} removeClicked={removeFromWatchList} />
-      </TabPanel>
       {NotificationBarComponent}
-
     </Container>
   );
 };

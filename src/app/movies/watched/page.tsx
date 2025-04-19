@@ -4,15 +4,15 @@ import { Container } from "@mui/material";
 import { Movie } from "@/data-models/movie.interface";
 import { useRouter } from "next/navigation";
 import { getContent } from "@/utils/api/contentApi";
-import { UserAuth } from "@/utils/providers/auth-provider";
 import useGetMyFavoriteProviders from "@/hooks/useGetMyFavoriteProviders";
 import { LoadingScreen } from "@/components/loading";
 import { ProviderList } from "@/components/provider";
 import { buildListOfMoviesOnEachProvider } from "@/utils/helpers/buildListOfMoviesOnEachProvider";
+import { useCurrentUser } from "@/hooks/useCurrentUser";
 
 // Main MovieGrid component
 const Watched = () => {
-  const { user } = UserAuth();
+  const { user } = useCurrentUser();
   const { isLoading, myFavoriteProviders } = useGetMyFavoriteProviders(user?.uid);
 
   const [watchList, setWatchList] = useState<Movie[]>([]);

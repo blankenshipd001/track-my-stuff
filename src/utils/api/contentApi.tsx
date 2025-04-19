@@ -1,5 +1,5 @@
 import { doc, deleteDoc, writeBatch, DocumentData, collection, getDocs, setDoc, DocumentReference, WriteBatch } from "firebase/firestore";
-import { db } from "@/config/firebase";
+import { db } from "@/utils/firebase/firebase";
 import { Movie } from "@/data-models/movie.interface";
 import { ServiceProvider } from "@/data-models/service-provider.interface";
 

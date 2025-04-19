@@ -1,4 +1,4 @@
-import { auth } from "@/config/firebase";
+import { auth } from "@/utils/firebase/firebase";
 import { User } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";

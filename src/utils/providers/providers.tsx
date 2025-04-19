@@ -1,8 +1,9 @@
 "use client";
 import { ThemeProvider } from "@mui/material";
-import { AuthProvider } from "./auth-provider";
+
 import { FC, ReactNode } from "react";
 import { darkTheme } from "@utils/themes/theme";
+import { AuthProvider } from "./AuthContext";
 
 interface Props { children: ReactNode }
 
