@@ -55,7 +55,7 @@ const HeaderClient = ({ user, navItems }: HeaderClientProps) => {
           ))}
           <Divider />
           {user ? (
-            <ListItemButton onClick={async () => { Logout(); setDrawerOpen(false); router.refresh(); }}>
+            <ListItemButton onClick={async () => { logout(); setDrawerOpen(false); router.refresh(); }}>
               <ListItemText primary="Log Out" />
             </ListItemButton>
           ) : (

@@ -5,7 +5,7 @@ import { getFirebaseTokenFromRequest } from "@utils/get-token"; // helper to ext
 
 export async function POST(req: NextRequest) {
   try {
-    const token = await getFirebaseTokenFromRequest(req);
+    const token = await getFirebaseTokenFromRequest();
     if (!token) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -18,6 +18,8 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Missing movie data" }, { status: 400 });
     }
 
+    
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { id, ...movieWithoutId } = movie;
 
     await adminDB.collection(`users/${decoded.uid}/movies`).add({

@@ -19,10 +19,18 @@ const Preferences: React.FC = () => {
   const { allProviders } = useFetchAllAvailableProviders();
 
   // Always call hook at top-level to avoid conditional hook usage
-  const { isLoading, myFavoriteProviders } = useGetMyFavoriteProviders(user?.uid);
+  const { isLoading, myFavoriteProviders } = useGetMyFavoriteProviders(user?.uid || "");
 
   const [selectedProviders, setSelectedProviders] = useState<ServiceProvider[]>([]);
   const [selectedProviderId, setSelectedProviderId] = useState<number[]>([]);
+
+    // Initialize the selected providers with existing favorites
+    useEffect(() => {
+      if (myFavoriteProviders?.length) {
+        setSelectedProviders(myFavoriteProviders);
+        setSelectedProviderId(myFavoriteProviders.map((p) => p.provider_id));
+      }
+    }, [myFavoriteProviders]);
 
   // If auth is still initializing, show a loading screen
   if (authLoading) {
@@ -63,14 +71,6 @@ const Preferences: React.FC = () => {
   const handleAddToFavorites = async () => {
     await saveMyProviders(user.uid, selectedProviders);
   };
-
-  // Initialize the selected providers with existing favorites
-  useEffect(() => {
-    if (myFavoriteProviders?.length) {
-      setSelectedProviders(myFavoriteProviders);
-      setSelectedProviderId(myFavoriteProviders.map((p) => p.provider_id));
-    }
-  }, [myFavoriteProviders]);
 
   return (
     <Container

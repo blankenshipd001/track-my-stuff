@@ -55,6 +55,7 @@ export const MovieContent = ({ popularMedia, user }: MovieContentProps) => {
   useEffect(() => {
     if (!user) return;
     getContent(user.uid)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .then((data: any) => setWatchList(data))
       .catch(() => router.push("/"));
   }, [user]);

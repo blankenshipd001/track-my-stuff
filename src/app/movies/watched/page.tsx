@@ -13,7 +13,7 @@ import { useCurrentUser } from "@/hooks/useCurrentUser";
 // Main MovieGrid component
 const Watched = () => {
   const { user } = useCurrentUser();
-  const { isLoading, myFavoriteProviders } = useGetMyFavoriteProviders(user?.uid);
+  const { isLoading, myFavoriteProviders } = useGetMyFavoriteProviders(user?.uid || "");
 
   const [watchList, setWatchList] = useState<Movie[]>([]);
   const router = useRouter();

@@ -2,16 +2,23 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import {
-  addToWatchList,
-} from "@/utils/api/contentApi";
 import Image from "next/image";
-import { Box, Container, Grid, Paper, Typography, Chip, Button } from "@mui/material";
+import {
+  Box,
+  Container,
+  Grid,
+  Paper,
+  Typography,
+  Chip,
+  Button,
+  useMediaQuery,
+  useTheme,
+  Stack,
+} from "@mui/material";
 import useNotificationBar from "@/hooks/useNotificationBar";
 // import { BackButton } from "@/components/buttons/back-button";
 import { Movie } from "@/data-models/movie.interface";
-import { ArrowBack, BookmarkAdd } from "@mui/icons-material";
-import { useCurrentUser } from "@/hooks/useCurrentUser";
+import { ArrowBack } from "@mui/icons-material";
 
 // const movie_api_key = process.env.NEXT_PUBLIC_THE_MOVIE_DB_API_KEY;
 const BASE_URL = process.env.NEXT_PUBLIC_THE_MOVIE_DB_BASE_URL;
@@ -19,11 +26,9 @@ const movie_api_key = process.env.NEXT_PUBLIC_THE_MOVIE_DB_API_KEY;
 
 export default function MovieDetailsPage({ params }: { params: { slug: string } }) {
   const router = useRouter();
-  const { login, user } = useCurrentUser();
-  
-  // const isMobile = useMediaQuery(darkTheme.breakpoints.down("sm"));
-
   const { enqueueNotificationBar, NotificationBarComponent } = useNotificationBar();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const [details, setDetails] = useState<Movie>();
   const [recommended, setRecommended] = useState<Movie[]>([]);
@@ -32,20 +37,20 @@ export default function MovieDetailsPage({ params }: { params: { slug: string } 
     fetchMovieOrTvDetails();
   }, []);
 
-  const addToWatchListClickHandler = async (movie: Movie) => {
-    if (!user) {
-      enqueueNotificationBar("Please log in to save movies.", "info");
-      return;
-    }
-
+  const addToWatchList = async (movie: Movie) => {
     try {
-      const docRef = await addToWatchList(user.uid, movie);
-      if (docRef && typeof docRef !== "string") {
-        enqueueNotificationBar("Added to your watch list!", "success");
-        router.push(`/movies/${docRef.id}`);
-      }
+      const res = await fetch("/api/watchlist", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ movie }),
+      });
+  
+      if (!res.ok) throw new Error("Failed to add movie to watchlist");
+      enqueueNotificationBar("Successfully added to your watch list", "success");
     } catch (err) {
-      enqueueNotificationBar(`Error: ${err}`, "error");
+      enqueueNotificationBar(`Failure adding to your watch list: ${err}`, "error");
     }
   };
 
@@ -89,29 +94,67 @@ export default function MovieDetailsPage({ params }: { params: { slug: string } 
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
       {details && (
-        <Paper elevation={3} sx={{ p: 3, mb: 4 }}>
-          <Button startIcon={<ArrowBack />} variant="contained" sx={{ mb: 2 }} onClick={() => router.back()}>
-            Back
-          </Button>
-          {/* temporary spacing as these buttons will move */}
-          &nbsp;&nbsp;&nbsp;
-          <Button startIcon={<BookmarkAdd />} variant="contained" sx={{ mb: 2 }} onClick={() => addToWatchListClickHandler(details)}>
-            Add to Watchlist
-          </Button>
-          <Grid container spacing={4}>
+        <Paper elevation={3} sx={{ p: { xs: 2, md: 3 }, mb: 4 }}>
+          <Stack
+            direction={isMobile ? "column" : "row"}
+            spacing={2}
+            justifyContent="space-between"
+            sx={{ mb: 2 }}
+          >
+            <Button
+              startIcon={<ArrowBack />}
+              variant="contained"
+              onClick={() => router.back()}
+              fullWidth={isMobile}
+            >
+              Back
+            </Button>
+            <Button
+              variant="contained"
+              onClick={() => addToWatchList(details)}
+              fullWidth={isMobile}
+            >
+              Add to Watchlist
+            </Button>
+          </Stack>
+
+          <Grid container spacing={4} direction={isMobile ? "column" : "row"}>
             <Grid item xs={12} md={4}>
-              <Image src={`${BASE_URL}${details.poster_path}`} alt={details.title} width={300} height={450} style={{ borderRadius: 8, width: "100%", height: "auto" }} />
+              <Image
+                src={`${BASE_URL}${details.poster_path}`}
+                alt={details.title}
+                width={300}
+                height={450}
+                style={{
+                  borderRadius: 8,
+                  width: "100%",
+                  height: "auto",
+                }}
+              />
             </Grid>
             <Grid item xs={12} md={8}>
-              <Typography variant="h4" gutterBottom color="white">
-                {details.title ?? details.name} ({new Date(details.release_date).getFullYear()})
+              <Typography
+                variant={isMobile ? "h5" : "h4"}
+                gutterBottom
+                color="white"
+              >
+                {details.title} ({new Date(details.release_date).getFullYear()})
               </Typography>
               <Box mb={2}>
                 {details.genres.map((genre) => (
-                  <Chip key={genre.id} label={genre.name} color="primary" sx={{ mr: 1, mb: 1 }} />
+                  <Chip
+                    key={genre.id}
+                    label={genre.name}
+                    color="primary"
+                    sx={{ mr: 1, mb: 1 }}
+                  />
                 ))}
               </Box>
-              <Typography variant="body1" color="white" sx={{ whiteSpace: "pre-wrap" }}>
+              <Typography
+                variant="body1"
+                color="white"
+                sx={{ whiteSpace: "pre-wrap" }}
+              >
                 {details.overview}
               </Typography>
 
@@ -121,11 +164,21 @@ export default function MovieDetailsPage({ params }: { params: { slug: string } 
                 </Typography>
                 <Grid container spacing={1}>
                   {["buy", "rent", "flatrate"].map((type) => {
-                    const providerList = details.providers?.[type as "buy" | "rent" | "flatrate"];
+                    const providerList =
+                      details.providers?.[type as keyof typeof details.providers];
                     return Array.isArray(providerList)
                       ? providerList.map((provider, i) => (
                           <Grid item key={i}>
-                            <Image src={`${BASE_URL}${provider.logo_path}`} alt={provider.provider_name} width={40} height={40} style={{ borderRadius: "50%", background: "#fff" }} />
+                            <Image
+                              src={`${BASE_URL}${provider.logo_path}`}
+                              alt={provider.provider_name}
+                              width={40}
+                              height={40}
+                              style={{
+                                borderRadius: "50%",
+                                background: "#fff",
+                              }}
+                            />
                           </Grid>
                         ))
                       : null;
@@ -142,14 +195,30 @@ export default function MovieDetailsPage({ params }: { params: { slug: string } 
       </Typography>
       <Grid container spacing={2}>
         {recommended.slice(0, 6).map((rec) => (
-          <Grid item xs={6} md={2} key={rec.id}>
-            <Image src={`${BASE_URL}${rec.poster_path}`} alt={rec.title} width={150} height={225} style={{ borderRadius: 6, width: "100%", height: "auto" }} />
-            <Typography variant="subtitle2" color="white" mt={1}>
+          <Grid item xs={6} sm={4} md={2} key={rec.id}>
+            <Image
+              src={`${BASE_URL}${rec.poster_path}`}
+              alt={rec.title}
+              width={150}
+              height={225}
+              style={{
+                borderRadius: 6,
+                width: "100%",
+                height: "auto",
+              }}
+            />
+            <Typography
+              variant="subtitle2"
+              color="white"
+              mt={1}
+              sx={{ fontSize: isMobile ? "0.75rem" : "inherit" }}
+            >
               {rec.title}
             </Typography>
           </Grid>
         ))}
       </Grid>
+
       {NotificationBarComponent}
     </Container>
   );
