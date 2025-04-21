@@ -36,9 +36,9 @@ const HeaderClient = ({ user, navItems }: HeaderClientProps) => {
           <StandardButton key={item.label} label={item.label} onClickAction={() => handleNav(item.path)} />
         ))}
         {user ? (
-          <StandardButton label="LOG OUT" onClickAction={async () => { await fetch("/api/logout", { method: "POST" }); router.refresh(); }} />
+          <StandardButton label="LOG OUT" onClickAction={async () => {logout()}} />
         ) : (
-          <StandardButton label="LOG IN" onClickAction={() => handleNav("/login")} />
+          <StandardButton label="LOG IN" onClickAction={() => login()} />
         )}
       </Box>
 

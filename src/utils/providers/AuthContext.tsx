@@ -24,7 +24,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
-        const token = await user.getIdToken();
+        const token = await user.getIdToken(true);
         nookies.set(undefined, "token", token, { path: "/" });
         setUser(user);
       } else {
@@ -41,7 +41,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     try {
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
-      const token = await user.getIdToken();
+      const token = await user.getIdToken(true);
       nookies.set(undefined, "token", token, { path: "/" });
       setUser(user);
       router.refresh();
