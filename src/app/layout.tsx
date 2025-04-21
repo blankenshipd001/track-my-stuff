@@ -1,5 +1,6 @@
 import { Roboto } from "next/font/google";
 import { SpeedInsights } from '@vercel/speed-insights/next';
+import { Analytics } from "@vercel/analytics/react"
 import { Container, CssBaseline } from "@mui/material";
 import { Providers } from "@utils/providers/providers";
 import { Header } from "@/components/header";
@@ -26,6 +27,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <Header />
             {children}
             <SpeedInsights />
+            <Analytics />
           </Container>
         </body>
       </Providers>
