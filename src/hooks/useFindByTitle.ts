@@ -19,8 +19,8 @@ export const useFindByTitle = () => {
   const [tvContent, setTvShows] = useState<Movie[]>([]);
 
   const fetchContent = (searchValue: string) => {
-    const getMovieUrl = `https://api.themoviedb.org/3/search/movie?api_key=${movie_api_key}&query=${searchValue}&include_adult=false&language=en-US&append_to_response=providers`;
-    const getTvUrl = `https://api.themoviedb.org/3/search/tv?api_key=${movie_api_key}&query=${searchValue}&include_adult=false&language=en-US&append_to_response=providers`;
+    const getMovieUrl = `https://api.themoviedb.org/3/search/movie?api_key=${movie_api_key}&query=${searchValue}&include_adult=false&language=en-US&region=us&append_to_response=providers`;
+    const getTvUrl = `https://api.themoviedb.org/3/search/tv?api_key=${movie_api_key}&query=${searchValue}&include_adult=false&language=en-US&region=us&append_to_response=providers`;
 
     Promise.all([fetch(getMovieUrl), fetch(getTvUrl)])
       .then((results) => Promise.all(results.map((r) => r.json())))

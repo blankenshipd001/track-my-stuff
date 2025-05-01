@@ -1,26 +1,19 @@
-import { cookies } from "next/headers";
-import { adminAuth } from "@/utils/firebase/firebaseAdmin"; // adjust to your setup
+// import { cookies } from "next/headers";
+// import { NextResponse } from "next/server";
 
-export async function GET() {
-  const cookieStore = cookies();
-  const token = cookieStore.get("token")?.value;
+// export async function POST(request: Request) {
+//   const { token } = await request.json();
+//   cookies().set("__session", token, {
+//     httpOnly: true,
+//     secure: true,
+//     maxAge: 60 * 60 * 24 * 5, // 5 days
+//     path: "/",
+//   });
 
-  if (!token) {
-    return new Response(JSON.stringify({ user: null }), {
-      status: 401,
-    });
-  }
+//   return NextResponse.json({ success: true });
+// }
 
-  try {
-    const decodedToken = await adminAuth.verifyIdToken(token);
-
-    return new Response(JSON.stringify({ user: decodedToken }), {
-      status: 200,
-    });
-  } catch (error) {
-    console.error("Invalid session token", error);
-    return new Response(JSON.stringify({ user: null }), {
-      status: 401,
-    });
-  }
-}
+// export async function DELETE() {
+//   cookies().delete("__session");
+//   return NextResponse.json({ success: true });
+// }

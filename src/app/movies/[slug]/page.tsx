@@ -56,7 +56,7 @@ export default function MovieDetailsPage({ params }: { params: { slug: string } 
 
   const fetchRecommendedMovies = async (movie: Movie) => {
     const genreId = movie?.genres[0]?.id;
-    const url = `https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&sort_by=popularity.desc&with_genres=${genreId}&api_key=${movie_api_key}`;
+    const url = `https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&with_origin-country=US&with_genres=${genreId}&api_key=${movie_api_key}`;
     const res = await fetch(url);
     const data = await res.json();
     setRecommended(data.results);
@@ -115,7 +115,7 @@ export default function MovieDetailsPage({ params }: { params: { slug: string } 
           </Stack>
 
           <Grid container spacing={4} direction={isMobile ? "column" : "row"}>
-            <Grid item xs={12} md={4}>
+            <Grid size={{xs: 12, md: 4}}>
               <Image
                 src={`${BASE_URL}${details.poster_path}`}
                 alt={details.title}
@@ -128,7 +128,7 @@ export default function MovieDetailsPage({ params }: { params: { slug: string } 
                 }}
               />
             </Grid>
-            <Grid item xs={12} md={8}>
+            <Grid size={{xs: 12, md:8}}>
               <Typography
                 variant={isMobile ? "h5" : "h4"}
                 gutterBottom
@@ -142,7 +142,7 @@ export default function MovieDetailsPage({ params }: { params: { slug: string } 
                     key={genre.id}
                     label={genre.name}
                     color="primary"
-                    sx={{ mr: 1, mb: 1 }}
+                    sx={{ mr: 1, mb: 1}}
                   />
                 ))}
               </Box>
@@ -164,14 +164,14 @@ export default function MovieDetailsPage({ params }: { params: { slug: string } 
                       details.providers?.[type as keyof typeof details.providers];
                     return Array.isArray(providerList)
                       ? providerList.map((provider, i) => (
-                          <Grid item key={i}>
+                          <Grid key={i}>
                             <Image
                               src={`${BASE_URL}${provider.logo_path}`}
                               alt={provider.provider_name}
                               width={40}
                               height={40}
                               style={{
-                                borderRadius: "50%",
+                                borderRadius: "25%",
                                 background: "#fff",
                               }}
                             />
@@ -191,7 +191,7 @@ export default function MovieDetailsPage({ params }: { params: { slug: string } 
       </Typography>
       <Grid container spacing={2}>
         {recommended.slice(0, 6).map((rec) => (
-          <Grid item xs={6} sm={4} md={2} key={rec.id}>
+          <Grid size={{xs: 6, sm: 4, md: 2}} key={rec.id}>
             <Image
               src={`${BASE_URL}${rec.poster_path}`}
               alt={rec.title}

@@ -9,10 +9,16 @@ import { getMyFavoriteProviders } from "@/utils/api/contentApi";
  * @returns {ServiceProvider[]} user's service providers
  */
 const useGetMyFavoriteProviders = (uid: string) => {
+
+  
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [myFavoriteProviders, setMyFavoriteProviders] = useState<ServiceProvider[]>([]);
 
   useEffect(() => {
+    if (uid === "") {
+      return;
+    }
+    
     const fetchData = async () => {
       setIsLoading(true);
       

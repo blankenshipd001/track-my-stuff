@@ -8,6 +8,8 @@ import Image from "next/image";
 import Logo from "@utils/assets/logo.svg";
 import { StandardButton } from "@components/buttons";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { auth } from "@/lib/firebase/client";
 
 interface HeaderClientProps {
   user: { uid: string; email?: string } | null;
@@ -17,11 +19,32 @@ interface HeaderClientProps {
 const HeaderClient = ({ user, navItems }: HeaderClientProps) => {
   const router = useRouter();
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const { login, logout } = useCurrentUser();
+  // const { login, logout } = useCurrentUser();
 
   const handleNav = (path: string) => {
     setDrawerOpen(false);
     router.push(path);
+  };
+
+  const handleLogin = async () => {
+    const provider = new GoogleAuthProvider();
+    const result = await signInWithPopup(auth, provider);
+    const token = await result.user.getIdToken();
+
+    // Set token cookie
+    await fetch("/api/session", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ token }),
+    });
+
+    router.push("/dashboard");
+  };
+
+  const logout = async () => {
+    await auth.signOut();
+    await fetch("/api/session", { method: "DELETE" });
+    router.push("/");
   };
 
   return (
@@ -38,7 +61,7 @@ const HeaderClient = ({ user, navItems }: HeaderClientProps) => {
         {user ? (
           <StandardButton label="LOG OUT" onClickAction={async () => {logout()}} />
         ) : (
-          <StandardButton label="LOG IN" onClickAction={() => login()} />
+          <StandardButton label="LOG IN" onClickAction={() => handleLogin()} />
         )}
       </Box>
 
@@ -59,7 +82,7 @@ const HeaderClient = ({ user, navItems }: HeaderClientProps) => {
               <ListItemText primary="Log Out" />
             </ListItemButton>
           ) : (
-            <ListItemButton onClick={() => { login(); handleNav("/login"); }}>
+            <ListItemButton onClick={() => {handleLogin}}>
               <ListItemText primary="Log In" />
             </ListItemButton>
           )}

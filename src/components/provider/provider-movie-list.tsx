@@ -1,46 +1,53 @@
 import { Movie } from "@/data-models/movie.interface";
-import { Grid, Typography, Card, CardMedia } from "@mui/material";
-// import TheatersIcon from "@mui/icons-material/Theaters";
-// import ConnectedTvIcon from "@mui/icons-material/ConnectedTv";
-// import LiveTvIcon from "@mui/icons-material/LiveTv";
+import { Grid, Typography, Card, CardMedia, CardActionArea, Box, Divider } from "@mui/material";
 
-interface providerListProps {
+interface ProviderListProps {
   providers: Map<string, Movie[]>;
   listName: string;
 }
 
-// TODO: Add icons to the providers and make this page prettier
-
-/**
- *
- * @param providers {Map<string, Movie[]} list of providers with the movies they have
- * @param listName {string} 
- * @returns a component that has the name of the provider (listName) and all the movies on that provider
- */
-export const ProviderList: React.FC<providerListProps> = ({ providers, listName }) => {
+export const ProviderList: React.FC<ProviderListProps> = ({ providers, listName }) => {
   const BASE_URL = process.env.NEXT_PUBLIC_THE_MOVIE_DB_BASE_URL;
 
   return (
-    <Grid container spacing={4}>
-      {Array.from(providers.entries()).map(([providerName, providerMovies]) => (
-        <Grid item xs={12} md={6} lg={4} key={providerName} style={{ marginBottom: "40px" }}>
-          <Typography variant="h5">
+    <Box sx={{ mb: 6 }}>
+      {Array.from(providers.entries()).map(([providerName, movies]) => (
+        <Box key={providerName} sx={{ mb: 6 }}>
+          <Typography variant="h5" gutterBottom sx={{ fontWeight: 600 }}>
             {listName}: {providerName}
           </Typography>
-          <Grid container spacing={4}>
-            {providerMovies.map((movie: Movie) => {
+          <Divider sx={{ mb: 3 }} />
+
+          <Grid container columns={{ xs: 4, sm: 8, md: 12 }} spacing={2}>
+            {movies.map((movie) => {
               const poster = movie.poster_path ?? movie.backdrop_path;
+              const posterUrl = poster ? `${BASE_URL}${poster}` : "/placeholder.png";
+
               return (
-                <Grid item key={movie.id} xs={12} sm={6} md={4}>
-                  <Card>
-                    <CardMedia component="img" height="150" image={`${BASE_URL}${poster}`} alt={movie.title} />
+                <Grid size={{xs: 2, sm: 2, md: 2}} key={movie.id}>
+                  <Card
+                    elevation={3}
+                    sx={{
+                      borderRadius: 2,
+                      transition: "transform 0.2s",
+                      "&:hover": { transform: "scale(1.03)" },
+                    }}
+                  >
+                    <CardActionArea href={`/movies/${movie.id}`}>
+                      <CardMedia
+                        component="img"
+                        image={posterUrl}
+                        alt={movie.title}
+                        sx={{ height: 225, objectFit: "cover" }}
+                      />
+                    </CardActionArea>
                   </Card>
                 </Grid>
               );
             })}
           </Grid>
-        </Grid>
+        </Box>
       ))}
-    </Grid>
+    </Box>
   );
 };

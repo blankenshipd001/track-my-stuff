@@ -10,6 +10,7 @@ import { ServiceProvider } from "@/data-models/service-provider.interface";
  * @returns Array of {Movie} items
  */
 export const getContent = async (uid: string): Promise<Movie[]> => {
+  console.log("Getting content for user: ", uid);
   const path: string = "users/" + uid + "/movies";
   const moviesSnapshot: DocumentData = await getDocs(collection(db, path));
 

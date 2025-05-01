@@ -13,6 +13,6 @@ export const ProviderChip = ({ providerInfo }: providerChip) => {
   };
 
   return (
-    <Chip label={providerInfo.provider_name} sx={{ mr: 1, mt: 1 }} avatar={<Avatar alt={providerInfo.provider_name} src={getProviderLogo(providerInfo)} />} />
+    <Chip label={providerInfo.provider_name} sx={{ mr: 1, mt: 1, borderRadius: 1 }} avatar={<Avatar alt={providerInfo.provider_name} src={getProviderLogo(providerInfo)} />} />
   );
 };
