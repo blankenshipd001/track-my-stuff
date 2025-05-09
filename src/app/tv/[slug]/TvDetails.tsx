@@ -16,6 +16,10 @@ export default function TvDetails({ user, movie, recommended }: { user: any, mov
   const isMobile = useMediaQuery("(max-width:600px)");
   const isLargeScreen = useMediaQuery("(min-width:1200px)");
 
+  const handleClickEvent = (movie: Movie) => {
+    router.push(`/tv/${movie.id}`, { scroll: false });
+  };
+  
   return (
     <Container maxWidth="lg" sx={{ py: 4, color: theme.palette.text.primary }}>
       <Paper
@@ -163,7 +167,7 @@ export default function TvDetails({ user, movie, recommended }: { user: any, mov
         <Typography variant="h5" color="text.primary" gutterBottom>
           You May Also Like
         </Typography>
-        <RecommendedTvShows tvShows={recommended} />
+        <RecommendedTvShows tvShows={recommended} handleClick={handleClickEvent}/>
       </Box>
     </Container>
   );

@@ -12,6 +12,7 @@ import ImageListItemBar from "@mui/material/ImageListItemBar";
 import { BookmarkAdd } from "@mui/icons-material";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
+import { getTVDetails } from "@/utils/api/serverContentApi";
 
 interface MovieGridProps {
   movies: Movie[];
@@ -41,9 +42,19 @@ export const MovieGrid = ({ movies, addClicked, removeClicked }: MovieGridProps)
     router.push(path, { scroll: false });
   };
 
-  const handleAddToWatchlist = (movie: Movie) => {
-    if (addClicked) addClicked(movie);
-    else if (removeClicked) removeClicked(movie);
+  const handleAddToWatchlist = async (movie: Movie) => {
+    if (addClicked) {
+      if (movie.name) {
+        const tvShow = await getTVDetails(`${movie.id}`);
+        if (tvShow) {
+          addClicked(tvShow);
+        }
+      } else {
+        addClicked(movie);
+      }      
+    } else if (removeClicked) {
+      removeClicked(movie);
+    }
   };
 
   return (
@@ -100,6 +111,7 @@ export const MovieGrid = ({ movies, addClicked, removeClicked }: MovieGridProps)
               }}
               position="below"
               title={title}
+              // TODO: Add this back but we will have to re-fetch the tv show because it's not adding
               actionIcon={
                 <BookmarkAdd
                   sx={{ cursor: "pointer", "&:hover": { color: "lightgray" } }}

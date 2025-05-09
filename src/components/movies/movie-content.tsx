@@ -4,13 +4,9 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Box, Container, useTheme, useMediaQuery } from "@mui/material";
 import { SearchBox } from "@components/search";
-import {
-  // addToWatchList,
-  getContent,
-  // requestRemoveFromWatchList,
-} from "@/utils/api/contentApi";
+import { getContent } from "@/utils/api/contentApi";
 import { fetchByTitle } from "@/lib/fetchByTitle";
-import useNotificationBar from "@/hooks/useNotificationBar";
+import useNotificationBar from "@/components/notifications/useNotificationBar";
 import { Movie } from "@/data-models/movie.interface";
 import TabsWrapper from "../panels/tab-wrapper";
 
@@ -66,28 +62,6 @@ export const MovieContent = ({ popularMedia, user }: MovieContentProps) => {
   useEffect(() => {
     setEverything(popularMedia);
   }, [popularMedia]);
-
-  // const addToWatchListClickHandler = async (movie: Movie) => {
-  //   if (!user) {
-  //     enqueueNotificationBar("Please log in to save movies.", "info");
-  //     return;
-  //   }
-  //   try {
-  //     const docRef = await addToWatchList(user.uid, movie);
-  //     if (docRef && typeof docRef !== "string") {
-  //       enqueueNotificationBar("Added to your watch list!", "success");
-  //       router.push(`/movies/${docRef.id}`);
-  //     }
-  //   } catch (err) {
-  //     enqueueNotificationBar(`Error: ${err}`, "error");
-  //   }
-  // };
-
-  // const removeFromWatchList = async (movie: Movie) => {
-  //   if (!user) return;
-  //   await requestRemoveFromWatchList(user.uid, movie);
-  //   setWatchList((prev) => prev.filter((item) => item.id !== movie.id));
-  // };
 
   return (
     <Container maxWidth="lg" sx={{ py: isClient && isMobile ? 2 : 4 }}>

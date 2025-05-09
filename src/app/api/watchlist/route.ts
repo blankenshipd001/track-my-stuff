@@ -16,7 +16,6 @@ export async function POST(req: NextRequest) {
     if (!movie) {
       return NextResponse.json({ error: "Missing movie data" }, { status: 400 });
     }
-
     
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { id, ...movieWithoutId } = movie;

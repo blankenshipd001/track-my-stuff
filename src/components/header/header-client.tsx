@@ -33,6 +33,8 @@ const HeaderClient = ({ user, navItems }: HeaderClientProps) => {
 
   const handleLogout = async () => {
     await logoutUser();
+
+    router.push("/");
     router.refresh();
   };
 

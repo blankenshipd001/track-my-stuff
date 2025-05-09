@@ -1,9 +1,10 @@
 "use client"
 import { MovieGrid } from "@/components/movies";
 import { Movie } from "@/data-models/movie.interface";
-import useNotificationBar from "@/hooks/useNotificationBar";
+import useNotificationBar from "@/components/notifications/useNotificationBar";
 import { requestRemoveFromWatchList } from "@/utils/api/contentApi";
 import { useRouter } from "next/navigation";
+import { Box, Typography } from "@mui/material";
 
 interface Props {
   user?: { uid: string; email?: string } | null;
@@ -22,20 +23,47 @@ const WatchListPage = ({ user, watchList }: Props) => {
         return;
       }
 
-      requestRemoveFromWatchList(user.uid, movie);
+      await requestRemoveFromWatchList(user.uid, movie);
       enqueueNotificationBar("Removed from your watch list!", "success");
       router.refresh();
+
     } catch (err) {
       enqueueNotificationBar(`Error: ${err}`, "error");
     }
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const moviesWithTitle = watchList.filter((item: any) => !!item.title);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const tvShowsWithName = watchList.filter((item: any) => !!item.name);
+
+  console.log("Tv Shows in Watchlist: ", tvShowsWithName);
   return (
-    <div>
-      <h1>Watched Movies</h1>
-      <MovieGrid movies={watchList} removeClicked={handleRemove} />
+    <Box sx={{ px: { xs: 2, md: 4 }, py: 4 }}>
+      <Typography variant="h4" gutterBottom color="white">
+        Watchlist
+      </Typography>
+
+      {moviesWithTitle.length > 0 && (
+        <Box mb={6}>
+          <Typography variant="h5" gutterBottom color="white">
+            Movies
+          </Typography>
+          <MovieGrid movies={moviesWithTitle} removeClicked={handleRemove} />
+        </Box>
+      )}
+
+      {tvShowsWithName.length > 0 && (
+        <Box>
+          <Typography variant="h5" gutterBottom color="white">
+            TV Shows
+          </Typography>
+          <MovieGrid movies={tvShowsWithName} removeClicked={handleRemove} />
+        </Box>
+      )}
+
       {NotificationBarComponent}
-    </div>
+    </Box>
   );
 };
 

@@ -4,9 +4,9 @@ import { useState } from "react";
 import { TabPanel } from "./tab-panel";
 import { MovieGrid } from "../movies";
 import { Movie } from "@/data-models/movie.interface";
-import useNotificationBar from "@/hooks/useNotificationBar";
 import { useRouter } from "next/navigation";
 import { addToWatchList, requestRemoveFromWatchList } from "@/utils/api/contentApi";
+import useNotificationBar from "../notifications/useNotificationBar";
 
 interface Props {
   user?: { uid: string; email?: string } | null;

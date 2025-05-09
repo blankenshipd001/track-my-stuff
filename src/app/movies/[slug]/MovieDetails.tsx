@@ -10,11 +10,15 @@ import RecommendedMovies from "./RecommendedMovies";
 import AddToWatchlist from "@/components/buttons/AddToWatchlist";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export default function MovieDetails({ user, movie, recommended }: { user: any, movie: Movie; recommended: Movie[] }) {
+export default function MovieDetails({ user, movie, recommended }: { user: any; movie: Movie; recommended: Movie[] }) {
   const router = useRouter();
   const theme = useTheme();
   const isMobile = useMediaQuery("(max-width:600px)");
   const isLargeScreen = useMediaQuery("(min-width:1200px)");
+
+  const handleClickEvent = (movie: Movie) => {
+    router.push(`/movies/${movie.id}`, { scroll: false });
+  };
 
   return (
     <Container maxWidth="lg" sx={{ py: 4, color: theme.palette.text.primary }}>
@@ -103,10 +107,10 @@ export default function MovieDetails({ user, movie, recommended }: { user: any, 
 
       {/* Media Gallery */}
       <Box mt={6}>
-         {/* Videos */}
-         <Grid container spacing={2} mt={2}>
+        {/* Videos */}
+        <Grid container spacing={2} mt={2}>
           {movie.videos?.results?.slice(0, 2).map((video) => (
-            <Grid size={{xs: 12, md: 6}} key={video.id}>
+            <Grid size={{ xs: 12, md: 6 }} key={video.id}>
               <Box
                 sx={{
                   position: "relative",
@@ -140,7 +144,7 @@ export default function MovieDetails({ user, movie, recommended }: { user: any, 
         <Grid container spacing={2}>
           {/* Images */}
           {movie.images?.backdrops?.slice(0, 4).map((img, index) => (
-            <Grid size={{xs: 6, md: 3}} key={index}>
+            <Grid size={{ xs: 6, md: 3 }} key={index}>
               <Image
                 src={`https://image.tmdb.org/t/p/w780${img.file_path}`}
                 alt={`Backdrop ${index + 1}`}
@@ -155,7 +159,7 @@ export default function MovieDetails({ user, movie, recommended }: { user: any, 
               />
             </Grid>
           ))}
-        </Grid>       
+        </Grid>
       </Box>
 
       {/* Recommended Movies Section */}
@@ -163,7 +167,7 @@ export default function MovieDetails({ user, movie, recommended }: { user: any, 
         <Typography variant="h5" color="text.primary" gutterBottom>
           You May Also Like
         </Typography>
-        <RecommendedMovies movies={recommended} />
+        <RecommendedMovies movies={recommended} handleClick={handleClickEvent}/>
       </Box>
     </Container>
   );

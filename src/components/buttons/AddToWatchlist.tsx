@@ -6,7 +6,7 @@ import { Movie } from "@/data-models/movie.interface";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { addToWatchList } from "@/utils/api/contentApi";
-import useNotificationBar from "@/hooks/useNotificationBar";
+import useNotificationBar from "@/components/notifications/useNotificationBar";
 
 export default function AddToWatchlist({ userId, movie }: {userId: string, movie: Movie }) {
   const router = useRouter();

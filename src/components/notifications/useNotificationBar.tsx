@@ -1,4 +1,4 @@
-import { NotificationBar } from "@/components/notifications";
+import { NotificationBar } from "./notification-bar";
 import React, { useCallback, useEffect, useState } from "react";
 
 type Severity = 'error' | 'warning' | 'info' | 'success';

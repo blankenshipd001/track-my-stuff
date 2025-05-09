@@ -5,6 +5,8 @@ import { Container, CssBaseline } from "@mui/material";
 import { Providers } from "@utils/providers/providers";
 import { Header } from "@/components/header";
 
+// export const dynamic = 'force-dynamic';
+
 const roboto = Roboto({
   weight: ["300", "400", "500", "700"],
   style: ["normal", "italic"],
