@@ -89,24 +89,6 @@ export const MovieContent = ({ popularMedia, user }: MovieContentProps) => {
   //   setWatchList((prev) => prev.filter((item) => item.id !== movie.id));
   // };
 
-  // // --- Mobile-friendly tab selector ---
-  // const renderTabSelector = () => (
-  //   <FormControl fullWidth size="small" sx={{ mb: 2 }}>
-  //     <InputLabel id="tab-select-label">View</InputLabel>
-  //     <Select
-  //       labelId="tab-select-label"
-  //       value={tabNumber}
-  //       label="View"
-  //       onChange={(e) => setTabNumber(Number(e.target.value))}
-  //     >
-  //       <MenuItem value={0}>{tabOneTitle}</MenuItem>
-  //       <MenuItem value={1}>Movies</MenuItem>
-  //       <MenuItem value={2}>TV</MenuItem>
-  //       {user && <MenuItem value={3}>Watchlist</MenuItem>}
-  //     </Select>
-  //   </FormControl>
-  // );
-
   return (
     <Container maxWidth="lg" sx={{ py: isClient && isMobile ? 2 : 4 }}>
       <Box sx={{ mb: 2 }}>
@@ -118,47 +100,5 @@ export const MovieContent = ({ popularMedia, user }: MovieContentProps) => {
     </Container>
   );
 };
-
-// import { Container } from "@mui/material";
-// // import { SearchBox } from "@/components/search";
-
-// import { fetchByTitle } from "@/lib/fetchByTitle";
-// import { getContent } from "@/utils/api/contentApi";
-// // import { fetchTrendingContent } from "@/lib/fetchTrendingContent";
-// // import { Movie } from "@/data-models/movie.interface";
-// import TabsWrapper from "../panels/tab-wrapper";
-// // import { getUserFromCookies } from "@/lib/firebase/auth";
-
-// interface MovieContentProps {
-//   searchQuery?: string;
-// }
-
-// const MovieContent = async ({ searchQuery = "" }: MovieContentProps) => {
-//   // const user = await getUserFromCookies();
-//   const user = null; // Placeholder for user authentication
-//   const [watchList] = await Promise.all([
-//     user ? getContent(user.uid) : [],
-//     // fetchTrendingContent()
-//   ]);
-
-//   const { moviesContent, tvContent, allContent } = searchQuery
-//     ? await fetchByTitle(searchQuery)
-//     : { moviesContent: [], tvContent: [], allContent: [] };
-
-//   return (
-//     <Container maxWidth="lg" sx={{ py: 4 }}>
-//       {/* <Box sx={{ mb: 2 }}>
-//         <SearchBox initialQuery={searchQuery} />
-//       </Box> */}
-//       <TabsWrapper
-//         user={user}
-//         watchList={watchList}
-//         allContent={allContent}
-//         movies={moviesContent}
-//         tvShows={tvContent}
-//       />
-//     </Container>
-//   );
-// }
 
 export default MovieContent;

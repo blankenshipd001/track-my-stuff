@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import ProviderLogos from "./ProviderLogos";
 import RecommendedTvShows from "./RecommendedTvShows";
-import AddToWatchlist from "./AddToWatchlist";
+import AddToWatchlist from "@/components/buttons/AddToWatchlist";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function TvDetails({ user, movie, recommended }: { user: any, movie: Movie; recommended: Movie[] }) {

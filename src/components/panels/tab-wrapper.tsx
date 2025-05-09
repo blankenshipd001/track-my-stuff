@@ -4,6 +4,9 @@ import { useState } from "react";
 import { TabPanel } from "./tab-panel";
 import { MovieGrid } from "../movies";
 import { Movie } from "@/data-models/movie.interface";
+import useNotificationBar from "@/hooks/useNotificationBar";
+import { useRouter } from "next/navigation";
+import { addToWatchList, requestRemoveFromWatchList } from "@/utils/api/contentApi";
 
 interface Props {
   user?: { uid: string; email?: string } | null;
@@ -15,9 +18,41 @@ interface Props {
 
 const TabsWrapper = ({ user, watchList, allContent, movies, tvShows }: Props) => {
   const theme = useTheme();
+  const router = useRouter();
+  const { enqueueNotificationBar, NotificationBarComponent } = useNotificationBar();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [tab, setTab] = useState<number>(0);
   const tabOneTitle = allContent.length > 0 ? "All" : "Trending";
+
+  const handleAdd = async (movie: Movie) => {
+    try {
+      if (!user) {
+        enqueueNotificationBar("Please log in to save movies.", "info");
+        return;
+      }
+
+      addToWatchList(user.uid, movie);
+      enqueueNotificationBar("Added to your watch list!", "success");
+      router.refresh();
+    } catch (err) {
+      enqueueNotificationBar(`Error: ${err}`, "error");
+    }
+  };
+
+  const handleRemove = async (movie: Movie) => {
+    try {
+      if (!user) {
+        enqueueNotificationBar("Please log in to save movies.", "info");
+        return;
+      }
+
+      requestRemoveFromWatchList(user.uid, movie);
+      enqueueNotificationBar("Removed from your watch list!", "success");
+      router.refresh();
+    } catch (err) {
+      enqueueNotificationBar(`Error: ${err}`, "error");
+    }
+  };
 
   const renderTabSelector = () => (
     <FormControl fullWidth size="small" sx={{ mb: 2 }}>
@@ -47,19 +82,21 @@ const TabsWrapper = ({ user, watchList, allContent, movies, tvShows }: Props) =>
       )}
 
       <TabPanel value={tab} index={0}>
-        <MovieGrid movies={allContent} />
+        <MovieGrid movies={allContent} addClicked={handleAdd}/>
       </TabPanel>
       <TabPanel value={tab} index={1}>
-        <MovieGrid movies={movies} />
+        <MovieGrid movies={movies} addClicked={handleAdd}/>
       </TabPanel>
       <TabPanel value={tab} index={2}>
-        <MovieGrid movies={tvShows} />
+        <MovieGrid movies={tvShows} addClicked={handleAdd}/>
       </TabPanel>
       {user && (
         <TabPanel value={tab} index={3}>
-          <MovieGrid movies={watchList} />
+          <MovieGrid movies={watchList} removeClicked={handleRemove}/>
         </TabPanel>
       )}
+
+      {NotificationBarComponent}
     </>
   );
 };

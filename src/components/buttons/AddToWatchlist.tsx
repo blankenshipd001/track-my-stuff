@@ -6,32 +6,37 @@ import { Movie } from "@/data-models/movie.interface";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { addToWatchList } from "@/utils/api/contentApi";
+import useNotificationBar from "@/hooks/useNotificationBar";
 
 export default function AddToWatchlist({ userId, movie }: {userId: string, movie: Movie }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const { enqueueNotificationBar, NotificationBarComponent } = useNotificationBar();
 
   const handleAdd = async () => {
     setLoading(true);
     try {
       if (!userId) {
-        alert("Please log in to add to watchlist");
+        enqueueNotificationBar("Please log in to save movies.", "info");
         return;
       }
 
       addToWatchList(userId, movie);
-      
+      enqueueNotificationBar("Added to your watch list!", "success");
       router.refresh();
     } catch (err) {
-      alert("Error adding to watchlist");
+      enqueueNotificationBar(`Error: ${err}`, "error");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <Button variant="contained" onClick={handleAdd} disabled={loading} fullWidth>
-      {loading ? "Adding..." : "Add to Watchlist"}
-    </Button>
+    <>
+      <Button variant="contained" onClick={handleAdd} disabled={loading} fullWidth>
+        {loading ? "Adding..." : "Add to Watchlist"}
+      </Button>
+      {NotificationBarComponent}
+    </>
   );
 }
