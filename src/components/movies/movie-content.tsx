@@ -2,12 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import {
-  Box,
-  Container,
-  useTheme,
-  useMediaQuery,
-} from "@mui/material";
+import { Box, Container, useTheme, useMediaQuery } from "@mui/material";
 import { SearchBox } from "@components/search";
 import {
   // addToWatchList,
@@ -117,15 +112,9 @@ export const MovieContent = ({ popularMedia, user }: MovieContentProps) => {
       <Box sx={{ mb: 2 }}>
         <SearchBox searchForMovie={fetchContent} />
       </Box>
-      <TabsWrapper
-        user={user}
-        watchList={watchList}
-        allContent={everything}
-        movies={movies}
-        tvShows={tvShows}
-      />
-     
-           {NotificationBarComponent}
+      <TabsWrapper user={user} watchList={watchList} allContent={everything} movies={movies} tvShows={tvShows} />
+
+      {NotificationBarComponent}
     </Container>
   );
 };

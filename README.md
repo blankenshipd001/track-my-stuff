@@ -33,9 +33,6 @@ To create a new page add a folder under the `/app` folder space with a `page.tsx
 ## Testing
 To run tests you can either run `npm run test` to run all tests or if working on them you can run `npm run test:watch` to have them run with every change int he window
 
-Currently tests are being added to the `__tests__` folder however this can be changed in the future if we decide.
-
-
 ### NOTES / TODOs
 
  - CSS Fonts

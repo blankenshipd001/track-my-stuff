@@ -1,19 +1,28 @@
-// import { cookies } from "next/headers";
-// import { NextResponse } from "next/server";
+import { cookies } from 'next/headers';
+import { NextResponse } from 'next/server';
+import { adminAuth } from '@/lib/firebase/admin';
 
-// export async function POST(request: Request) {
-//   const { token } = await request.json();
-//   cookies().set("__session", token, {
-//     httpOnly: true,
-//     secure: true,
-//     maxAge: 60 * 60 * 24 * 5, // 5 days
-//     path: "/",
-//   });
+export async function POST(req: Request) {
+  const { token } = await req.json();
 
-//   return NextResponse.json({ success: true });
-// }
+  const decoded = await adminAuth.verifyIdToken(token);
+  
+  if (!decoded.email_verified) {
+    return NextResponse.json({ error: 'Email not verified' }, { status: 401 });
+  }
 
-// export async function DELETE() {
-//   cookies().delete("__session");
-//   return NextResponse.json({ success: true });
-// }
+  const expiresIn = 60 * 60 * 24 * 5 * 1000;
+
+  const sessionCookie = await adminAuth.createSessionCookie(token, { expiresIn });
+
+  cookies().set({
+    name: '__session',
+    value: sessionCookie,
+    httpOnly: true, 
+    secure: true,
+    path: '/',
+    maxAge: expiresIn / 1000,
+  });
+
+  return NextResponse.json({ status: 'success' });
+}

@@ -29,3 +29,59 @@ export async function fetchPopularContent(): Promise<Movie[]> {
       return trendingResults;
     });
 }
+
+export async function getMovieDetails(slug: string): Promise<Movie | null> {
+  const res = await fetch(`https://api.themoviedb.org/3/movie/${slug}?api_key=${movie_api_key}&append_to_response=videos,images`, { cache: "no-store" });
+  
+  if (!res.ok) {
+    return null
+  }
+  
+  const movie = await res.json();
+
+  const providerRes = await fetch(`https://api.themoviedb.org/3/movie/${slug}/watch/providers?api_key=${movie_api_key}`);
+  const providerData = await providerRes.json();
+
+  return {
+    ...movie,
+    movieId: Number(movie.id),
+    providers: providerData.results?.US ?? [],
+  };
+}
+
+export async function getRecommendedMovies(genreId: number): Promise<Movie[]> {
+  const res = await fetch(
+    `https://api.themoviedb.org/3/discover/movie?include_adult=false&with_genres=${genreId}&api_key=${movie_api_key}`,
+    { cache: "no-store" }
+  );
+  const data = await res.json();
+  return data.results || [];
+}
+
+
+export async function getTVDetails(slug: string): Promise<Movie | null> {
+  const res = await fetch(`https://api.themoviedb.org/3/tv/${slug}?api_key=${movie_api_key}&append_to_response=videos,images`, { cache: "no-store" });
+  
+  if (!res.ok) {
+    return null
+  }
+  
+  const tv = await res.json();
+  const providerRes = await fetch(`https://api.themoviedb.org/3/tv/${slug}/watch/providers?api_key=${movie_api_key}`);
+  const providerData = await providerRes.json();
+
+  return {
+    ...tv,
+    movieId: Number(tv.id),
+    providers: providerData.results?.US ?? [],
+  };
+}
+
+export async function getRecommendedTV(genreId: number): Promise<Movie[]> {
+  const res = await fetch(
+    `https://api.themoviedb.org/3/discover/tv?include_adult=false&with_genres=${genreId}&api_key=${movie_api_key}`,
+    { cache: "no-store" }
+  );
+  const data = await res.json();
+  return data.results || [];
+}

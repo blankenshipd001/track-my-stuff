@@ -27,10 +27,8 @@ export function fetchShowById(id: string) {
 
 // Example: https://api.tvmaze.com/lookup/shows?imdb=tt0944947
 
-console.log('fetchShowById:', id);
     const response = fetch(`https://api.tvmaze.com/lookup/shows?imdb=${id}`).then(async (res) => {
         const json = await res.json()
-        console.log('single:', json); 
         return json
     });
 

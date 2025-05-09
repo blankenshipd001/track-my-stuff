@@ -29,7 +29,7 @@ export const Details = ({ movie }: DetailsProps) => {
     <Container>
       <Grid container spacing={4}>
         {/* Poster */}
-        <Grid item xs={12} md={2}>
+        <Grid size={{xs: 12, md: 2}}>
           <Box
             sx={{
               width: "100%",
@@ -51,7 +51,7 @@ export const Details = ({ movie }: DetailsProps) => {
         </Grid>
 
         {/* Details */}
-        <Grid item xs={12} md={10}>
+        <Grid size={{xs: 12, md: 10}}>
           <Box
             sx={{
               pl: isMobile ? 1 : 4,

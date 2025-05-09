@@ -1,20 +1,21 @@
-// import { cookies } from "next/headers";
-// import { adminAuth } from "./admin";
+import { adminAuth } from "./admin";
 
-// export const getUserFromCookies = async () => {
+export async function verifySessionToken(cookie?: string) {
+  if (!cookie) {
+    return null;
+  }
 
-//   console.log("getUserFromCookies");
+  // grab the __session token from the cookie where we store it
+  const token = cookie.match(/__session=([^;]+)/)?.[1];
 
-//   const cookieStore = cookies();
-//   const token = cookieStore.get("__session")?.value;
+  if (!token) {
+    return null;
+  }
 
-//   if (!token) return null;
-
-//   try {
-//     const decodedToken = await adminAuth.verifyIdToken(token);
-//     return decodedToken;
-//   } catch (err) {
-//     console.error("Invalid or expired token:", err);
-//     return null;
-//   }
-// };
+  try {
+    return await adminAuth.verifySessionCookie(token, true);
+  } catch (error) {
+    console.error("Invalid session cookie:", error);
+    return null;
+  }
+}

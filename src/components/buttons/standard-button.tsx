@@ -1,33 +1,43 @@
-import React from "react";
+// components/buttons/StandardButton.tsx
 
+import React from "react";
 import { Button } from "@mui/material";
 
-interface StandardButton {
+interface StandardButtonProps {
   label: string;
-  onClickAction?(): void;
+  onClickAction?: () => void;
 }
 
 /**
- * The basic button in our system that is purple, white text and rounded
- * 
- * @param label the label to display in the button
- * @param onClickAction what do we do when a user clicks the button?
- * @returns 
+ * A styled button that is purple, bold, white text, rounded and responsive to hover/focus.
  */
-export const StandardButton = ({ label, onClickAction }: StandardButton) => {
+export const StandardButton = ({ label, onClickAction }: StandardButtonProps) => {
   return (
     <Button
       variant="outlined"
-      style={{
-        color: "white",
-        background: "#782FEF",
-        // width: "188px",
-        fontWeight: "bold",
-        border: "1px solid #782FEF",
-        borderRadius: "100px",
-      }}
       onClick={onClickAction}
-      sx={{ fontWeight: "bold", mx: 1 }}
+      sx={{
+        color: "white",
+        backgroundColor: "#782FEF",
+        fontWeight: "bold",
+        borderRadius: "100px",
+        border: "1px solid #782FEF",
+        textTransform: "none",
+        px: 3,
+        py: 1,
+        transition: "all 0.2s ease-in-out",
+        "&:hover": {
+          backgroundColor: "#5b22c6",
+          borderColor: "#5b22c6",
+        },
+        "&:active": {
+          transform: "scale(0.98)",
+        },
+        "&:focus": {
+          outline: "2px solid #9c6bff",
+          outlineOffset: "2px",
+        },
+      }}
     >
       {label}
     </Button>

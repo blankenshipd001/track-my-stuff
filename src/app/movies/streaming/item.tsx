@@ -2,12 +2,10 @@ import { Content } from "@/data-models/content.interface";
 import Image from "next/image";
 
 export const Item = ({data}: { data: Content }) => {
-  console.log('data: ', data);
   return (
     <div>
       {Boolean(data?.image_url) && (
         <>
-          {console.log("image_url: ", data?.image_url)}
           <Image src={`${data?.image_url}`} alt={data?.name} loading="lazy" width={240} height={240} style={{ width: "20%", height: "auto" }} />
         </>
       )}

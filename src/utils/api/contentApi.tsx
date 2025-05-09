@@ -1,5 +1,5 @@
 import { doc, deleteDoc, writeBatch, DocumentData, collection, getDocs, setDoc, DocumentReference, WriteBatch } from "firebase/firestore";
-import { db } from "@/utils/firebase/firebase";
+import { db } from "@/lib/firebase/client";
 import { Movie } from "@/data-models/movie.interface";
 import { ServiceProvider } from "@/data-models/service-provider.interface";
 
@@ -10,7 +10,6 @@ import { ServiceProvider } from "@/data-models/service-provider.interface";
  * @returns Array of {Movie} items
  */
 export const getContent = async (uid: string): Promise<Movie[]> => {
-  console.log("Getting content for user: ", uid);
   const path: string = "users/" + uid + "/movies";
   const moviesSnapshot: DocumentData = await getDocs(collection(db, path));
 

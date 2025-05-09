@@ -1,24 +1,10 @@
-// app/components/Header.tsx  (Server Component — no "use client")
 import HeaderClient from "./header-client";
 import { cookies } from "next/headers";
-import { verifyIdToken } from "@/utils/firebase/firebaseAdmin";
-// import { getWatchlistCount } from "@/utils/api/contentApi"; // e.g. a server‑only helper
+import { verifySessionToken } from "@/lib/firebase/auth";
 
 export const Header = async () => {
-  const token = cookies().get("token")?.value;
-  let user = null;
-  // let watchCount = 0;
+  const user = await verifySessionToken(cookies().toString());
 
-  if (token) {
-    const decoded = await verifyIdToken(token);
-    if (decoded) {
-      user = { uid: decoded.uid, email: decoded.email };
-      // Fetch data server-side
-      // watchCount = await getWatchlistCount(decoded.uid);
-    }
-  }
-
-  // If you have static menus, you could define them here too:
   const navItems = [
     { label: "Search", path: "/" },
     ...(user

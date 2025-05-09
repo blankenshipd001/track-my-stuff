@@ -1,88 +1,115 @@
-// app/components/HeaderClient.tsx  (Client Component)
 "use client";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Drawer, Box, IconButton, List, ListItemButton, ListItemText, Divider } from "@mui/material";
+import {
+  Drawer,
+  Box,
+  IconButton,
+  List,
+  ListItemButton,
+  ListItemText,
+  Divider,
+} from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import Image from "next/image";
 import Logo from "@utils/assets/logo.svg";
 import { StandardButton } from "@components/buttons";
-import { useCurrentUser } from "@/hooks/useCurrentUser";
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { auth } from "@/lib/firebase/client";
+import { logoutUser } from "@/lib/clientLogout";
+import UserMenu from "./user-menu";
 
 interface HeaderClientProps {
-  user: { uid: string; email?: string } | null;
+  user: { uid: string; email?: string; picture?: string } | null;
   navItems: { label: string; path: string }[];
 }
 
 const HeaderClient = ({ user, navItems }: HeaderClientProps) => {
   const router = useRouter();
   const [drawerOpen, setDrawerOpen] = useState(false);
-  // const { login, logout } = useCurrentUser();
 
   const handleNav = (path: string) => {
     setDrawerOpen(false);
     router.push(path);
   };
 
-  const handleLogin = async () => {
-    const provider = new GoogleAuthProvider();
-    const result = await signInWithPopup(auth, provider);
-    const token = await result.user.getIdToken();
-
-    // Set token cookie
-    await fetch("/api/session", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ token }),
-    });
-
-    router.push("/dashboard");
-  };
-
-  const logout = async () => {
-    await auth.signOut();
-    await fetch("/api/session", { method: "DELETE" });
-    router.push("/");
+  const handleLogout = async () => {
+    await logoutUser();
+    router.refresh();
   };
 
   return (
-    <Box component="header" sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", p: 2 }}>
-      <Box onClick={() => handleNav("/")} sx={{ cursor: "pointer" }}>
-        <Image src={Logo} alt="Logo" width={200} height={100} style={{ height: "auto" }} />
+    <Box
+      component="header"
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        px: 4,
+        py: 2,
+        backgroundColor: "#121212",
+        borderBottom: "1px solid #333",
+      }}
+    >
+      <Box onClick={() => handleNav("/")} sx={{ cursor: "pointer", display: "flex", alignItems: "center" }}>
+        <Image src={Logo} alt="Logo" width={160} height={80} style={{ height: "auto" }} />
       </Box>
 
-      {/* desktop */}
-      <Box sx={{ display: { xs: "none", md: "flex" }, gap: 2 }}>
+      {/* desktop nav */}
+      <Box sx={{ display: { xs: "none", md: "flex" }, alignItems: "center", gap: 2 }}>
         {navItems.map((item) => (
           <StandardButton key={item.label} label={item.label} onClickAction={() => handleNav(item.path)} />
         ))}
         {user ? (
-          <StandardButton label="LOG OUT" onClickAction={async () => {logout()}} />
+          <Suspense fallback={<Box sx={{ width: 36, height: 36 }} />}>
+            <UserMenu user={user} onLogout={handleLogout} />
+          </Suspense>
         ) : (
-          <StandardButton label="LOG IN" onClickAction={() => handleLogin()} />
+          <StandardButton label="LOG IN" onClickAction={() => router.push("/login")} />
         )}
       </Box>
 
-      {/* mobile */}
+      {/* mobile nav */}
       <IconButton sx={{ display: { xs: "flex", md: "none" } }} onClick={() => setDrawerOpen(true)}>
-        <MenuIcon />
+        <MenuIcon sx={{ color: "white" }} />
       </IconButton>
-      <Drawer anchor="right" open={drawerOpen} onClose={() => setDrawerOpen(false)}>
+      <Drawer
+        anchor="right"
+        open={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+        slotProps={{
+          paper: {
+            sx: {
+              backgroundColor: "#121212",
+              color: "white",
+              width: 250,
+            },
+          },
+        }}
+      >
         <List sx={{ width: 250 }}>
           {navItems.map((item) => (
             <ListItemButton key={item.label} onClick={() => handleNav(item.path)}>
               <ListItemText primary={item.label} />
             </ListItemButton>
           ))}
-          <Divider />
+          <Divider sx={{ borderColor: "#333" }} />
           {user ? (
-            <ListItemButton onClick={async () => { logout(); setDrawerOpen(false); router.refresh(); }}>
+            <ListItemButton
+              onClick={async () => {
+                setDrawerOpen(false);
+                await logoutUser();
+                router.refresh();
+              }}
+            >
               <ListItemText primary="Log Out" />
             </ListItemButton>
           ) : (
-            <ListItemButton onClick={() => {handleLogin}}>
+            <ListItemButton
+              onClick={() => {
+                router.push("/login");
+                setDrawerOpen(false);
+                router.refresh();
+              }}
+            >
               <ListItemText primary="Log In" />
             </ListItemButton>
           )}
@@ -90,6 +117,5 @@ const HeaderClient = ({ user, navItems }: HeaderClientProps) => {
       </Drawer>
     </Box>
   );
-}
-
+};
 export default HeaderClient;

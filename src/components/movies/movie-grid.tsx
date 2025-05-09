@@ -1,4 +1,7 @@
-import React from "react";
+// app/components/MovieGrid.tsx
+"use client";
+
+import React, { useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { Movie } from "@/data-models/movie.interface";
 
@@ -16,51 +19,39 @@ interface MovieGridProps {
   removeClicked?(movie: Movie): Promise<void>;
 }
 
-export const MovieGrid = ({
-  movies,
-  addClicked,
-  removeClicked,
-}: MovieGridProps): JSX.Element => {
+export const MovieGrid = ({ movies, addClicked, removeClicked }: MovieGridProps): JSX.Element => {
   const router = useRouter();
   const BASE_URL = process.env.NEXT_PUBLIC_THE_MOVIE_DB_BASE_URL;
 
   const theme = useTheme();
-  const isXs = useMediaQuery(theme.breakpoints.down("sm")); // mobile
-  const isSm = useMediaQuery(theme.breakpoints.between("sm", "md")); // tablets
-  const isMd = useMediaQuery(theme.breakpoints.between("md", "lg")); // small desktops
+  const isXs = useMediaQuery(theme.breakpoints.down("sm"));
+  const isSm = useMediaQuery(theme.breakpoints.between("sm", "md"));
+  const isMd = useMediaQuery(theme.breakpoints.between("md", "lg"));
 
-  const getCols = () => {
-    if (isXs) { 
-      return 1; 
-    } else if (isSm) {
-      return 2;
-    } else if (isMd) {
-      return 3;
-    } else {
-      return 4;
-    }
-  };
+  const cols = useMemo(() => {
+    if (isXs) return 1;
+    if (isSm) return 2;
+    if (isMd) return 3;
+    return 4;
+  }, [isXs, isSm, isMd]);
 
   const handleClickEvent = (movie: Movie) => {
-    if (movie.first_air_date !== undefined) {
-      router.push(`/tv/${movie.movieId}`, { scroll: false });
-    } else {
-      router.push(`/movies/${movie.movieId}`, { scroll: false });
-    }
+    const isTV = movie.first_air_date !== undefined;
+    const path = isTV ? `/tv/${movie.movieId}` : `/movies/${movie.movieId}`;
+    router.push(path, { scroll: false });
   };
 
   const handleAddToWatchlist = (movie: Movie) => {
-    if (addClicked !== undefined) {
-      addClicked(movie);
-    } else if (removeClicked !== undefined) {
-      removeClicked(movie);
-    }
+    if (addClicked) addClicked(movie);
+    else if (removeClicked) removeClicked(movie);
   };
 
   return (
-    <ImageList cols={getCols()} sx={{ width: "100%", height: "100%" }} gap={16}>
+    <ImageList cols={cols} sx={{ width: "100%", height: "100%" }} gap={16}>
       {movies.map((movie) => {
         const poster = movie.poster_path ?? movie.backdrop_path;
+        const title = movie.title ?? movie.original_title ?? movie.original_name;
+
         return (
           <ImageListItem
             key={movie.id ?? movie.movieId}
@@ -72,13 +63,8 @@ export const MovieGrid = ({
             }}
           >
             <Image
-              onClick={(event) => {
-                event.stopPropagation();
-                event.preventDefault();
-                handleClickEvent(movie);
-              }}
               src={`${BASE_URL}${poster}?w=248&fit=crop&auto=format`}
-              alt={movie.title ?? movie.original_name}
+              alt={title}
               loading="lazy"
               width={355}
               height={200}
@@ -88,12 +74,13 @@ export const MovieGrid = ({
                 cursor: "pointer",
                 transition: "transform 0.2s ease-in-out",
               }}
-              onMouseOver={(e) =>
-                (e.currentTarget.style.transform = "scale(1.03)")
-              }
-              onMouseOut={(e) =>
-                (e.currentTarget.style.transform = "scale(1)")
-              }
+              onClick={(event) => {
+                event.stopPropagation();
+                event.preventDefault();
+                handleClickEvent(movie);
+              }}
+              onMouseOver={(e) => (e.currentTarget.style.transform = "scale(1.03)")}
+              onMouseOut={(e) => (e.currentTarget.style.transform = "scale(1)")}
             />
 
             <ImageListItemBar
@@ -105,7 +92,6 @@ export const MovieGrid = ({
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "center",
-                "&:hover": { color: "lightgray" },
                 fontSize: {
                   xs: "0.8rem",
                   sm: "0.9rem",
@@ -113,13 +99,10 @@ export const MovieGrid = ({
                 },
               }}
               position="below"
-              title={movie.title ?? movie.original_title ?? movie.original_name}
+              title={title}
               actionIcon={
                 <BookmarkAdd
-                  sx={{
-                    cursor: "pointer",
-                    "&:hover": { color: "lightgray" },
-                  }}
+                  sx={{ cursor: "pointer", "&:hover": { color: "lightgray" } }}
                   onClick={(event) => {
                     event.stopPropagation();
                     event.preventDefault();

@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-// import { adminAuth, adminDB } from "@/config/firebase-admin"; // adjust to your setup
-import { adminAuth, adminDB } from "@/utils/firebase/firebaseAdmin"; // adjust to your setup
 import { getFirebaseTokenFromRequest } from "@utils/get-token"; // helper to extract token
+import { adminAuth, adminDB } from "@/lib/firebase/admin";
 
 export async function POST(req: NextRequest) {
   try {

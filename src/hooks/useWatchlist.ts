@@ -1,4 +1,4 @@
-import { db } from "@/utils/firebase/firebase";
+import { db } from "@/lib/firebase/client";
 import { Movie } from "@/data-models/movie.interface";
 import { collection, getDocs } from "firebase/firestore";
 import { useState, useEffect } from "react";

@@ -8,7 +8,7 @@ interface providerGrid {
 }
 
 export const ProviderGrid = ({ title, items }: providerGrid) => (
-  <Grid item xs={4}>
+  <Grid size={{xs: 4}}>
     <Paper sx={{ backgroundColor: "#3D3D3D", textAlign: "left" }}>
       <Box sx={{ paddingBottom: "10px" }}>
         <div style={{ fontWeight: "400", fontSize: "18px", marginLeft: "10px", paddingBottom: "7px", paddingTop: "6px" }}>{title}</div>
