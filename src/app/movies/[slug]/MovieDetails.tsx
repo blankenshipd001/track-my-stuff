@@ -50,7 +50,7 @@ export default function MovieDetails({ user, movie, recommended }: { user: any; 
           >
             Back
           </Button>
-          <AddToWatchlist userId={user.uid} movie={movie} />
+          <AddToWatchlist user={user} movie={movie} />
         </Stack>
 
         {/* Movie Details: Poster, Title, Description */}

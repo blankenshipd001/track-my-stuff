@@ -50,7 +50,7 @@ export default function TvDetails({ user, movie, recommended }: { user: any, mov
           >
             Back
           </Button>
-          <AddToWatchlist userId={user.uid} movie={movie} />
+          <AddToWatchlist user={user} movie={movie} />
         </Stack>
 
         {/* TV Details: Poster, Name, Description */}
