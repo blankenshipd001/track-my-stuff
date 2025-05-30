@@ -8,6 +8,7 @@ export default async function WatchedPage() {
   const user = await verifySessionToken(cookies().toString());
 
   const snapshot = await adminDB.collection('/users/' + user?.uid + "/movies").get();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const movies: any = snapshot.docs.map(doc => doc.data());
 
   return (
