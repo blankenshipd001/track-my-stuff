@@ -8,7 +8,7 @@ export default async function WatchedPage() {
   const user = await verifySessionToken(cookies().toString());
 
   const snapshot = await adminDB.collection('/users/' + user?.uid + "/movies").get();
-  const movies = snapshot.docs.map(doc => doc.data());
+  const movies: any = snapshot.docs.map(doc => doc.data());
 
   return (
     // <StreamingPage watchList={movies}/>
