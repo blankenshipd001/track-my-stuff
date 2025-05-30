@@ -40,4 +40,4 @@ export default function AddToWatchlist({ user, movie }: {user: any, movie: Movie
       {NotificationBarComponent}
     </>
   );
-}
+}x

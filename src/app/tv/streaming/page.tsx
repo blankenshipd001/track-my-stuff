@@ -1,7 +1,8 @@
 import { verifySessionToken } from '@/lib/firebase/auth';
 import { cookies } from 'next/headers';
-import StreamingPage from '@/app/tv/streaming/StreamingPage';
+// import StreamingPage from '@/app/tv/streaming/StreamingPage';
 import { adminDB } from '@/lib/firebase/admin';
+import CalendarPage from './CalendarPage';
 
 export default async function WatchedPage() {
   const user = await verifySessionToken(cookies().toString());
@@ -10,6 +11,7 @@ export default async function WatchedPage() {
   const movies = snapshot.docs.map(doc => doc.data());
 
   return (
-    <StreamingPage watchList={movies}/>
+    // <StreamingPage watchList={movies}/>
+    <CalendarPage watchList={movies} />
   );
 }

@@ -15,6 +15,14 @@ export interface Movie {
   overview: string;
   popularity: number;
   poster_path: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  next_episode_to_air: any;
+  networks: [{
+    id: number;
+    name: string;
+    logo_path: string;
+    origin_country: string;
+  }]
   providers: {
     buy: [ServiceProvider];
     link: string;

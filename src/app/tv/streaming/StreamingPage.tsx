@@ -60,3 +60,38 @@ console.log("Tv Shows in Watchlist: ", tvShowsWithName);
 };
 
 export default TvSchedulePage;
+
+
+
+        // <Grid container spacing={2}>
+        //   {moviesThisWeek.map((movie: Movie) => (
+        //     <Grid size={{ xs: 12, sm: 6, md: 4 }} key={movie.id}>
+        //       <Card sx={{ display: "flex", backgroundColor: "#222" }}>
+        //         <Box
+        //           component="img"
+        //           src={`https://image.tmdb.org/t/p/w185${movie.poster_path}`}
+        //           alt={movie.name}
+        //           sx={{
+        //             width: 100,
+        //             height: "auto",
+        //             objectFit: "cover",
+        //             borderTopLeftRadius: 4,
+        //             borderBottomLeftRadius: 4,
+        //           }}
+        //         />
+        //         <CardContent sx={{ flex: "1 0 auto" }}>
+        //           <Typography variant="h6">{movie.name}</Typography>
+        //           <Typography variant="body2" color="text.secondary">
+        //             Airs on: {dayjs(movie.first_air_date).format("dddd, MMM D")}
+        //           </Typography>
+        //           {movie?.providers?.flatrate?.map((provider) => (
+        //             <Box key={provider.provider_id} display="flex" alignItems="center" mt={1}>
+        //               <img src={`https://image.tmdb.org/t/p/w45${provider.logo_path}`} alt={provider.provider_name} style={{ marginRight: 8, borderRadius: 4 }} />
+        //               <Typography>{provider.provider_name}</Typography>
+        //             </Box>
+        //           ))}
+        //         </CardContent>
+        //       </Card>
+        //     </Grid>
+        //   ))}
+        // </Grid>
