@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState } from "react";
@@ -9,6 +8,7 @@ import { Movie } from "@/data-models/movie.interface";
 import { useTheme } from "@mui/material/styles";
 import Picker from "@/components/calendar/Picker";
 import CalendarDay from "@/components/calendar/CalendarDay";
+import ListView from "@/components/calendar/ListView";
 
 dayjs.extend(localizedFormat);
 
@@ -22,7 +22,7 @@ const CalendarPage = ({ watchList }: Props) => {
   const [currentMonth, setCurrentMonth] = useState<Dayjs>(dayjs().startOf("month"));
   const [nameFilter, setNameFilter] = useState("");
   const [providerFilter, setProviderFilter] = useState("");
-  const [viewMode, setViewMode] = useState<"month" | "week">("month");
+  const [viewMode, setViewMode] = useState<"month" | "week" | "list">("month");
   const [currentWeekIndex, setCurrentWeekIndex] = useState(0);
 
   const theme = useTheme();
@@ -48,10 +48,16 @@ const CalendarPage = ({ watchList }: Props) => {
 
   watchList.forEach((movie) => {
     const airDate = movie?.next_episode_to_air?.air_date || movie?.first_air_date;
+    const releaseDate = movie?.release_date || movie?.first_air_date;
     const airDay = dayjs(airDate).format("YYYY-MM-DD");
     if (airDate && dayjs(airDate).isSame(currentMonth, "month")) {
       if (!showsByDate[airDay]) showsByDate[airDay] = [];
       showsByDate[airDay].push(movie);
+    }
+    const releaseDay = dayjs(releaseDate).format("YYYY-MM-DD");
+    if (releaseDay && dayjs(releaseDay).isSame(currentMonth, "month")) {
+      if (!showsByDate[releaseDay]) showsByDate[airDay] = [];
+      showsByDate[releaseDay].push(movie);
     }
   });
 
@@ -61,12 +67,26 @@ const CalendarPage = ({ watchList }: Props) => {
     return matchesName && matchesProvider;
   };
 
-//   const weeks: DayDate[][] = [];
-//   for (let i = 0; i < calendarDates.length; i += 7) {
-//     weeks.push(calendarDates.slice(i, i + 7));
-//   }
+//   const filteredList = useMemo(
+//     () =>
+//       Object.entries(showsByDate)
+//         .flatMap(([date, shows]) =>
+//           shows.map((show) => ({
+//             ...show,
+//             airDate: date,
+//           }))
+//         )
+//         .filter((movie) => movie.name.toLowerCase().includes(search.toLowerCase())),
+//     [showsByDate, search]
+//   );
+
+  //   const weeks: DayDate[][] = [];
+  //   for (let i = 0; i < calendarDates.length; i += 7) {
+  //     weeks.push(calendarDates.slice(i, i + 7));
+  //   }
+  
   const visibleDates = viewMode === "week" ? daysArray.slice(currentWeekIndex, currentWeekIndex + 7) : daysArray;
-// const visibleDates = viewMode === "month" ? calendarDates : weeks[currentWeekIndex] || [];
+  // const visibleDates = viewMode === "month" ? calendarDates : weeks[currentWeekIndex] || [];
 
   return (
     <Container sx={{ py: 2 }}>
@@ -83,6 +103,7 @@ const CalendarPage = ({ watchList }: Props) => {
           ))}
         </TextField>
       </Box>
+
       <ToggleButtonGroup
         value={viewMode}
         exclusive
@@ -97,33 +118,46 @@ const CalendarPage = ({ watchList }: Props) => {
       >
         <ToggleButton value="month">Month View</ToggleButton>
         <ToggleButton value="week">Week View</ToggleButton>
+        <ToggleButton value="list">List View</ToggleButton>
       </ToggleButtonGroup>
+
       {viewMode === "week" && (
         <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1 }}>
           <Button onClick={() => setCurrentWeekIndex((i) => Math.max(i - 1, 0))}>Previous Week</Button>
           <Button onClick={() => setCurrentWeekIndex((i) => i + 1)}>Next Week</Button>
         </Box>
       )}
-      <Grid container spacing={0.5} columns={7}>
-        {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
-          <Grid size={1} key={day}>
-            <Typography variant="caption" align="center" color="gray" display="block">
-              {day}
-            </Typography>
-          </Grid>
-        ))}
 
-        {visibleDates.map((day) => {
-          const dayKey = day.format("YYYY-MM-DD");
-          const shows = (showsByDate[dayKey] || []).filter(filterShow);
+      {/* {viewMode === "list" && (
+        <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1 }}>
+            <TextField size="small" label="Search by name" value={search} onChange={(e) => setSearch(e.target.value)} />
+        </Box>
+      )} */}
 
-          return (
-            <Grid size={1} key={dayKey}>
-              <CalendarDay shows={shows} day={day} />
+      {viewMode === "list" ? (
+        <ListView shows={watchList} />
+      ) : (
+        <Grid container spacing={0.5} columns={7}>
+          {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
+            <Grid size={1} key={day}>
+              <Typography variant="caption" align="center" color="gray" display="block">
+                {day}
+              </Typography>
             </Grid>
-          );
-        })}
-      </Grid>
+          ))}
+
+          {visibleDates.map((day) => {
+            const dayKey = day.format("YYYY-MM-DD");
+            const shows = (showsByDate[dayKey] || []).filter(filterShow);
+
+            return (
+              <Grid size={1} key={dayKey}>
+                <CalendarDay shows={shows} day={day} />
+              </Grid>
+            );
+          })}
+        </Grid>
+      )}
     </Container>
   );
 };

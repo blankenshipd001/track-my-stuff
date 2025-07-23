@@ -31,7 +31,7 @@ console.log("Tv Shows in Watchlist: ", tvShowsWithName);
                 height: "100%",
               }}
             >
-              <Image src={`https://image.tmdb.org/t/p/w500${show.poster_path}`} alt={show.name} width={500} height={750} style={{ width: "100%", height: "auto" }} />
+              <Image src={`https://image.tmdb.org/t/p/w500${show.poster_path}`} alt={show.name ?? 'image'} width={500} height={750} style={{ width: "100%", height: "auto" }} />
               <Box p={2}>
                 <Typography variant="h6">{show.name}</Typography>
                 <Typography variant="body2" color="grey.400">

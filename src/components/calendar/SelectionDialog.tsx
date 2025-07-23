@@ -67,7 +67,7 @@ const SelectionDialog = ({ selectedDay, selectedShows, handleCloseDialog }: Sele
                   "&:hover": { transform: "scale(1.02)" },
                 }}
               >
-                <Image src={`https://image.tmdb.org/t/p/w185${show.poster_path}`} alt={show.name} width={110} height={165} style={{ borderRadius: 8 }} />
+                <Image src={`https://image.tmdb.org/t/p/w185${show.poster_path}`} alt={show.name ?? 'image'} width={110} height={165} style={{ borderRadius: 8 }} />
 
                 <Typography variant="subtitle1" fontWeight={600} mt={1} textAlign="center" noWrap title={show.name}>
                   {show.name}
@@ -91,7 +91,7 @@ const SelectionDialog = ({ selectedDay, selectedShows, handleCloseDialog }: Sele
                     {show.providers.flatrate.map((provider: ServiceProvider) => (
                       <Chip
                         key={provider.provider_id}
-                        icon={<Image loading="lazy" src={`https://image.tmdb.org/t/p/w45${provider.logo_path}`} alt={provider.provider_name} width={24} height={24} style={{ borderRadius: 4 }} />}
+                        icon={<Image loading="lazy" src={`https://image.tmdb.org/t/p/w45${provider.logo_path}`} alt={provider.provider_name ?? 'image'} width={24} height={24} style={{ borderRadius: 4 }} />}
                         label={provider.provider_name}
                         size="small"
                         sx={{

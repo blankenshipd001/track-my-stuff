@@ -42,7 +42,7 @@ export const Details = ({ movie }: DetailsProps) => {
           >
             <Image
               src={`${BASE_URL}${movie?.poster_path}`}
-              alt={movie?.title}
+              alt={movie?.title ?? 'image'}
               fill
               style={{ objectFit: "cover" }}
               sizes="(max-width: 768px) 100vw, 230px"

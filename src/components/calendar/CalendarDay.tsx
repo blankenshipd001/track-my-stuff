@@ -57,7 +57,7 @@ const CalendarDay = ({ shows, day }: CalendarDayProps) => {
         {shows.slice(0, 4).map((show, idx) => (
           <Tooltip key={idx} title={show.name}>
             <Box sx={{ display: "inline-block", mr: 0.5 }}>
-              <Image loading="lazy" src={`https://image.tmdb.org/t/p/w185${show.poster_path}`} alt={show.name} width={imageWidth} height={imageHeight} style={{ borderRadius: 4 }} />
+              <Image loading="lazy" src={`https://image.tmdb.org/t/p/w185${show.poster_path}`} alt={show.name ?? 'image'} width={imageWidth} height={imageHeight} style={{ borderRadius: 4 }} />
             </Box>
           </Tooltip>
         ))}

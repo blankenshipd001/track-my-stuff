@@ -75,7 +75,7 @@ export const MovieGrid = ({ movies, addClicked, removeClicked }: MovieGridProps)
           >
             <Image
               src={`${BASE_URL}${poster}?w=248&fit=crop&auto=format`}
-              alt={title}
+              alt={title ?? 'image'}
               loading="lazy"
               width={355}
               height={200}

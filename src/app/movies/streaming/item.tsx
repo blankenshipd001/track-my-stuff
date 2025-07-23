@@ -6,7 +6,7 @@ export const Item = ({data}: { data: Content }) => {
     <div>
       {Boolean(data?.image_url) && (
         <>
-          <Image src={`${data?.image_url}`} alt={data?.name} loading="lazy" width={240} height={240} style={{ width: "20%", height: "auto" }} />
+          <Image src={`${data?.image_url}`} alt={data?.name ?? 'image'} loading="lazy" width={240} height={240} style={{ width: "20%", height: "auto" }} />
         </>
       )}
       <div>Name: {data?.name}</div>
