@@ -7,7 +7,7 @@ import { SearchBox } from "@components/search";
 import { getContent } from "@/utils/api/contentApi";
 import { fetchByTitle } from "@/lib/fetchByTitle";
 import useNotificationBar from "@/components/notifications/useNotificationBar";
-import { Media } from "@/data-models/media.interface";
+import { Media } from "@/data-models/movie.interface";
 import TabsWrapper from "../panels/tab-wrapper";
 
 interface MovieContentProps {
@@ -54,7 +54,6 @@ export const MovieContent = ({ popularMedia, user }: MovieContentProps) => {
       setMovies(moviesContent);
       setTvShows(tvContent);
       setEverything(allContent);
-      console.log('allContent: ', allContent)
     } catch (err) {
       enqueueNotificationBar(`Error: ${err}`, "error");
     }

@@ -1,6 +1,6 @@
 import ThumbDownIcon from "@mui/icons-material/ThumbDown";
 import { Fab } from "@mui/material";
-import { Media } from "@/data-models/media.interface";
+import { Media } from "@/data-models/movie.interface";
 
 interface thumbDownButton {
   movie: Media;

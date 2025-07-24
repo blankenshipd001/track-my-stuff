@@ -4,7 +4,7 @@ import PlaylistRemoveIcon from "@mui/icons-material/PlaylistRemove";
 // import CheckIcon from "@mui/icons-material/Check";
 
 import { IconButton } from "../buttons";
-import { Media } from "@/data-models/media.interface";
+import { Media } from "@/data-models/movie.interface";
 
 interface Actions {
   movie: Media;

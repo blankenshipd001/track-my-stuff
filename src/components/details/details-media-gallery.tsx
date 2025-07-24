@@ -1,7 +1,7 @@
 import React from "react"
 import Image from "next/image";
 import { Box, Grid, Typography } from "@mui/material";
-import { Media } from "@/data-models/media.interface";
+import { Media } from "@/data-models/movie.interface";
 
 export default function DetailsMediaGallery({media}: { media: Media }) {
 

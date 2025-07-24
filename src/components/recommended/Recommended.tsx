@@ -1,7 +1,7 @@
 // app/movies/[slug]/RecommendedMovies.tsx
 import { Grid, Typography } from "@mui/material";
 import Image from "next/image";
-import { Media } from "@/data-models/media.interface";
+import { Media } from "@/data-models/movie.interface";
 
 export default function Recommended({ shows, handleClick }: { shows: Media[], handleClick: (movie: Media) => void }) {
   return (

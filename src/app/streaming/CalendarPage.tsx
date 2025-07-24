@@ -9,7 +9,7 @@ import MovieIcon from '@mui/icons-material/Movie';
 import LiveTvIcon from '@mui/icons-material/LiveTv';
 import dayjs, { Dayjs } from "dayjs";
 import localizedFormat from "dayjs/plugin/localizedFormat";
-import { Media } from "@/data-models/media.interface";
+import { Media } from "@/data-models/movie.interface";
 import { useTheme } from "@mui/material/styles";
 import Picker from "@/components/calendar/Picker";
 import CalendarDay from "@/components/calendar/CalendarDay";

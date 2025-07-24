@@ -1,4 +1,4 @@
-import { Media } from "@/data-models/media.interface";
+import { Media } from "@/data-models/movie.interface";
 
 const movie_api_key = process.env.NEXT_PUBLIC_THE_MOVIE_DB_API_KEY;
 const popular_url = `https://api.themoviedb.org/3/movie/popular?api_key=${movie_api_key}&include_video=false`;
@@ -61,7 +61,7 @@ export async function getRecommendedMovies(genreId: number): Promise<Media[]> {
 
 export async function getTVDetails(slug: string): Promise<Media | null> {
   const res = await fetch(`https://api.themoviedb.org/3/tv/${slug}?api_key=${movie_api_key}&append_to_response=videos,images`, { cache: "no-store" });
-  
+  console.log('res : ', res)
   if (!res.ok) {
     return null
   }

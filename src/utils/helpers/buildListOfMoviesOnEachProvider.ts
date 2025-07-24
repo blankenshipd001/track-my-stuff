@@ -1,4 +1,4 @@
-import { Media } from "@/data-models/media.interface";
+import { Media } from "@/data-models/movie.interface";
 import { ServiceProvider } from "@/data-models/service-provider.interface";
 
 

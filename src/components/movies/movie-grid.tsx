@@ -3,7 +3,7 @@
 
 import React, { useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { Media } from "@/data-models/media.interface";
+import { Media } from "@/data-models/movie.interface";
 
 import Image from "next/image";
 import ImageList from "@mui/material/ImageList";
