@@ -1,6 +1,6 @@
 import { verifySessionToken } from '@/lib/firebase/auth';
 import { cookies } from 'next/headers';
-// import StreamingPage from '@/app/tv/streaming/StreamingPage';
+// import StreamingPage from './StreamingPage';
 import { adminDB } from '@/lib/firebase/admin';
 import CalendarPage from './CalendarPage';
 
