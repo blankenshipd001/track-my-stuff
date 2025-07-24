@@ -1,4 +1,4 @@
-import { Media } from "@/data-models/movie.interface";
+import { Media } from "@/data-models/media.interface";
 import Image from "next/image";
 import {
   Box,

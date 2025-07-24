@@ -2,14 +2,14 @@
 
 import React, { useState } from "react";
 import { Container, Typography, Box, Grid, TextField, MenuItem, useMediaQuery, ToggleButtonGroup, ToggleButton } from "@mui/material";
-import ViewModuleIcon from '@mui/icons-material/ViewModule';
-import ViewWeekIcon from '@mui/icons-material/ViewWeek';
-import ListIcon from '@mui/icons-material/List';
-import MovieIcon from '@mui/icons-material/Movie';
-import LiveTvIcon from '@mui/icons-material/LiveTv';
+import ViewModuleIcon from "@mui/icons-material/ViewModule";
+import ViewWeekIcon from "@mui/icons-material/ViewWeek";
+import ListIcon from "@mui/icons-material/List";
+import MovieIcon from "@mui/icons-material/Movie";
+import LiveTvIcon from "@mui/icons-material/LiveTv";
 import dayjs, { Dayjs } from "dayjs";
 import localizedFormat from "dayjs/plugin/localizedFormat";
-import { Media } from "@/data-models/movie.interface";
+import { Media } from "@/data-models/media.interface";
 import { useTheme } from "@mui/material/styles";
 import Picker from "@/components/calendar/Picker";
 import CalendarDay from "@/components/calendar/CalendarDay";
@@ -27,7 +27,7 @@ const CalendarPage = ({ watchList }: Props) => {
   const [providerFilter, setProviderFilter] = useState("");
   const [viewMode, setViewMode] = useState<"month" | "week" | "list">("month");
   const [currentWeekIndex, setCurrentWeekIndex] = useState(0);
-  const [listType, setListType] = useState<'tv' | 'movie'>('tv');
+  const [listType, setListType] = useState<"tv" | "movie">("tv");
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -41,8 +41,8 @@ const CalendarPage = ({ watchList }: Props) => {
   // Calculate the full range of days to cover all visible weeks, including those that start in the previous or next month
   const startOfMonth = currentMonth.startOf("month");
   const endOfMonth = currentMonth.endOf("month");
-  const calendarStart = startOfMonth.startOf('week');
-  const calendarEnd = endOfMonth.endOf('week');
+  const calendarStart = startOfMonth.startOf("week");
+  const calendarEnd = endOfMonth.endOf("week");
 
   // Unified navigation handlers for back/forward depending on view mode
   // maxWeekIndex is now declared after daysArray
@@ -56,9 +56,9 @@ const CalendarPage = ({ watchList }: Props) => {
         const prevMonth = currentMonth.subtract(1, "month");
         const prevStartOfMonth = prevMonth.startOf("month");
         const prevEndOfMonth = prevMonth.endOf("month");
-        const prevCalendarStart = prevStartOfMonth.startOf('week');
-        const prevCalendarEnd = prevEndOfMonth.endOf('week');
-        const prevTotalCells = prevCalendarEnd.diff(prevCalendarStart, 'day') + 1;
+        const prevCalendarStart = prevStartOfMonth.startOf("week");
+        const prevCalendarEnd = prevEndOfMonth.endOf("week");
+        const prevTotalCells = prevCalendarEnd.diff(prevCalendarStart, "day") + 1;
         const prevMaxWeekIndex = Math.ceil(prevTotalCells / 7) - 1;
         setCurrentMonth(prevMonth);
         setCurrentWeekIndex(prevMaxWeekIndex);
@@ -84,26 +84,40 @@ const CalendarPage = ({ watchList }: Props) => {
   };
 
   // Build daysArray to cover all days from calendarStart to calendarEnd (inclusive)
-  const totalCells = calendarEnd.diff(calendarStart, 'day') + 1;
-  const daysArray = Array.from({ length: totalCells }, (_, i) => calendarStart.add(i, 'day'));
+  const totalCells = calendarEnd.diff(calendarStart, "day") + 1;
+  const daysArray = Array.from({ length: totalCells }, (_, i) => calendarStart.add(i, "day"));
   const maxWeekIndex = Math.ceil(daysArray.length / 7) - 1;
 
-  const showsByDate: { [date: string]: Media[] } = {};
+  // Helper to add a show to a date bucket
+  const addShowToDate = (dict: { [date: string]: Media[] }, date: string, show: Media) => {
+    if (!dict[date]) dict[date] = [];
+    dict[date].push(show);
+  };
 
-  watchList.forEach((movie) => {
-    const airDate = movie?.next_episode_to_air?.air_date || movie?.first_air_date;
-    const airDay = dayjs(airDate).format("YYYY-MM-DD");
-    const releaseDate = movie?.release_date || movie?.first_air_date;
-    const releaseDay = dayjs(releaseDate).format("YYYY-MM-DD");
-    const pushed = new Set();
-    if (airDate && dayjs(airDate).isSame(currentMonth, "month")) {
-      if (!showsByDate[airDay]) showsByDate[airDay] = [];
-      showsByDate[airDay].push(movie);
-      pushed.add(airDay);
-    }
-    if (releaseDay !== airDay && releaseDay && dayjs(releaseDay).isSame(currentMonth, "month")) {
-      if (!showsByDate[releaseDay]) showsByDate[releaseDay] = [];
-      showsByDate[releaseDay].push(movie);
+  // Build showsByDate: TV shows with episodes only by episode air_date, movies by release_date
+  const showsByDate: { [date: string]: Media[] } = {};
+  watchList.forEach((item) => {
+    if (Array.isArray(item.episodes) && item.episodes.length > 0) {
+      // TV show with episodes: add each episode by its air_date
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      item.episodes.forEach((season: any) => {
+        if (Array.isArray(season.episodes)) {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          season.episodes.forEach((ep: any) => {
+            if (ep.air_date) {
+              const epDay = dayjs(ep.air_date).format("YYYY-MM-DD");
+              addShowToDate(showsByDate, epDay, { ...item, episodes: [ep] });
+            }
+          });
+        }
+      });
+    } else {
+      // Movie or TV show without episodes: add by release_date
+      const releaseDate = item?.release_date || item?.first_air_date;
+      if (releaseDate && dayjs(releaseDate).isSame(currentMonth, "month")) {
+        const releaseDay = dayjs(releaseDate).format("YYYY-MM-DD");
+        addShowToDate(showsByDate, releaseDay, item);
+      }
     }
   });
 
@@ -112,35 +126,35 @@ const CalendarPage = ({ watchList }: Props) => {
     const matchesProvider = !providerFilter || show.providers?.flatrate?.some((p) => p.provider_name === providerFilter);
     return matchesName && matchesProvider;
   };
-  
+
   // For week view, currentWeekIndex is the week number (0-based), not a day index
-  const visibleDates = viewMode === "week"
-    ? daysArray.slice(currentWeekIndex * 7, currentWeekIndex * 7 + 7)
-    : daysArray;
+  const visibleDates = viewMode === "week" ? daysArray.slice(currentWeekIndex * 7, currentWeekIndex * 7 + 7) : daysArray;
 
   // For month and week views, show both TV and movies; for list view, filter by listType
-  const filteredWatchList = viewMode === 'list'
-    ? (listType === 'tv'
-        ? watchList.filter((item) => !!item.name)
-        : watchList.filter((item) => !!item.title))
-    : watchList;
+  const filteredWatchList = viewMode === "list" ? (listType === "tv" ? watchList.filter((item) => !!item.name) : watchList.filter((item) => !!item.title)) : watchList;
 
-  // Build showsByDate for filteredWatchList
+  // Build filteredShowsByDate: TV shows with episodes only by episode air_date, movies by release_date
   const filteredShowsByDate: { [date: string]: Media[] } = {};
-  filteredWatchList.forEach((movie) => {
-    const airDate = movie?.next_episode_to_air?.air_date || movie?.first_air_date;
-    const airDay = dayjs(airDate).format("YYYY-MM-DD");
-    const releaseDate = movie?.release_date || movie?.first_air_date;
-    const releaseDay = dayjs(releaseDate).format("YYYY-MM-DD");
-    const pushed = new Set();
-    if (airDate && dayjs(airDate).isSame(currentMonth, "month")) {
-      if (!filteredShowsByDate[airDay]) filteredShowsByDate[airDay] = [];
-      filteredShowsByDate[airDay].push(movie);
-      pushed.add(airDay);
-    }
-    if (releaseDay !== airDay && releaseDay && dayjs(releaseDay).isSame(currentMonth, "month")) {
-      if (!filteredShowsByDate[releaseDay]) filteredShowsByDate[releaseDay] = [];
-      filteredShowsByDate[releaseDay].push(movie);
+  filteredWatchList.forEach((item) => {
+    if (Array.isArray(item.episodes) && item.episodes.length > 0) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      item.episodes.forEach((season: any) => {
+        if (Array.isArray(season.episodes)) {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          season.episodes.forEach((ep: any) => {
+            if (ep.air_date) {
+              const epDay = dayjs(ep.air_date).format("YYYY-MM-DD");
+              addShowToDate(filteredShowsByDate, epDay, { ...item, episodes: [ep] });
+            }
+          });
+        }
+      });
+    } else {
+      const releaseDate = item?.release_date || item?.first_air_date;
+      if (releaseDate && dayjs(releaseDate).isSame(currentMonth, "month")) {
+        const releaseDay = dayjs(releaseDate).format("YYYY-MM-DD");
+        addShowToDate(filteredShowsByDate, releaseDay, item);
+      }
     }
   });
 
@@ -167,10 +181,10 @@ const CalendarPage = ({ watchList }: Props) => {
           onChange={(e, val) => {
             if (val) {
               setViewMode(val);
-              if (val === 'week') {
+              if (val === "week") {
                 // Find the week index for today
                 const today = dayjs();
-                const todayIndex = daysArray.findIndex(day => day.isSame(today, 'day'));
+                const todayIndex = daysArray.findIndex((day) => day.isSame(today, "day"));
                 if (todayIndex !== -1) {
                   setCurrentWeekIndex(Math.floor(todayIndex / 7));
                 } else {
@@ -186,7 +200,7 @@ const CalendarPage = ({ watchList }: Props) => {
             boxShadow: 1,
             borderRadius: 2,
             backgroundColor: (theme) => theme.palette.background.paper,
-            width: { xs: '100%', sm: 'auto' },
+            width: { xs: "100%", sm: "auto" },
           }}
           fullWidth={isMobile}
           aria-label="View mode"
@@ -205,7 +219,7 @@ const CalendarPage = ({ watchList }: Props) => {
           </ToggleButton>
         </ToggleButtonGroup>
 
-        {viewMode === 'list' && (
+        {viewMode === "list" && (
           <ToggleButtonGroup
             value={listType}
             exclusive
@@ -217,7 +231,7 @@ const CalendarPage = ({ watchList }: Props) => {
               boxShadow: 1,
               borderRadius: 2,
               backgroundColor: (theme) => theme.palette.background.paper,
-              width: { xs: '100%', sm: 'auto' },
+              width: { xs: "100%", sm: "auto" },
               ml: 2,
             }}
             fullWidth={false}
@@ -233,7 +247,6 @@ const CalendarPage = ({ watchList }: Props) => {
             </ToggleButton>
           </ToggleButtonGroup>
         )}
-
       </Box>
 
       {/* {viewMode === "week" && (
@@ -254,9 +267,7 @@ const CalendarPage = ({ watchList }: Props) => {
       )} */}
 
       {viewMode === "list" ? (
-        <ListView
-          shows={filteredWatchList}
-        />
+        <ListView shows={filteredWatchList} />
       ) : (
         <Grid container spacing={0.5} columns={7}>
           {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
@@ -270,7 +281,7 @@ const CalendarPage = ({ watchList }: Props) => {
           {visibleDates.map((day) => {
             const dayKey = day.format("YYYY-MM-DD");
             const shows = (filteredShowsByDate[dayKey] || []).filter(filterShow);
-            const isToday = day.isSame(dayjs(), 'day');
+            const isToday = day.isSame(dayjs(), "day");
 
             return (
               <Grid size={1} key={dayKey}>

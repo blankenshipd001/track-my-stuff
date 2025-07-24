@@ -1,6 +1,6 @@
 import { doc, deleteDoc, writeBatch, DocumentData, collection, getDocs, setDoc, DocumentReference, WriteBatch } from "firebase/firestore";
 import { db } from "@/lib/firebase/client";
-import { Media } from "@/data-models/movie.interface";
+import { Media } from "@/data-models/media.interface";
 import { ServiceProvider } from "@/data-models/service-provider.interface";
 
 /**
@@ -114,19 +114,23 @@ export const addToWatchList = async (uid: string, movie: Media): Promise<Media |
     const json = await fetchMovie.json();
     movie.imdb_id = json.imdb_id;
   }
-  
+
+  // Remove episodes property before saving
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { episodes, ...movieWithoutEpisodes } = movie;
+
   const path: string = `users/${uid}/movies`;
   const documentRef: DocumentReference = doc(db, path, `${movie.id}`);
 
-  let docRef: Media = movie;
+  let docRef: Media = movieWithoutEpisodes;
 
   await setDoc(documentRef, {
-    ...movie,
+    ...movieWithoutEpisodes,
   }).then(() => {
-    docRef = movie;
+    docRef = movieWithoutEpisodes;
   }).catch(error => {
     console.error("Error adding movie to watchlist: ", error);
-    docRef = movie;
+    docRef = movieWithoutEpisodes;
   })
 
   return docRef;

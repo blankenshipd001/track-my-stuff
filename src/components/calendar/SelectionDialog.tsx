@@ -1,4 +1,4 @@
-import { Media } from "@/data-models/movie.interface";
+import { Media } from "@/data-models/media.interface";
 import { ServiceProvider } from "@/data-models/service-provider.interface";
 import { Box, Chip, Dialog, DialogContent, DialogTitle, Grid, Slide, Typography, useTheme, SlideProps } from "@mui/material";
 import Image from "next/image";

@@ -1,4 +1,4 @@
-import { Media } from "@/data-models/movie.interface";
+import { Media } from "@/data-models/media.interface";
 import { Box, Paper, Tooltip, Typography, useMediaQuery, useTheme } from "@mui/material";
 import dayjs, { Dayjs } from "dayjs";
 import Image from "next/image";

@@ -7,7 +7,7 @@ import { SearchBox } from "@components/search";
 import { getContent } from "@/utils/api/contentApi";
 import { fetchByTitle } from "@/lib/fetchByTitle";
 import useNotificationBar from "@/components/notifications/useNotificationBar";
-import { Media } from "@/data-models/movie.interface";
+import { Media } from "@/data-models/media.interface";
 import TabsWrapper from "../panels/tab-wrapper";
 
 interface MovieContentProps {

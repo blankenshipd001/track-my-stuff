@@ -88,4 +88,9 @@ export interface Media {
       }
     ];
   };
+  episodes?: Array<{
+    season_number: number;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    episodes: any[];
+  }>;
 }
