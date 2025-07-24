@@ -1,6 +1,6 @@
 import { doc, deleteDoc, writeBatch, DocumentData, collection, getDocs, setDoc, DocumentReference, WriteBatch } from "firebase/firestore";
 import { db } from "@/lib/firebase/client";
-import { Media } from "@/data-models/movie.interface";
+import { Media } from "@/data-models/media.interface";
 import { ServiceProvider } from "@/data-models/service-provider.interface";
 
 /**

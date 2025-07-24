@@ -1,4 +1,4 @@
-import { Media } from "@/data-models/movie.interface";
+import { Media } from "@/data-models/media.interface";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import { Fab } from "@mui/material";
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { Media } from "@/data-models/movie.interface";
+import { Media } from "@/data-models/media.interface";
 import { Container, Paper, useTheme } from "@mui/material";
 import DetailsHeader from "./details-header";
 import DetailsMediaGallery from "./details-media-gallery";

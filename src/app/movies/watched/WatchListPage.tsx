@@ -1,6 +1,6 @@
 "use client"
 import { MovieGrid } from "@/components/movies";
-import { Media } from "@/data-models/movie.interface";
+import { Media } from "@/data-models/media.interface";
 import useNotificationBar from "@/components/notifications/useNotificationBar";
 import { requestRemoveFromWatchList } from "@/utils/api/contentApi";
 import { useRouter } from "next/navigation";

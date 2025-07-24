@@ -22,7 +22,7 @@ import {
 import SearchIcon from '@mui/icons-material/Search';
 import { useRouter } from 'next/navigation';
 import { fetchByTitle } from '@/lib/fetchByTitle';
-import { Media } from '@/data-models/movie.interface';
+import { Media } from '@/data-models/media.interface';
 
 const SearchInput = styled(OutlinedInput)(({ theme }) => ({
   width: '100%',

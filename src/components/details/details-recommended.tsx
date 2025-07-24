@@ -3,7 +3,7 @@ import { useRouter } from "next/navigation";
 import { Box, Typography } from "@mui/material";
 import Recommended from "@/components/recommended/Recommended";
 
-import { Media } from "@/data-models/movie.interface";
+import { Media } from "@/data-models/media.interface";
 
 export default function DetailsRecommended({ recommended, isTv }: { recommended: Media[]; isTv: boolean }) {
   const router = useRouter();

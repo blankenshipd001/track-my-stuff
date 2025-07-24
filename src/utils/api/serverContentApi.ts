@@ -1,4 +1,4 @@
-import { Media } from "@/data-models/movie.interface";
+import { Media } from "@/data-models/media.interface";
 
 const movie_api_key = process.env.NEXT_PUBLIC_THE_MOVIE_DB_API_KEY;
 const popular_url = `https://api.themoviedb.org/3/movie/popular?api_key=${movie_api_key}&include_video=false`;

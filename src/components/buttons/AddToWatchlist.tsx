@@ -2,7 +2,7 @@
 "use client";
 
 import { Button } from "@mui/material";
-import { Media } from "@/data-models/movie.interface";
+import { Media } from "@/data-models/media.interface";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { addToWatchList } from "@/utils/api/contentApi";
