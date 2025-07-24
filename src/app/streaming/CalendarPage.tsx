@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Container, Typography, Box, Grid, TextField, MenuItem, useMediaQuery, ToggleButtonGroup, ToggleButton, Button } from "@mui/material";
+import { Container, Typography, Box, Grid, TextField, MenuItem, useMediaQuery, ToggleButtonGroup, ToggleButton } from "@mui/material";
 import ViewModuleIcon from '@mui/icons-material/ViewModule';
 import ViewWeekIcon from '@mui/icons-material/ViewWeek';
 import ListIcon from '@mui/icons-material/List';
@@ -9,7 +9,7 @@ import MovieIcon from '@mui/icons-material/Movie';
 import LiveTvIcon from '@mui/icons-material/LiveTv';
 import dayjs, { Dayjs } from "dayjs";
 import localizedFormat from "dayjs/plugin/localizedFormat";
-import { Movie } from "@/data-models/movie.interface";
+import { Media } from "@/data-models/movie.interface";
 import { useTheme } from "@mui/material/styles";
 import Picker from "@/components/calendar/Picker";
 import CalendarDay from "@/components/calendar/CalendarDay";
@@ -18,7 +18,7 @@ import ListView from "@/components/calendar/ListView";
 dayjs.extend(localizedFormat);
 
 interface Props {
-  watchList: Movie[];
+  watchList: Media[];
 }
 
 const CalendarPage = ({ watchList }: Props) => {
@@ -83,13 +83,12 @@ const CalendarPage = ({ watchList }: Props) => {
     }
   };
 
-  const daysInMonth = endOfMonth.date();
   // Build daysArray to cover all days from calendarStart to calendarEnd (inclusive)
   const totalCells = calendarEnd.diff(calendarStart, 'day') + 1;
   const daysArray = Array.from({ length: totalCells }, (_, i) => calendarStart.add(i, 'day'));
   const maxWeekIndex = Math.ceil(daysArray.length / 7) - 1;
 
-  const showsByDate: { [date: string]: Movie[] } = {};
+  const showsByDate: { [date: string]: Media[] } = {};
 
   watchList.forEach((movie) => {
     const airDate = movie?.next_episode_to_air?.air_date || movie?.first_air_date;
@@ -108,7 +107,7 @@ const CalendarPage = ({ watchList }: Props) => {
     }
   });
 
-  const filterShow = (show: Movie) => {
+  const filterShow = (show: Media) => {
     const matchesName = show?.name?.toLowerCase().includes(nameFilter.toLowerCase()) || show?.title?.toLocaleLowerCase().includes(nameFilter.toLocaleLowerCase());
     const matchesProvider = !providerFilter || show.providers?.flatrate?.some((p) => p.provider_name === providerFilter);
     return matchesName && matchesProvider;
@@ -127,7 +126,7 @@ const CalendarPage = ({ watchList }: Props) => {
     : watchList;
 
   // Build showsByDate for filteredWatchList
-  const filteredShowsByDate: { [date: string]: Movie[] } = {};
+  const filteredShowsByDate: { [date: string]: Media[] } = {};
   filteredWatchList.forEach((movie) => {
     const airDate = movie?.next_episode_to_air?.air_date || movie?.first_air_date;
     const airDay = dayjs(airDate).format("YYYY-MM-DD");

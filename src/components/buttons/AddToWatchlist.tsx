@@ -2,14 +2,14 @@
 "use client";
 
 import { Button } from "@mui/material";
-import { Movie } from "@/data-models/movie.interface";
+import { Media } from "@/data-models/movie.interface";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { addToWatchList } from "@/utils/api/contentApi";
 import useNotificationBar from "@/components/notifications/useNotificationBar";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export default function AddToWatchlist({ user, movie }: {user: any, movie: Movie }) {
+export default function AddToWatchlist({ user, movie }: {user: any, movie: Media }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const { enqueueNotificationBar, NotificationBarComponent } = useNotificationBar();

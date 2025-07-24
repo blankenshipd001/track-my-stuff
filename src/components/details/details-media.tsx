@@ -2,9 +2,9 @@ import React from "react";
 import Image from "next/image";
 import { Box, Chip, Grid, Typography, useTheme } from "@mui/material";
 import ProviderLogos from "@/components/provider/ProviderLogos";
-import { Movie } from "@/data-models/movie.interface";
+import { Media } from "@/data-models/movie.interface";
 
-export default function DetailsMedia({ media, isTv }: { media: Movie; isTv: boolean }) {
+export default function DetailsMedia({ media, isTv }: { media: Media; isTv: boolean }) {
   const theme = useTheme();
 
   {/* Media Gallery */}

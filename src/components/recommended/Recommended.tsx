@@ -1,9 +1,9 @@
 // app/movies/[slug]/RecommendedMovies.tsx
 import { Grid, Typography } from "@mui/material";
 import Image from "next/image";
-import { Movie } from "@/data-models/movie.interface";
+import { Media } from "@/data-models/movie.interface";
 
-export default function Recommended({ shows, handleClick }: { shows: Movie[], handleClick: (movie: Movie) => void }) {
+export default function Recommended({ shows, handleClick }: { shows: Media[], handleClick: (movie: Media) => void }) {
   return (
     <>
       <Grid container spacing={2}>

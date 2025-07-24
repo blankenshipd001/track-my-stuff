@@ -1,4 +1,4 @@
-import { Movie } from "@/data-models/movie.interface";
+import { Media } from "@/data-models/movie.interface";
 import { Box, Paper, Tooltip, Typography, useMediaQuery, useTheme } from "@mui/material";
 import dayjs, { Dayjs } from "dayjs";
 import Image from "next/image";
@@ -6,14 +6,14 @@ import { useState } from "react";
 import SelectionDialog from "./SelectionDialog";
 
 interface CalendarDayProps {
-  shows: Movie[];
+  shows: Media[];
   day: Dayjs;
   isToday?: boolean;
 }
 
 const CalendarDay = ({ shows, day, isToday = false }: CalendarDayProps) => {
   const [selectedDay, setSelectedDay] = useState<Dayjs | null>(null);
-  const [selectedShows, setSelectedShows] = useState<Movie[]>([]);
+  const [selectedShows, setSelectedShows] = useState<Media[]>([]);
   const [currentMonth] = useState<Dayjs>(dayjs().startOf("month"));
 
   const theme = useTheme();
@@ -24,7 +24,7 @@ const CalendarDay = ({ shows, day, isToday = false }: CalendarDayProps) => {
 
   const isCurrentMonth = day.month() === currentMonth.month();
 
-  const handleDayClick = (shows: Movie[], day: Dayjs) => {
+  const handleDayClick = (shows: Media[], day: Dayjs) => {
     setSelectedDay(day);
     setSelectedShows(shows);
   };

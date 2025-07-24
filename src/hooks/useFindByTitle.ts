@@ -1,4 +1,4 @@
-import { Movie } from "@/data-models/movie.interface";
+import { Media } from "@/data-models/movie.interface";
 import { useState } from "react";
 
 const movie_api_key = process.env.NEXT_PUBLIC_THE_MOVIE_DB_API_KEY;
@@ -8,15 +8,15 @@ const movie_api_key = process.env.NEXT_PUBLIC_THE_MOVIE_DB_API_KEY;
  * 
  * This returns
  * 
- * moviesContent: Movie[]
- * tvContent: Movie[]
- * allContent: Movie[]
+ * moviesContent: Media[]
+ * tvContent: Media[]
+ * allContent: Media[]
  * fetchContent: function(searchValue)
  */
 export const useFindByTitle = () => {
-  const [allContent, setAllContent] = useState<Movie[]>([]);
-  const [moviesContent, setMovies] = useState<Movie[]>([]);
-  const [tvContent, setTvShows] = useState<Movie[]>([]);
+  const [allContent, setAllContent] = useState<Media[]>([]);
+  const [moviesContent, setMovies] = useState<Media[]>([]);
+  const [tvContent, setTvShows] = useState<Media[]>([]);
 
   const fetchContent = (searchValue: string) => {
     const getMovieUrl = `https://api.themoviedb.org/3/search/movie?api_key=${movie_api_key}&query=${searchValue}&include_adult=false&language=en-US&region=us&append_to_response=providers`;
@@ -25,8 +25,8 @@ export const useFindByTitle = () => {
     Promise.all([fetch(getMovieUrl), fetch(getTvUrl)])
       .then((results) => Promise.all(results.map((r) => r.json())))
       .then(async ([movieResponseJson, tvResponseJson]) => {
-        const moviesResult: Movie[] = await Promise.all(
-          movieResponseJson.results.map(async (movie: Movie) => {
+        const moviesResult: Media[] = await Promise.all(
+          movieResponseJson.results.map(async (movie: Media) => {
             const res = await fetch(`https://api.themoviedb.org/3/movie/${movie.id}/watch/providers?api_key=${movie_api_key}&external_source=imdb_id`);
             const providers = await res.json();
             const newMovie = {
@@ -41,8 +41,8 @@ export const useFindByTitle = () => {
 
         setMovies(moviesResult);
 
-        const tvResult: Movie[] = await Promise.all(
-          tvResponseJson.results.map(async (tv: Movie) => {
+        const tvResult: Media[] = await Promise.all(
+          tvResponseJson.results.map(async (tv: Media) => {
             const res = await fetch(`https://api.themoviedb.org/3/tv/${tv.id}/watch/providers?api_key=${movie_api_key}&external_source=imdb_id`);
             const providers = await res.json();
             const newShow = {
@@ -57,7 +57,7 @@ export const useFindByTitle = () => {
 
         setTvShows(tvResult);
 
-        const everything: Movie[] = [...moviesResult, ...tvResult];
+        const everything: Media[] = [...moviesResult, ...tvResult];
 
         setAllContent(everything);
       });

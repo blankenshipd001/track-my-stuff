@@ -1,4 +1,4 @@
-import { Movie } from "@/data-models/movie.interface";
+import { Media } from "@/data-models/movie.interface";
 import { ServiceProvider } from "@/data-models/service-provider.interface";
 import { Box, Chip, Dialog, DialogContent, DialogTitle, Grid, Slide, Typography, useTheme, SlideProps } from "@mui/material";
 import Image from "next/image";
@@ -7,7 +7,7 @@ import dayjs from "dayjs";
 
 interface SelectionDialogProps {
   selectedDay: dayjs.Dayjs;
-  selectedShows: Movie[];
+  selectedShows: Media[];
   handleCloseDialog: () => void;
 }
 

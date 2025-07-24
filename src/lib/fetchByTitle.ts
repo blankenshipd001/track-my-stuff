@@ -1,4 +1,4 @@
-import { Movie } from "@/data-models/movie.interface";
+import { Media } from "@/data-models/movie.interface";
 
 const movie_api_key = process.env.NEXT_PUBLIC_THE_MOVIE_DB_API_KEY;
 
@@ -9,8 +9,8 @@ export const fetchByTitle = async (searchValue: string) => {
   const [movieResponse, tvResponse] = await Promise.all([fetch(getMovieUrl), fetch(getTvUrl)]);
   const [movieResponseJson, tvResponseJson] = await Promise.all([movieResponse.json(), tvResponse.json()]);
 
-  const moviesResult: Movie[] = await Promise.all(
-    movieResponseJson.results.map(async (movie: Movie) => {
+  const moviesResult: Media[] = await Promise.all(
+    movieResponseJson.results.map(async (movie: Media) => {
       const newMovie = {
         ...movie,
         movieId: movie.id
@@ -19,8 +19,8 @@ export const fetchByTitle = async (searchValue: string) => {
     })
   );
 
-  const tvResult: Movie[] = await Promise.all(
-    tvResponseJson.results.map(async (tv: Movie) => {
+  const tvResult: Media[] = await Promise.all(
+    tvResponseJson.results.map(async (tv: Media) => {
       const newShow = {
         ...tv,
         movieId: tv.id,

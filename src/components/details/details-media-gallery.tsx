@@ -1,9 +1,9 @@
 import React from "react"
 import Image from "next/image";
 import { Box, Grid, Typography } from "@mui/material";
-import { Movie } from "@/data-models/movie.interface";
+import { Media } from "@/data-models/movie.interface";
 
-export default function DetailsMediaGallery({media}: { media: Movie }) {
+export default function DetailsMediaGallery({media}: { media: Media }) {
 
     {/* Media Gallery */}
     return (

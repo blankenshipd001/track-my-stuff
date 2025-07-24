@@ -3,7 +3,7 @@
 
 import React, { useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { Movie } from "@/data-models/movie.interface";
+import { Media } from "@/data-models/movie.interface";
 
 import Image from "next/image";
 import ImageList from "@mui/material/ImageList";
@@ -15,9 +15,9 @@ import { useTheme } from "@mui/material/styles";
 import { getTVDetails } from "@/utils/api/serverContentApi";
 
 interface MovieGridProps {
-  movies: Movie[];
-  addClicked?(movie: Movie): Promise<void>;
-  removeClicked?(movie: Movie): Promise<void>;
+  movies: Media[];
+  addClicked?(movie: Media): Promise<void>;
+  removeClicked?(movie: Media): Promise<void>;
 }
 
 export const MovieGrid = ({ movies, addClicked, removeClicked }: MovieGridProps): JSX.Element => {
@@ -36,13 +36,13 @@ export const MovieGrid = ({ movies, addClicked, removeClicked }: MovieGridProps)
     return 4;
   }, [isXs, isSm, isMd]);
 
-  const handleClickEvent = (movie: Movie) => {
+  const handleClickEvent = (movie: Media) => {
     const isTV = movie.first_air_date !== undefined;
     const path = isTV ? `/tv/${movie.movieId}` : `/movies/${movie.movieId}`;
     router.push(path, { scroll: false });
   };
 
-  const handleAddToWatchlist = async (movie: Movie) => {
+  const handleAddToWatchlist = async (movie: Media) => {
     if (addClicked) {
       if (movie.name) {
         const tvShow = await getTVDetails(`${movie.id}`);

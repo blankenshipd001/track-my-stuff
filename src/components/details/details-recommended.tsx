@@ -3,12 +3,12 @@ import { useRouter } from "next/navigation";
 import { Box, Typography } from "@mui/material";
 import Recommended from "@/components/recommended/Recommended";
 
-import { Movie } from "@/data-models/movie.interface";
+import { Media } from "@/data-models/movie.interface";
 
-export default function DetailsRecommended({ recommended, isTv }: { recommended: Movie[]; isTv: boolean }) {
+export default function DetailsRecommended({ recommended, isTv }: { recommended: Media[]; isTv: boolean }) {
   const router = useRouter();
 
-  const handleClickEvent = (movie: Movie) => {
+  const handleClickEvent = (movie: Media) => {
     router.push(`/${isTv ? "tv" : "movies"}/${movie.id}`, { scroll: false });
   };
 

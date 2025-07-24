@@ -22,7 +22,7 @@ import {
 import SearchIcon from '@mui/icons-material/Search';
 import { useRouter } from 'next/navigation';
 import { fetchByTitle } from '@/lib/fetchByTitle';
-import { Movie } from '@/data-models/movie.interface';
+import { Media } from '@/data-models/movie.interface';
 
 const SearchInput = styled(OutlinedInput)(({ theme }) => ({
   width: '100%',
@@ -39,7 +39,7 @@ const SearchInput = styled(OutlinedInput)(({ theme }) => ({
 }));
 
 export const MobileSearchBox = () => {
-  const [results, setResults] = useState<Movie[]>([]);
+  const [results, setResults] = useState<Media[]>([]);
   const [loading, setLoading] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -77,7 +77,7 @@ export const MobileSearchBox = () => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleSelect = (movie: Movie) => {
+  const handleSelect = (movie: Media) => {
     setResults([]);
     router.push(`/movies/${movie.id}`);
   };

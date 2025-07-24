@@ -26,6 +26,7 @@ const useNotificationBar = () => {
       setTimeout(() => {
         setNotificationPack((prev) => prev.filter((msg) => msg.key !== key));
         setOpenMap((prev) => {
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
           const { [key]: _, ...rest } = prev;
           return rest;
         });
@@ -60,6 +61,7 @@ const useNotificationBar = () => {
     setTimeout(() => {
       setNotificationPack((prev) => prev.filter((msg) => msg.key !== key));
       setOpenMap((prev) => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { [key]: _, ...rest } = prev;
         return rest;
       });

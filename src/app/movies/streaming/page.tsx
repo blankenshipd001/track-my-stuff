@@ -6,7 +6,7 @@ import { useState } from "react";
 
 // import { useEffect, useState } from "react";
 import { Item } from "./item";
-// import { Movie } from "@/data-models/movie.interface";
+// import { Media } from "@/data-models/movie.interface";
 // import { useRouter } from "next/navigation";
 import { Content } from "@/data-models/content.interface";
 // import { useCurrentUser } from "@/hooks/useCurrentUser";
@@ -30,7 +30,7 @@ const Streaming = () => {
   // const router = useRouter();
   // const { user } = useCurrentUser();
 
-  // const [watchlist, setWatchList] = useState<Movie[]>([]);
+  // const [watchlist, setWatchList] = useState<Media[]>([]);
   const [data, ] = useState<ItemData[]>();
 
   // useEffect(() => {

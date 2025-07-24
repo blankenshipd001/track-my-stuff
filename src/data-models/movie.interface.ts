@@ -1,6 +1,6 @@
 import { ServiceProvider } from "./service-provider.interface";
 
-export interface Movie {
+export interface Media {
   airDate?: string;
   adult: boolean;
   backdrop_path: string;

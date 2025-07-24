@@ -1,4 +1,4 @@
-import { Movie } from "@/data-models/movie.interface";
+import { Media } from "@/data-models/movie.interface";
 import { Box, Paper, TextField, Typography } from "@mui/material";
 import dayjs from "dayjs";
 import Image from "next/image";
@@ -7,7 +7,7 @@ import ProviderLogos from "../provider/ProviderLogos";
 
 
 interface ListViewProps {
-  shows: Movie[];
+  shows: Media[];
 }
 
 const ListView = ({ shows }: ListViewProps) => {
@@ -15,7 +15,7 @@ const ListView = ({ shows }: ListViewProps) => {
 
   // Group by air date for TV, release date for movies
   const showsByDate = useMemo(() => {
-    return shows.reduce((acc: { [date: string]: Movie[] }, show) => {
+    return shows.reduce((acc: { [date: string]: Media[] }, show) => {
       // Use next_episode_to_air?.air_date or first_air_date for TV, release_date or first_air_date for movies
       const date = show.next_episode_to_air?.air_date || show.release_date || show.first_air_date;
       if (!date) {

@@ -7,21 +7,21 @@ import { SearchBox } from "@components/search";
 import { getContent } from "@/utils/api/contentApi";
 import { fetchByTitle } from "@/lib/fetchByTitle";
 import useNotificationBar from "@/components/notifications/useNotificationBar";
-import { Movie } from "@/data-models/movie.interface";
+import { Media } from "@/data-models/movie.interface";
 import TabsWrapper from "../panels/tab-wrapper";
 
 interface MovieContentProps {
-  popularMedia: Movie[];
+  popularMedia: Media[];
   user?: { uid: string; email?: string } | null;
 }
 
 export const MovieContent = ({ popularMedia, user }: MovieContentProps) => {
   const router = useRouter();
 
-  const [movies, setMovies] = useState<Movie[]>([]);
-  const [tvShows, setTvShows] = useState<Movie[]>([]);
-  const [everything, setEverything] = useState<Movie[]>([]);
-  const [watchList, setWatchList] = useState<Movie[]>([]);
+  const [movies, setMovies] = useState<Media[]>([]);
+  const [tvShows, setTvShows] = useState<Media[]>([]);
+  const [everything, setEverything] = useState<Media[]>([]);
+  const [watchList, setWatchList] = useState<Media[]>([]);
 
   const { enqueueNotificationBar, NotificationBarComponent } = useNotificationBar();
 
@@ -54,6 +54,7 @@ export const MovieContent = ({ popularMedia, user }: MovieContentProps) => {
       setMovies(moviesContent);
       setTvShows(tvContent);
       setEverything(allContent);
+      console.log('allContent: ', allContent)
     } catch (err) {
       enqueueNotificationBar(`Error: ${err}`, "error");
     }

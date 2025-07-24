@@ -1,19 +1,19 @@
 import { doc, deleteDoc, writeBatch, DocumentData, collection, getDocs, setDoc, DocumentReference, WriteBatch } from "firebase/firestore";
 import { db } from "@/lib/firebase/client";
-import { Movie } from "@/data-models/movie.interface";
+import { Media } from "@/data-models/movie.interface";
 import { ServiceProvider } from "@/data-models/service-provider.interface";
 
 /**
  * Get all items from your watchlist
  *
  * @param uid unique id for the movie
- * @returns Array of {Movie} items
+ * @returns Array of {Media} items
  */
-export const getContent = async (uid: string): Promise<Movie[]> => {
+export const getContent = async (uid: string): Promise<Media[]> => {
   const path: string = "users/" + uid + "/movies";
   const moviesSnapshot: DocumentData = await getDocs(collection(db, path));
 
-  const moviesList: Movie[] = moviesSnapshot.docs.map((doc: DocumentData) => {
+  const moviesList: Media[] = moviesSnapshot.docs.map((doc: DocumentData) => {
     return {
       id: doc.id,
       docId: doc.documentId,
@@ -27,10 +27,10 @@ export const getContent = async (uid: string): Promise<Movie[]> => {
 /**
  * Remove a movie from the watchlist
  * @param uid the unique id for the movie
- * @param movie The {Movie} object
+ * @param movie The {Media} object
  * @returns Promise
  */
-export const requestRemoveFromWatchList = async (uid: string | undefined, movie: Movie): Promise<void> => {
+export const requestRemoveFromWatchList = async (uid: string | undefined, movie: Media): Promise<void> => {
   if (uid == null) {
     return new Promise(() => {
       // If we didn't send a user fail silently
@@ -96,10 +96,10 @@ export const saveMyProviders = async (uid: string | undefined, providers: Servic
  * Add a movie to my watchlist
  *
  * @param uid {string} user's ID so we can add it to their list
- * @param movie {Movie} the movie to add
+ * @param movie {Media} the movie to add
  * @returns
  */
-export const addToWatchList = async (uid: string, movie: Movie): Promise<Movie | string> => {
+export const addToWatchList = async (uid: string, movie: Media): Promise<Media | string> => {
   if (uid == null) {
     return new Promise((resolve) => {
       // If we didn't send a user fail silently
@@ -118,7 +118,7 @@ export const addToWatchList = async (uid: string, movie: Movie): Promise<Movie |
   const path: string = `users/${uid}/movies`;
   const documentRef: DocumentReference = doc(db, path, `${movie.id}`);
 
-  let docRef: Movie = movie;
+  let docRef: Media = movie;
 
   await setDoc(documentRef, {
     ...movie,

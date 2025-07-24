@@ -1,9 +1,9 @@
-import { Movie } from "@/data-models/movie.interface";
+import { Media } from "@/data-models/movie.interface";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import { Fab } from "@mui/material";
 
 interface thumbUpButton {
-  movie: Movie;
+  movie: Media;
 }
 
 //TODO: Come back and handle the thumb click

@@ -3,10 +3,10 @@ import { useRouter } from "next/navigation";
 import { ArrowBack } from "@mui/icons-material";
 import { Button, Stack, useMediaQuery, useTheme } from "@mui/material";
 import AddToWatchlist from "@/components/buttons/AddToWatchlist";
-import { Movie } from "@/data-models/movie.interface";
+import { Media } from "@/data-models/movie.interface";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export default function DetailsHeader({user, media}: { user: any; media: Movie }) {
+export default function DetailsHeader({user, media}: { user: any; media: Media }) {
   const router = useRouter();
   const theme = useTheme();
   const isMobile = useMediaQuery("(max-width:600px)");

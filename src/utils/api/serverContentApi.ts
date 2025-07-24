@@ -1,16 +1,16 @@
-import { Movie } from "@/data-models/movie.interface";
+import { Media } from "@/data-models/movie.interface";
 
 const movie_api_key = process.env.NEXT_PUBLIC_THE_MOVIE_DB_API_KEY;
 const popular_url = `https://api.themoviedb.org/3/movie/popular?api_key=${movie_api_key}&include_video=false`;
 
-export async function fetchPopularContent(): Promise<Movie[]> {
+export async function fetchPopularContent(): Promise<Media[]> {
   return fetch(popular_url)
     .then(async (res) => {
       const json = await res.json();
       return json;
     })
     .then(async (popularRes) => {
-      const trendingResults: Movie[] = await Promise.all(
+      const trendingResults: Media[] = await Promise.all(
         popularRes.results.map((item: { id: unknown }) => {
           return fetch(`https://api.themoviedb.org/3/movie/${item.id}/watch/providers?api_key=${movie_api_key}&external_source=imdb_id`)
             .then((res) => res.json())
@@ -30,7 +30,7 @@ export async function fetchPopularContent(): Promise<Movie[]> {
     });
 }
 
-export async function getMovieDetails(slug: string): Promise<Movie | null> {
+export async function getMovieDetails(slug: string): Promise<Media | null> {
   const res = await fetch(`https://api.themoviedb.org/3/movie/${slug}?api_key=${movie_api_key}&append_to_response=videos,images`, { cache: "no-store" });
   
   if (!res.ok) {
@@ -49,7 +49,7 @@ export async function getMovieDetails(slug: string): Promise<Movie | null> {
   };
 }
 
-export async function getRecommendedMovies(genreId: number): Promise<Movie[]> {
+export async function getRecommendedMovies(genreId: number): Promise<Media[]> {
   const res = await fetch(
     `https://api.themoviedb.org/3/discover/movie?include_adult=false&with_genres=${genreId}&api_key=${movie_api_key}`,
     { cache: "no-store" }
@@ -59,7 +59,7 @@ export async function getRecommendedMovies(genreId: number): Promise<Movie[]> {
 }
 
 
-export async function getTVDetails(slug: string): Promise<Movie | null> {
+export async function getTVDetails(slug: string): Promise<Media | null> {
   const res = await fetch(`https://api.themoviedb.org/3/tv/${slug}?api_key=${movie_api_key}&append_to_response=videos,images`, { cache: "no-store" });
   
   if (!res.ok) {
@@ -77,7 +77,7 @@ export async function getTVDetails(slug: string): Promise<Movie | null> {
   };
 }
 
-export async function getRecommendedTV(genreId: number): Promise<Movie[]> {
+export async function getRecommendedTV(genreId: number): Promise<Media[]> {
   const res = await fetch(
     `https://api.themoviedb.org/3/discover/tv?include_adult=false&with_genres=${genreId}&api_key=${movie_api_key}`,
     { cache: "no-store" }

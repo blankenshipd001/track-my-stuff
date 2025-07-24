@@ -1,6 +1,6 @@
 "use client"
 import { MovieGrid } from "@/components/movies";
-import { Movie } from "@/data-models/movie.interface";
+import { Media } from "@/data-models/movie.interface";
 import useNotificationBar from "@/components/notifications/useNotificationBar";
 import { requestRemoveFromWatchList } from "@/utils/api/contentApi";
 import { useRouter } from "next/navigation";
@@ -16,7 +16,7 @@ const WatchListPage = ({ user, watchList }: Props) => {
   const router = useRouter();
   const { enqueueNotificationBar, NotificationBarComponent } = useNotificationBar();
 
-  const handleRemove = async (movie: Movie) => {
+  const handleRemove = async (movie: Media) => {
     try {
       if (!user) {
         enqueueNotificationBar("Please log in to save movies.", "info");

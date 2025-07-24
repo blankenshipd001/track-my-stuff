@@ -4,12 +4,12 @@ import PlaylistRemoveIcon from "@mui/icons-material/PlaylistRemove";
 // import CheckIcon from "@mui/icons-material/Check";
 
 import { IconButton } from "../buttons";
-import { Movie } from "@/data-models/movie.interface";
+import { Media } from "@/data-models/movie.interface";
 
 interface Actions {
-  movie: Movie;
-  addClicked?(movie: Movie): void;
-  removeClicked?(movie: Movie): void; // Assuming you have a removeClicked function
+  movie: Media;
+  addClicked?(movie: Media): void;
+  removeClicked?(movie: Media): void; // Assuming you have a removeClicked function
 }
 
 export const ActionItems = ({ movie, addClicked, removeClicked }: Actions) => {

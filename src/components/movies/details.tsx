@@ -1,4 +1,4 @@
-import { Movie } from "@/data-models/movie.interface";
+import { Media } from "@/data-models/movie.interface";
 import Image from "next/image";
 import {
   Box,
@@ -16,7 +16,7 @@ import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import ThumbDownIcon from "@mui/icons-material/ThumbDown";
 
 interface DetailsProps {
-  movie: Movie;
+  movie: Media;
 }
 
 const BASE_URL = process.env.NEXT_PUBLIC_THE_MOVIE_DB_BASE_URL;

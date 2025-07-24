@@ -1,5 +1,5 @@
 import { db } from "@/lib/firebase/client";
-import { Movie } from "@/data-models/movie.interface";
+import { Media } from "@/data-models/movie.interface";
 import { collection, getDocs } from "firebase/firestore";
 import { useState, useEffect } from "react";
 
@@ -7,7 +7,7 @@ import { useState, useEffect } from "react";
 
 //TODO make this more like the useFindByTitle hook so it can be called whenever we want instead of just once
 export const useWatchList = (uid: string) => {
-  const [watchlist, setWatchlist] = useState<Movie[]>([]);
+  const [watchlist, setWatchlist] = useState<Media[]>([]);
 
 //   const popular_url = `https://api.themoviedb.org/3/movie/popular?api_key=${movie_api_key}&include_video=false`;
 
@@ -18,7 +18,7 @@ export const useWatchList = (uid: string) => {
     //     return json;
     //   })
     //   .then(async (popularRes) => {
-    //     const trendingResults: Movie[] = await Promise.all(
+    //     const trendingResults: Media[] = await Promise.all(
     //       popularRes.results.map((item: { id: unknown }) => {
     //         return fetch(`https://api.themoviedb.org/3/movie/${item.id}/watch/providers?api_key=${movie_api_key}&external_source=imdb_id`)
     //           .then((res) => res.json())
@@ -44,7 +44,7 @@ export const useWatchList = (uid: string) => {
       getDocs(collection(db, path)).then((movieData) => {
   
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const moviesList: Movie[] = movieData.docs.map((doc: any) => {
+      const moviesList: Media[] = movieData.docs.map((doc: any) => {
         return {
           id: doc.id,
           docId: doc.documentId,

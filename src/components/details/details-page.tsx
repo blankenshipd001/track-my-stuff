@@ -1,6 +1,6 @@
 "use client";
 
-import { Movie } from "@/data-models/movie.interface";
+import { Media } from "@/data-models/movie.interface";
 import { Container, Paper, useTheme } from "@mui/material";
 import DetailsHeader from "./details-header";
 import DetailsMediaGallery from "./details-media-gallery";
@@ -8,7 +8,7 @@ import DetailsMedia from "./details-media";
 import DetailsRecommended from "./details-recommended";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export default function DetailsPage({ user, media, recommended, isTv }: { user: any; media: Movie; recommended: Movie[]; isTv: boolean }) {
+export default function DetailsPage({ user, media, recommended, isTv }: { user: any; media: Media; recommended: Media[]; isTv: boolean }) {
   const theme = useTheme();
   
   return (

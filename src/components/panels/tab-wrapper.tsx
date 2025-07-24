@@ -3,17 +3,17 @@ import { Box, FormControl, InputLabel, MenuItem, Select, Tab, Tabs, useMediaQuer
 import { useState } from "react";
 import { TabPanel } from "./tab-panel";
 import { MovieGrid } from "../movies";
-import { Movie } from "@/data-models/movie.interface";
+import { Media } from "@/data-models/movie.interface";
 import { useRouter } from "next/navigation";
 import { addToWatchList, requestRemoveFromWatchList } from "@/utils/api/contentApi";
 import useNotificationBar from "../notifications/useNotificationBar";
 
 interface Props {
   user?: { uid: string; email?: string } | null;
-  watchList: Movie[];
-  allContent: Movie[];
-  movies: Movie[];
-  tvShows: Movie[];
+  watchList: Media[];
+  allContent: Media[];
+  movies: Media[];
+  tvShows: Media[];
 }
 
 const TabsWrapper = ({ user, watchList, allContent, movies, tvShows }: Props) => {
@@ -24,7 +24,7 @@ const TabsWrapper = ({ user, watchList, allContent, movies, tvShows }: Props) =>
   const [tab, setTab] = useState<number>(0);
   const tabOneTitle = allContent.length > 0 ? "All" : "Trending";
 
-  const handleAdd = async (movie: Movie) => {
+  const handleAdd = async (movie: Media) => {
     try {
       if (!user) {
         enqueueNotificationBar("Please log in to save movies.", "info");
@@ -39,7 +39,7 @@ const TabsWrapper = ({ user, watchList, allContent, movies, tvShows }: Props) =>
     }
   };
 
-  const handleRemove = async (movie: Movie) => {
+  const handleRemove = async (movie: Media) => {
     try {
       if (!user) {
         enqueueNotificationBar("Please log in to save movies.", "info");
