@@ -8,9 +8,10 @@ import SelectionDialog from "./SelectionDialog";
 interface CalendarDayProps {
   shows: Movie[];
   day: Dayjs;
+  isToday?: boolean;
 }
 
-const CalendarDay = ({ shows, day }: CalendarDayProps) => {
+const CalendarDay = ({ shows, day, isToday = false }: CalendarDayProps) => {
   const [selectedDay, setSelectedDay] = useState<Dayjs | null>(null);
   const [selectedShows, setSelectedShows] = useState<Movie[]>([]);
   const [currentMonth] = useState<Dayjs>(dayjs().startOf("month"));
@@ -34,24 +35,36 @@ const CalendarDay = ({ shows, day }: CalendarDayProps) => {
     <>
       <Paper
         onClick={() => shows.length > 0 && handleDayClick(shows, day)}
-        elevation={1}
+        elevation={isToday ? 6 : 1}
         sx={{
-          backgroundColor: isCurrentMonth ? "#1f1f1f" : "#121212",
-          borderRadius: 1,
+          backgroundColor: isToday
+            ? theme.palette.primary.light
+            : isCurrentMonth
+              ? "#1f1f1f"
+              : "#121212",
+          borderRadius: 2,
           color: "white",
           display: "flex",
           flexDirection: "column",
-          height: isMobile ? 150 : 180, // increase as needed
+          height: isMobile ? 150 : 180,
           p: 1,
           cursor: shows.length > 0 ? "pointer" : "default",
           overflow: "hidden",
           transition: "background-color 0.2s ease-in-out",
+          border: isToday ? '3px double ' + theme.palette.primary.dark : undefined,
+          boxShadow: isToday ? 8 : 1,
           "&:hover": {
             backgroundColor: shows.length > 0 ? "rgba(255, 255, 255, 0.08)" : "inherit",
           },
         }}
       >
-        <Typography variant="caption" color={isCurrentMonth ? "gray" : "#555"} display="block" textAlign="right">
+        <Typography
+          variant="caption"
+          color={isToday ? theme.palette.primary.dark : isCurrentMonth ? "gray" : "#555"}
+          display="block"
+          textAlign="right"
+          fontWeight={isToday ? 'bold' : undefined}
+        >
           {day.date()}
         </Typography>
         {shows.slice(0, 4).map((show, idx) => (
@@ -68,7 +81,7 @@ const CalendarDay = ({ shows, day }: CalendarDayProps) => {
         )}
       </Paper>
 
-      {selectedDay && 
+      {selectedDay &&
         <SelectionDialog selectedDay={selectedDay} selectedShows={selectedShows} handleCloseDialog={handleCloseDialog} />}
     </>
   );

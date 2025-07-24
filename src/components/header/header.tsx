@@ -10,7 +10,7 @@ export const Header = async () => {
     ...(user
       ? [
           { label: "Watchlist", path: "/movies/watched" },
-          { label: "Streaming", path: "/tv/streaming" },
+          { label: "Streaming", path: "/streaming" },
         ]
       : []),
     { label: "About", path: "/about" },

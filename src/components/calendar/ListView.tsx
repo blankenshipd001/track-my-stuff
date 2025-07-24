@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useMemo, useState } from "react";
 import ProviderLogos from "../provider/ProviderLogos";
 
+
 interface ListViewProps {
   shows: Movie[];
 }
@@ -12,11 +13,17 @@ interface ListViewProps {
 const ListView = ({ shows }: ListViewProps) => {
   const [search, setSearch] = useState<string>("");
 
+  // Group by air date for TV, release date for movies
   const showsByDate = useMemo(() => {
     return shows.reduce((acc: { [date: string]: Movie[] }, show) => {
-      const date = show.next_episode_to_air?.air_date || show.first_air_date;
-      if (!date) return acc;
-      if (!acc[date]) acc[date] = [];
+      // Use next_episode_to_air?.air_date or first_air_date for TV, release_date or first_air_date for movies
+      const date = show.next_episode_to_air?.air_date || show.release_date || show.first_air_date;
+      if (!date) {
+        return acc;
+      }
+      if (!acc[date]) {
+        acc[date] = [];
+      }
       acc[date].push(show);
       return acc;
     }, {});
@@ -40,7 +47,11 @@ const ListView = ({ shows }: ListViewProps) => {
           airDate: date,
         }))
       )
-      .filter((movie) => normalize(movie.name).includes(normSearch));
+      .filter((item) => {
+        // Search by name (TV) or title (movie)
+        const nameOrTitle = item?.name || item?.title || '';
+        return normalize(nameOrTitle).includes(normSearch);
+      });
   }, [showsByDate, search]);
 
   return (
@@ -65,10 +76,10 @@ const ListView = ({ shows }: ListViewProps) => {
             <Image src={`https://image.tmdb.org/t/p/w154${show.poster_path}`} alt={show.name ?? 'image'} width={48} height={72} style={{ borderRadius: 4, flexShrink: 0 }} />
             <Box flexGrow={1}>
               <Typography variant="subtitle1" fontWeight={600}>
-                {show.name}
+                {show.name || show.title}
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                Airs: {dayjs(show.airDate).format("MMM D, YYYY")}
+                {show.release_date ? 'Release: ' : 'Airs: '} {dayjs(show.airDate).format("MMM D, YYYY")}
               </Typography>
               {show?.next_episode_to_air?.name && (
                 <Typography variant="body2" color="text.secondary">
