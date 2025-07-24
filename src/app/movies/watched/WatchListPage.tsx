@@ -37,7 +37,6 @@ const WatchListPage = ({ user, watchList }: Props) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const tvShowsWithName = watchList.filter((item: any) => !!item.name);
 
-  console.log("Tv Shows in Watchlist: ", tvShowsWithName);
   return (
     <Box sx={{ px: { xs: 2, md: 4 }, py: 4 }}>
       <Typography variant="h4" gutterBottom color="white">

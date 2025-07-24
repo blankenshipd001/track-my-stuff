@@ -16,7 +16,7 @@ export const ThumbDownButton = ({ movie }: thumbDownButton) => {
       }}
       aria-label="add"
     >
-      <ThumbDownIcon onClick={() => console.log("you didn't this move: " + movie.title)} style={{ paddingLeft: "5px" }} />
+      <ThumbDownIcon onClick={() => console.log("why didn't this move: " + movie.title)} style={{ paddingLeft: "5px" }} />
     </Fab>
   );
 };

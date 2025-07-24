@@ -11,7 +11,7 @@ interface Props {
 const TvSchedulePage = ({ watchList }: Props) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const tvShowsWithName = watchList.filter((item: any) => !!item.name);
-console.log("Tv Shows in Watchlist: ", tvShowsWithName);
+
   return (
     <Container sx={{ py: 6 }}>
       <Typography variant="h4" color="white" gutterBottom>

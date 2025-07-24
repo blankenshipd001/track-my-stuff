@@ -66,27 +66,8 @@ const CalendarPage = ({ watchList }: Props) => {
     const matchesProvider = !providerFilter || show.providers?.flatrate?.some((p) => p.provider_name === providerFilter);
     return matchesName && matchesProvider;
   };
-
-//   const filteredList = useMemo(
-//     () =>
-//       Object.entries(showsByDate)
-//         .flatMap(([date, shows]) =>
-//           shows.map((show) => ({
-//             ...show,
-//             airDate: date,
-//           }))
-//         )
-//         .filter((movie) => movie.name.toLowerCase().includes(search.toLowerCase())),
-//     [showsByDate, search]
-//   );
-
-  //   const weeks: DayDate[][] = [];
-  //   for (let i = 0; i < calendarDates.length; i += 7) {
-  //     weeks.push(calendarDates.slice(i, i + 7));
-  //   }
   
   const visibleDates = viewMode === "week" ? daysArray.slice(currentWeekIndex, currentWeekIndex + 7) : daysArray;
-  // const visibleDates = viewMode === "month" ? calendarDates : weeks[currentWeekIndex] || [];
 
   return (
     <Container sx={{ py: 2 }}>
@@ -127,12 +108,6 @@ const CalendarPage = ({ watchList }: Props) => {
           <Button onClick={() => setCurrentWeekIndex((i) => i + 1)}>Next Week</Button>
         </Box>
       )}
-
-      {/* {viewMode === "list" && (
-        <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1 }}>
-            <TextField size="small" label="Search by name" value={search} onChange={(e) => setSearch(e.target.value)} />
-        </Box>
-      )} */}
 
       {viewMode === "list" ? (
         <ListView shows={watchList} />

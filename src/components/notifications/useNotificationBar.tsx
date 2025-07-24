@@ -1,5 +1,6 @@
 import { NotificationBar } from "./notification-bar";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState, useRef } from "react";
+import Box from "@mui/material/Box";
 
 type Severity = 'error' | 'warning' | 'info' | 'success';
 
@@ -11,53 +12,103 @@ interface SnackbarMessage {
 
 const useNotificationBar = () => {
   const [notificationPack, setNotificationPack] = useState<SnackbarMessage[]>([]);
-  const [messageInfo, setMessageInfo] = useState<SnackbarMessage | undefined>(undefined);
-  const [open, setOpen] = useState<boolean>(false);
+  // Track open state for each notification by key
+  const [openMap, setOpenMap] = useState<{ [key: number]: boolean }>({});
+  const notificationRef = useRef<HTMLDivElement | null>(null);
 
   const enqueueNotificationBar = useCallback((message: string, severity: Severity) => {
-    setNotificationPack((prev) => [...prev, { message, severity, key: new Date().getTime() }]);
+    const key = new Date().getTime() + Math.random();
+    setNotificationPack([{ message, severity, key }]);
+    setOpenMap({ [key]: true });
+    // Set timeout to auto-dismiss after 6 seconds
+    setTimeout(() => {
+      setOpenMap((prev) => ({ ...prev, [key]: false }));
+      setTimeout(() => {
+        setNotificationPack((prev) => prev.filter((msg) => msg.key !== key));
+        setOpenMap((prev) => {
+          const { [key]: _, ...rest } = prev;
+          return rest;
+        });
+      }, 200);
+    }, 6000);
   }, []);
+  // Click-away listener to dismiss notification if user clicks outside
+  useEffect(() => {
+    function handleClick(event: MouseEvent) {
+      if (notificationRef.current && !notificationRef.current.contains(event.target as Node)) {
+        // Dismiss all notifications
+        setOpenMap({});
+        setTimeout(() => {
+          setNotificationPack([]);
+        }, 200);
+      }
+    }
+    if (notificationPack.length > 0) {
+      document.addEventListener('mousedown', handleClick);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClick);
+    };
+  }, [notificationPack.length]);
 
-  const handleNotificationBarClose =  useCallback((event?: React.SyntheticEvent | Event, reason?: string) => {
+  const handleNotificationBarClose = useCallback((key: number) => (event?: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') {
       return;
     }
-    setOpen(false);
+    setOpenMap((prev) => ({ ...prev, [key]: false }));
+    // Remove notification after close animation
+    setTimeout(() => {
+      setNotificationPack((prev) => prev.filter((msg) => msg.key !== key));
+      setOpenMap((prev) => {
+        const { [key]: _, ...rest } = prev;
+        return rest;
+      });
+    }, 200);
   }, []);
 
+  const notificationBarContainerSx = {
+    position: 'fixed',
+    left: 24,
+    bottom: 24,
+    zIndex: 1400,
+    minWidth: 320,
+    maxWidth: 'calc(100vw - 48px)',
+    pointerEvents: 'none',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    minHeight: 48,
+    gap: 1.5,
+  };
 
-  // const handleExited = useCallback(() => {
-  //   setMessageInfo(undefined);
-  //   setNotificationPack((prev) => prev.slice(1));
-  //   if (notificationPack.length > 1) {
-  //     setMessageInfo({ ...notificationPack[1] });
-  //     setOpen(true);
-  //   }
-  // }, [notificationPack]);
+  const notificationBarItemSx = {
+    pointerEvents: 'auto',
+    width: '100%',
+    flex: '0 0 auto',
+    boxSizing: 'border-box',
+  };
 
-  useEffect(() => {
-    if ((notificationPack.length > 0) && !messageInfo) {
-      setMessageInfo({ ...notificationPack[0] });
-      setOpen(true);
-      //TODO: not sure this  is needed? Seems to work just fine.;
-    // } else if ((notificationPack.length >= 0) && messageInfo && open) {
-    //   console.log('should close')
-    //   setOpen(false);
-    //   handleExited();
-    }
-  }, [notificationPack, messageInfo, open]);
+  const NotificationBarComponent = (
+    <Box sx={notificationBarContainerSx} ref={notificationRef}>
+      {notificationPack.map((msg) => (
+        <Box
+          key={msg.key}
+          sx={notificationBarItemSx}
+          onClick={() => handleNotificationBarClose(msg.key)()}
+          style={{ cursor: 'pointer' }}
+        >
+          <NotificationBar
+            open={!!openMap[msg.key]}
+            onClose={handleNotificationBarClose(msg.key)}
+            severity={msg.severity}
+            text={msg.message}
+          />
+        </Box>
+      ))}
+    </Box>
+  );
 
-  const NotificationBarComponent = notificationPack.length > 0 ? (
-    <NotificationBar
-      open={open}
-      onClose={handleNotificationBarClose}
-      // onExited={handleExited}
-      severity={messageInfo ? messageInfo.severity : 'info'}
-      text={messageInfo ? messageInfo.message : ''}
-    />
-  ) : null;
-
-  return { enqueueNotificationBar, NotificationBarComponent }
+  return { enqueueNotificationBar, NotificationBarComponent };
 };
 
 export default useNotificationBar;

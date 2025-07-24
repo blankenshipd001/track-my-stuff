@@ -22,7 +22,17 @@ const ListView = ({ shows }: ListViewProps) => {
     }, {});
   }, [shows]);
 
+  // Helper to normalize strings for fuzzy search (removes accents, special chars, lowercases)
+  function normalize(str: string) {
+    return str
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '') // Remove diacritics
+      .replace(/[^\w\s]/gi, '') // Remove special characters
+      .toLowerCase();
+  }
+
   const filteredList = useMemo(() => {
+    const normSearch = normalize(search);
     return Object.entries(showsByDate)
       .flatMap(([date, shows]) =>
         shows.map((show) => ({
@@ -30,7 +40,7 @@ const ListView = ({ shows }: ListViewProps) => {
           airDate: date,
         }))
       )
-      .filter((movie) => movie.name.toLowerCase().includes(search.toLowerCase()));
+      .filter((movie) => normalize(movie.name).includes(normSearch));
   }, [showsByDate, search]);
 
   return (
