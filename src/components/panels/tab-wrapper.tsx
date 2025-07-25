@@ -12,17 +12,14 @@ interface Props {
   user?: { uid: string; email?: string } | null;
   watchList: Media[];
   allContent: Media[];
-  movies: Media[];
-  tvShows: Media[];
 }
 
-const TabsWrapper = ({ user, watchList, allContent, movies, tvShows }: Props) => {
+const TabsWrapper = ({ user, watchList, allContent }: Props) => {
   const theme = useTheme();
   const router = useRouter();
   const { enqueueNotificationBar, NotificationBarComponent } = useNotificationBar();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [tab, setTab] = useState<number>(0);
-  const tabOneTitle = allContent.length > 0 ? "All" : "Trending";
 
   const handleAdd = async (movie: Media) => {
     try {
@@ -58,10 +55,8 @@ const TabsWrapper = ({ user, watchList, allContent, movies, tvShows }: Props) =>
     <FormControl fullWidth size="small" sx={{ mb: 2 }}>
       <InputLabel id="tab-select-label">View</InputLabel>
       <Select labelId="tab-select-label" value={tab} label="View" onChange={(e) => setTab(Number(e.target.value))}>
-        <MenuItem value={0}>{tabOneTitle}</MenuItem>
-        <MenuItem value={1}>Movies</MenuItem>
-        <MenuItem value={2}>TV</MenuItem>
-        {user && <MenuItem value={3}>Watchlist</MenuItem>}
+        <MenuItem value={0}>Trending</MenuItem>
+        {user && <MenuItem value={1}>Watchlist</MenuItem>}
       </Select>
     </FormControl>
   );
@@ -73,27 +68,23 @@ const TabsWrapper = ({ user, watchList, allContent, movies, tvShows }: Props) =>
       ) : (
         <Box sx={{ borderBottom: 1, borderColor: "divider", overflowX: "auto" }}>
           <Tabs value={tab} onChange={(_, newValue) => setTab(newValue)} variant="scrollable" scrollButtons="auto">
-            <Tab label={tabOneTitle} />
-            <Tab label="Movies" />
-            <Tab label="TV" />
+            <Tab label="Trending" />
             {user && <Tab label="Watchlist" />}
           </Tabs>
         </Box>
       )}
 
-      <TabPanel value={tab} index={0}>
-        <MovieGrid movies={allContent} addClicked={handleAdd}/>
-      </TabPanel>
-      <TabPanel value={tab} index={1}>
-        <MovieGrid movies={movies} addClicked={handleAdd}/>
-      </TabPanel>
-      <TabPanel value={tab} index={2}>
-        <MovieGrid movies={tvShows} addClicked={handleAdd}/>
-      </TabPanel>
-      {user && (
-        <TabPanel value={tab} index={3}>
-          <MovieGrid movies={watchList} removeClicked={handleRemove}/>
-        </TabPanel>
+      {user ? (
+        <>
+          <TabPanel value={tab} index={0}>
+            <MovieGrid movies={allContent} addClicked={handleAdd} />
+          </TabPanel>
+          <TabPanel value={tab} index={1}>
+            <MovieGrid movies={watchList} removeClicked={handleRemove} />
+          </TabPanel>
+        </>
+      ) : (
+        <MovieGrid movies={allContent} addClicked={handleAdd} />
       )}
 
       {NotificationBarComponent}

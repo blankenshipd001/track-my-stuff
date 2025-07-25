@@ -1,6 +1,7 @@
 import { ServiceProvider } from "./service-provider.interface";
 
 export interface Media {
+  type?: string;
   airDate?: string;
   adult: boolean;
   backdrop_path: string;

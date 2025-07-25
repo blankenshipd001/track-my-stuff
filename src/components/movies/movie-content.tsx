@@ -5,11 +5,8 @@ import { useRouter } from "next/navigation";
 import { Box, Container, useTheme, useMediaQuery } from "@mui/material";
 import { SearchBox } from "@components/search";
 import { getContent } from "@/utils/api/contentApi";
-import { fetchByTitle } from "@/lib/fetchByTitle";
-import useNotificationBar from "@/components/notifications/useNotificationBar";
 import { Media } from "@/data-models/media.interface";
 import TabsWrapper from "../panels/tab-wrapper";
-
 interface MovieContentProps {
   popularMedia: Media[];
   user?: { uid: string; email?: string } | null;
@@ -18,12 +15,8 @@ interface MovieContentProps {
 export const MovieContent = ({ popularMedia, user }: MovieContentProps) => {
   const router = useRouter();
 
-  const [movies, setMovies] = useState<Media[]>([]);
-  const [tvShows, setTvShows] = useState<Media[]>([]);
   const [everything, setEverything] = useState<Media[]>([]);
   const [watchList, setWatchList] = useState<Media[]>([]);
-
-  const { enqueueNotificationBar, NotificationBarComponent } = useNotificationBar();
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -34,43 +27,26 @@ export const MovieContent = ({ popularMedia, user }: MovieContentProps) => {
   }, []);
 
   useEffect(() => {
-    if (!user) return;
-    getContent(user.uid)
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .then((data: any) => setWatchList(data))
-      .catch(() => router.push("/"));
-  }, [user]);
-
-  const fetchContent = async (searchValue: string) => {
-    if (!searchValue) {
-      setMovies([]);
-      setTvShows([]);
-      setEverything([]);
+    if (!user) {
       return;
     }
 
-    try {
-      const { moviesContent, tvContent, allContent } = await fetchByTitle(searchValue);
-      setMovies(moviesContent);
-      setTvShows(tvContent);
-      setEverything(allContent);
-    } catch (err) {
-      enqueueNotificationBar(`Error: ${err}`, "error");
-    }
-  };
+    getContent(user.uid)
+      .then((data: Media[]) => setWatchList(data))
+      .catch(() => router.push("/"));
+  }, [user]);
 
   useEffect(() => {
     setEverything(popularMedia);
   }, [popularMedia]);
 
   return (
-    <Container maxWidth="lg" sx={{ py: isClient && isMobile ? 2 : 4 }}>
-      <Box sx={{ mb: 2 }}>
-        <SearchBox searchForMovie={fetchContent} />
+    <Container maxWidth="lg" sx={{ py: isClient && isMobile ? 2 : 4, position: "relative", minHeight: 400 }}>
+      <Box sx={{ mb: 2, position: "relative", zIndex: 1 }}>
+        <SearchBox user={user} />
       </Box>
-      <TabsWrapper user={user} watchList={watchList} allContent={everything} movies={movies} tvShows={tvShows} />
+      <TabsWrapper user={user} watchList={watchList} allContent={everything} />
 
-      {NotificationBarComponent}
     </Container>
   );
 };
