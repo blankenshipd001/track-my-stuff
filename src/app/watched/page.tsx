@@ -1,6 +1,6 @@
 import { verifySessionToken } from '@/lib/firebase/auth';
 import { cookies } from 'next/headers';
-import WatchListPage from '@/app/movies/watched/WatchListPage';
+import WatchListPage from '@/app/watched/WatchListPage';
 import { adminDB } from '@/lib/firebase/admin';
 
 export default async function WatchedPage() {
