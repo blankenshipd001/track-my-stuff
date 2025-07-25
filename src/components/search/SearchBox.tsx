@@ -1,7 +1,8 @@
 "use client";
 
 import { ChangeEvent, useRef, useState } from "react";
-import { OutlinedInput, InputAdornment, IconButton, styled, debounce, Box, Paper, List, ListItem, ListItemText, Avatar, ClickAwayListener, useTheme, ListItemButton } from "@mui/material";
+import { OutlinedInput, InputAdornment, IconButton, styled, Box, Paper, List, ListItem, ListItemText, Avatar, ClickAwayListener, useTheme, ListItemButton } from "@mui/material";
+import { debounce } from "@mui/material/utils";
 import CloseIcon from "@mui/icons-material/Close";
 import SearchIcon from "@mui/icons-material/Search";
 import { addToWatchList } from "@/utils/api/contentApi";
@@ -38,33 +39,33 @@ export const SearchBox = ({ user: userProp }: SearchBoxProps): JSX.Element => {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const router = useRouter();
   const { enqueueNotificationBar, NotificationBarComponent } = useNotificationBar();
-  const [user, setUser] = useState<{ uid: string } | null>(null);
 
-  const handleInputChange = async (event: ChangeEvent<HTMLInputElement>) => {
+  // Debounced search handler using MUI debounce
+  const debouncedSearch = useRef(
+    debounce(async (value: string) => {
+      if (!value) {
+        setDropdownOptions([]);
+        setDropdownOpen(false);
+        return;
+      }
+      try {
+        const { moviesContent, tvContent } = await fetchByTitle(value);
+        const movies = moviesContent.map(m => ({ ...m, type: "movie" }));
+        const tv = tvContent.map(m => ({ ...m, type: "tv" }));
+        const all = [...movies, ...tv].sort((a, b) => b.popularity - a.popularity);
+        setDropdownOptions(all);
+        setShowAll(false);
+        setDropdownOpen(all.length > 0);
+      } catch (err) {
+        enqueueNotificationBar(`Error: ${err}`, "error");
+      }
+    }, 200)
+  ).current;
+
+  const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     setSearchValue(value);
-    
-    if (!value) {
-      setDropdownOptions([]);
-      setDropdownOpen(false);
-      return;
-    }
-
-    try {
-      const { moviesContent, tvContent } = await fetchByTitle(value);
-      const movies = moviesContent.map(m => ({ ...m, type: "movie" }));
-      const tv = tvContent.map(m => ({ ...m, type: "tv" }));
-      const all = [...movies, ...tv].sort((a, b) => b.popularity - a.popularity);
-
-      console.log('tv--------- : ', tv[0])
-
-      setDropdownOptions(all);
-      setShowAll(false);
-      setDropdownOpen(all.length > 0);
-      
-    } catch (err) {
-      enqueueNotificationBar(`Error: ${err}`, "error");
-    }
+    debouncedSearch(value);
   };
 
   const handleClear = () => {
@@ -173,13 +174,13 @@ export const SearchBox = ({ user: userProp }: SearchBoxProps): JSX.Element => {
                       />
                     </Box>
                     <Box sx={{ ml: 2, display: "flex", alignItems: "center" }}>
-                      {(userProp?.uid || user?.uid) && (
+                      {(userProp?.uid) && (
                         <BookmarkAdd
                           sx={{ cursor: "pointer", color: "lightgrey", "&:hover": { color: "#782FEF" } }}
                           onClick={async (e: React.MouseEvent) => {
                             e.stopPropagation();
                             try {
-                              await addToWatchList((userProp?.uid || user?.uid) as string, option);
+                              await addToWatchList((userProp?.uid) as string, option);
                               enqueueNotificationBar("Added to watchlist!", "success");
                             } catch (err) {
                               enqueueNotificationBar("Failed to add to watchlist", "error");
