@@ -16,6 +16,7 @@ export default function DetailsPage({ user, media, recommended, isTv }: { user: 
     Array.isArray(media.episodes) && media.episodes.length > 0 ? media.episodes[0].season_number : null
   );
 
+console.log('movie: ', media)
   return (
     <Container maxWidth="lg" sx={{ py: 4, color: theme.palette.text.primary }}>
       <Paper

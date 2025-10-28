@@ -30,6 +30,7 @@
     "firebase": "^11.3.0",
     "firebase-admin": "^13.1.0",
     "framer-motion": "^12.15.0",
+    "justwatch-api": "^1.0.7",
     "net": "^1.0.2",
     "next": "^14.1.0",
     "next-auth": "^4.24.7",

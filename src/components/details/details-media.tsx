@@ -47,7 +47,7 @@ export default function DetailsMedia({ media, isTv }: { media: Media; isTv: bool
                 mr: 1,
                 mb: 1,
                 backgroundColor: theme.palette.primary.main,
-                color: theme.palette.background.paper,
+                color: theme.palette.primary.text,
               }}
             />
           ))}

@@ -14,7 +14,7 @@ export default async function MovieDetailsPage({ params }: { params: { slug: str
   );
 
   const recommended = await getRecommendedMovies(movie.genres?.[0]?.id || 0);
-
+  
   return (
     <Details user={user} media={movie} recommended={recommended} isTv={false} />
   );
