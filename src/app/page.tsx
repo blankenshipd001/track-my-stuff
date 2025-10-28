@@ -2,7 +2,7 @@ import React from "react";
 import { Container } from "@mui/material";
 import { Title } from "@/components/title";
 import { fetchPopularContent } from "@utils/api/serverContentApi";
-import MovieContent from "@/components/movies/movie-content";
+import MovieContent from "@/components/media/movie-content";
 import { verifySessionToken } from "@/lib/firebase/auth";
 import { cookies } from "next/headers";
 

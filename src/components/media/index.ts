@@ -1,3 +1,3 @@
 export * from "./movie-content";
-export * from "./movie-grid";
+export * from "./media-grid";
 export * from "./details";

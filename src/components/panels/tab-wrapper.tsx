@@ -2,7 +2,7 @@
 import { Box, FormControl, InputLabel, MenuItem, Select, Tab, Tabs, useMediaQuery, useTheme } from "@mui/material";
 import { useState } from "react";
 import { TabPanel } from "./tab-panel";
-import { MovieGrid } from "../movies";
+import { MovieGrid } from "../media";
 import { Media } from "@/data-models/media.interface";
 import { useRouter } from "next/navigation";
 import { addToWatchList, requestRemoveFromWatchList } from "@/utils/api/contentApi";

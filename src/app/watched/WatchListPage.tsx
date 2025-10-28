@@ -1,6 +1,6 @@
 "use client"
 
-import { MovieGrid } from "@/components/movies";
+import { MovieGrid } from "@/components/media";
 import { Media } from "@/data-models/media.interface";
 import { Box, Typography } from "@mui/material";
 import { User } from '@/data-models/user.interface';
