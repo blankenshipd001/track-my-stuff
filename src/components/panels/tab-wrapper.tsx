@@ -2,7 +2,7 @@
 import { Box, FormControl, InputLabel, MenuItem, Select, Tab, Tabs, useMediaQuery, useTheme } from "@mui/material";
 import { useState } from "react";
 import { TabPanel } from "./tab-panel";
-import { MovieGrid } from "../media";
+import { MediaGrid } from "../media";
 import { Media } from "@/data-models/media.interface";
 import { useRouter } from "next/navigation";
 import { addToWatchList, requestRemoveFromWatchList } from "@/utils/api/contentApi";
@@ -77,14 +77,14 @@ const TabsWrapper = ({ user, watchList, allContent }: Props) => {
       {user ? (
         <>
           <TabPanel value={tab} index={0}>
-            <MovieGrid movies={allContent} addClicked={handleAdd} />
+            <MediaGrid movies={allContent} addClicked={handleAdd} />
           </TabPanel>
           <TabPanel value={tab} index={1}>
-            <MovieGrid movies={watchList} removeClicked={handleRemove} />
+            <MediaGrid movies={watchList} removeClicked={handleRemove} />
           </TabPanel>
         </>
       ) : (
-        <MovieGrid movies={allContent} addClicked={handleAdd} />
+        <MediaGrid movies={allContent} addClicked={handleAdd} />
       )}
 
       {NotificationBarComponent}

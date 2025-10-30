@@ -12,7 +12,7 @@ interface ProviderSectionsProps {
 
 const BASE_URL = "https://image.tmdb.org/t/p/w500";
 
-const Section = ({ title, list }: { title: string; list: ServiceProvider[] }) => (
+export const ProviderLogos = ({ title, list }: { title?: string; list: ServiceProvider[] }) => (
   <Box mb={1}>
     <Typography variant="subtitle1" sx={{ fontWeight: 400, mb: 0.5 }}>
       {title}
@@ -40,9 +40,9 @@ const Section = ({ title, list }: { title: string; list: ServiceProvider[] }) =>
 export default function ProviderSections({ providers }: ProviderSectionsProps) {
   return (
     <Box mt={1}>
-      {(providers?.flatrate?.length ?? 0) > 0 && <Section title="Streaming On" list={providers.flatrate ?? []} />}
-      {(providers?.rent?.length ?? 0) > 0 && <Section title="Available to Rent" list={providers.rent ?? []} />}
-      {(providers?.buy?.length ?? 0) > 0 && <Section title="Available to Buy" list={providers.buy ?? []} />}
+      {(providers?.flatrate?.length ?? 0) > 0 && <ProviderLogos title="Streaming On" list={providers.flatrate ?? []} />}
+      {(providers?.rent?.length ?? 0) > 0 && <ProviderLogos title="Available to Rent" list={providers.rent ?? []} />}
+      {(providers?.buy?.length ?? 0) > 0 && <ProviderLogos title="Available to Buy" list={providers.buy ?? []} />}
     </Box>
   );
 }

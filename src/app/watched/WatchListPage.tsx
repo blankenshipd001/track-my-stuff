@@ -1,6 +1,6 @@
 "use client"
 
-import { MovieGrid } from "@/components/media";
+import { MediaGrid } from "@/components/media";
 import { Media } from "@/data-models/media.interface";
 import { Box, Typography } from "@mui/material";
 import { User } from '@/data-models/user.interface';
@@ -25,7 +25,7 @@ const WatchListPage = ({ watchList, user }: Props) => {
           <Typography variant="h5" gutterBottom color="white">
             Movies
           </Typography>
-          <MovieGrid movies={moviesWithTitle} isWatchlist={true} user={user} />
+          <MediaGrid movies={moviesWithTitle} isWatchlist={true} user={user} />
         </Box>
       )}
 
@@ -34,7 +34,7 @@ const WatchListPage = ({ watchList, user }: Props) => {
           <Typography variant="h5" gutterBottom color="white">
             TV Shows
           </Typography>
-          <MovieGrid movies={tvShowsWithName} isWatchlist={true} user={user} />
+          <MediaGrid movies={tvShowsWithName} isWatchlist={true} user={user} />
         </Box>
       )}
     </Box>

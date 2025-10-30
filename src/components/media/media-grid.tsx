@@ -1,4 +1,4 @@
-// app/components/MovieGrid.tsx
+// app/components/MediaGrid.tsx
 "use client";
 
 import React, { ReactNode, useMemo } from "react";
@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { Media } from "@/data-models/media.interface";
 
 import Image from "next/image";
-import { useMediaQuery, useTheme } from "@mui/material";
+import { Box, useMediaQuery, useTheme } from "@mui/material";
 
 import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
@@ -15,8 +15,9 @@ import { BookmarkAdd, BookmarkRemove } from "@mui/icons-material";
 import { getTVDetails } from "@/utils/api/serverContentApi";
 import useNotificationBar from "@/components/notifications/useNotificationBar";
 import { requestRemoveFromWatchList } from "@/utils/api/contentApi";
+import { ProviderLogos } from "../provider/ProviderLogos";
 
-interface MovieGridProps {
+interface MediaGridProps {
   movies: Media[];
   addClicked?(movie: Media): Promise<void>;
   removeClicked?(movie: Media): Promise<void>;
@@ -24,7 +25,7 @@ interface MovieGridProps {
   user?: { uid: string; email?: string } | null;
 }
 
-export const MovieGrid = ({ movies, addClicked, removeClicked, isWatchlist, user }: MovieGridProps): JSX.Element => {
+export const MediaGrid = ({ movies, addClicked, removeClicked, isWatchlist, user }: MediaGridProps): JSX.Element => {
   const router = useRouter();
   const BASE_URL = process.env.NEXT_PUBLIC_THE_MOVIE_DB_BASE_URL;
 
@@ -69,7 +70,7 @@ export const MovieGrid = ({ movies, addClicked, removeClicked, isWatchlist, user
    * @returns
    */
   const handleRemove = async (movie: Media) => {
-    console.log(user)
+    console.log(user);
     try {
       if (!user) {
         enqueueNotificationBar("Please log in to save movies.", "info");
@@ -107,6 +108,12 @@ export const MovieGrid = ({ movies, addClicked, removeClicked, isWatchlist, user
           }}
         />
       );
+    }
+  };
+
+  const getProviders = (media: Media): ReactNode => {
+    if (media?.providers?.flatrate?.length > 0) {
+      return <ProviderLogos list={media?.providers?.flatrate} />;
     }
   };
 
@@ -168,6 +175,7 @@ export const MovieGrid = ({ movies, addClicked, removeClicked, isWatchlist, user
                 // TODO: Add this back but we will have to re-fetch the tv show because it's not adding
                 actionIcon={getBookmarkIcon(movie)}
               />
+              <Box bgcolor="black">{getProviders(movie)}</Box>
             </ImageListItem>
           );
         })}
@@ -178,4 +186,4 @@ export const MovieGrid = ({ movies, addClicked, removeClicked, isWatchlist, user
   );
 };
 
-MovieGrid.displayName = "MovieGrid";
+MediaGrid.displayName = "MediaGrid";
