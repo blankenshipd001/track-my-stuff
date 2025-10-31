@@ -7,7 +7,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import SearchIcon from "@mui/icons-material/Search";
 import { addToWatchList } from "@/utils/api/contentApi";
 import { BookmarkAdd } from "@mui/icons-material";
-import { fetchByTitle } from "@/lib/fetchByTitle";
+// Search now delegates to server-side `/api/search` route to avoid exposing TMDB key
 import { useRouter } from "next/navigation";
 import useNotificationBar from "@/components/notifications/useNotificationBar";
 import { Media } from "@/data-models/media.interface";
@@ -49,13 +49,27 @@ export const SearchBox = ({ user: userProp }: SearchBoxProps): JSX.Element => {
         return;
       }
       try {
-        const { moviesContent, tvContent } = await fetchByTitle(value);
-        const movies = moviesContent.map(m => ({ ...m, type: "movie" }));
-        const tv = tvContent.map(m => ({ ...m, type: "tv" }));
-        const all = [...movies, ...tv].sort((a, b) => b.popularity - a.popularity);
-        setDropdownOptions(all);
+        const res = await fetch(`/api/search?q=${encodeURIComponent(value)}`);
+        if (!res.ok) {
+          enqueueNotificationBar("Search failed", "error");
+          return;
+        }
+  const json = await res.json();
+  // Narrow the incoming shape so TypeScript is happy
+  type RawItem = { id?: number; movieId?: number; title?: string; popularity?: number } & Record<string, unknown>;
+  const items = (json.all as RawItem[]) || ([...(json.movies || []) as RawItem[], ...(json.tv || []) as RawItem[]]);
+        const normalized = (items as RawItem[])
+          .map((item) => ({
+            ...item,
+            type: item.title ? "movie" : "tv",
+            movieId: item.movieId ?? item.id,
+            popularity: typeof item.popularity === "number" ? item.popularity : 0,
+          }))
+          .sort((a, b) => (b.popularity || 0) - (a.popularity || 0));
+
+        setDropdownOptions(normalized as unknown as Media[]);
         setShowAll(false);
-        setDropdownOpen(all.length > 0);
+        setDropdownOpen(normalized.length > 0);
       } catch (err) {
         enqueueNotificationBar(`Error: ${err}`, "error");
       }

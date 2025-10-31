@@ -107,12 +107,18 @@ export const addToWatchList = async (uid: string, movie: Media): Promise<Media |
     });
   }
 
-  const movie_api_key = process.env.NEXT_PUBLIC_THE_MOVIE_DB_API_KEY;
-
+  // Ensure we enrich movie with TMDB details (server-side).
   if (movie.title) {
-    const fetchMovie = await fetch(`https://api.themoviedb.org/3/movie/${movie.movieId}?api_key=${movie_api_key}`);
-    const json = await fetchMovie.json();
-    movie.imdb_id = json.imdb_id;
+    try {
+      const res = await fetch(`/api/movie/${movie.movieId}`);
+      if (res.ok) {
+        const json = await res.json();
+        movie.imdb_id = json.imdb_id;
+      }
+    } catch (e) {
+      // ignore enrichment failure; still save the movie
+      console.error("Failed to fetch movie details for enrichment: ", e);
+    }
   }
 
   // Remove episodes property before saving

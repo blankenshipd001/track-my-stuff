@@ -12,7 +12,8 @@ import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
 import ImageListItemBar from "@mui/material/ImageListItemBar";
 import { BookmarkAdd, BookmarkRemove } from "@mui/icons-material";
-import { getTVDetails } from "@/utils/api/serverContentApi";
+// NOTE: This is a client component — avoid importing server helpers directly.
+// Use the API route `/api/tv/[id]` instead so TMDB calls remain server-side.
 import useNotificationBar from "@/components/notifications/useNotificationBar";
 import { requestRemoveFromWatchList } from "@/utils/api/contentApi";
 import { ProviderLogos } from "../provider/ProviderLogos";
@@ -52,9 +53,16 @@ export const MediaGrid = ({ movies, addClicked, removeClicked, isWatchlist, user
   const handleAddToWatchlist = async (movie: Media) => {
     if (addClicked) {
       if (movie.name) {
-        const tvShow = await getTVDetails(`${movie.id}`);
-        if (tvShow) {
-          addClicked(tvShow);
+        try {
+          const res = await fetch(`/api/tv/${movie.id}`);
+          if (res.ok) {
+            const tvShow = await res.json();
+            addClicked(tvShow);
+          } else {
+            enqueueNotificationBar("Could not load TV details", "error");
+          }
+        } catch (e) {
+          enqueueNotificationBar(String(e), "error");
         }
       } else {
         addClicked(movie);
@@ -70,7 +78,6 @@ export const MediaGrid = ({ movies, addClicked, removeClicked, isWatchlist, user
    * @returns
    */
   const handleRemove = async (movie: Media) => {
-    console.log(user);
     try {
       if (!user) {
         enqueueNotificationBar("Please log in to save movies.", "info");

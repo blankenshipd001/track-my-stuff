@@ -5,13 +5,14 @@ describe('The Footer', () => {
     it('should render and contain the copyright', () => {
         renderWithProviders(<Footer />)
 
-        const copyright = screen.getByText('2023 Copyright:');
-        const tmdbAttribution = screen.getByText('This product uses the TMDB API but is not endorsed or certified by TMDB.');
-        const justWatchAttribution = screen.getByText('This product uses the Just Watch API but is not endorsed or certified by Just Watch.');
-        
-        expect(copyright).toBeVisible();
-        expect(tmdbAttribution).toBeVisible();
-        expect(justWatchAttribution).toBeVisible();
+    // Use regex-based queries to be robust to the © symbol and spacing
+    const copyright = screen.getByText(/\d{4}\s+Copyright:/i);
+    const tmdbAttribution = screen.getByText(/This product uses the TMDB API but is not endorsed or certified by TMDB\./i);
+    const justWatchAttribution = screen.getByText(/This product uses the Just Watch API but is not endorsed or certified by Just Watch\./i);
+
+    expect(copyright).toBeVisible();
+    expect(tmdbAttribution).toBeVisible();
+    expect(justWatchAttribution).toBeVisible();
     });
 
     it('should have link to github repo', () => {
