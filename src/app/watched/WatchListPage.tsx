@@ -7,7 +7,7 @@ import { User } from '@/data-models/user.interface';
 
 interface Props {
   watchList: Media[];
-  user: User;
+  user?: User | null;
 }
 
 const WatchListPage = ({ watchList, user }: Props) => {
