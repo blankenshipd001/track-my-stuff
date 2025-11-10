@@ -46,18 +46,20 @@ export default function DetailsMediaGallery({media}: { media: Media }) {
           {/* Images */}
           {media.images?.backdrops?.slice(0, 4).map((img, index) => (
             <Grid size={{ xs: 6, md: 3 }} key={index}>
-              <Image
-                src={`https://image.tmdb.org/t/p/w780${img.file_path}`}
-                alt={`Backdrop ${index + 1}`}
-                width={300}
-                height={170}
-                style={{
-                  borderRadius: 10,
-                  width: "100%",
-                  height: "auto",
-                  objectFit: "cover",
-                }}
-              />
+              {img.file_path ? (
+                <Image
+                  src={`/api/image?path=${encodeURIComponent(`/t/p/w780${img.file_path}`)}`}
+                  alt={`Backdrop ${index + 1}`}
+                  width={300}
+                  height={170}
+                  style={{
+                    borderRadius: 10,
+                    width: "100%",
+                    height: "auto",
+                    objectFit: "cover",
+                  }}
+                />
+              ) : null}
             </Grid>
           ))}
         </Grid>

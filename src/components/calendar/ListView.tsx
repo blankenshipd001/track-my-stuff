@@ -73,7 +73,9 @@ const ListView = ({ shows }: ListViewProps) => {
               borderRadius: 2,
             }}
           >
-            <Image src={`https://image.tmdb.org/t/p/w154${show.poster_path}`} alt={show.name ?? 'image'} width={48} height={72} style={{ borderRadius: 4, flexShrink: 0 }} />
+            {show.poster_path ? (
+              <Image src={`/api/image?path=${encodeURIComponent(`/t/p/w154${show.poster_path}`)}`} alt={show.name ?? 'image'} width={48} height={72} style={{ borderRadius: 4, flexShrink: 0 }} />
+            ) : null}
             <Box flexGrow={1}>
               <Typography variant="subtitle1" fontWeight={600}>
                 {show.name || show.title}

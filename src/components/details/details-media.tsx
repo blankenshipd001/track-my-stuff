@@ -12,17 +12,19 @@ export default function DetailsMedia({ media, isTv }: { media: Media; isTv: bool
     <Grid container spacing={4} sx={{ alignItems: "flex-start" }}>
       {/* Image Section */}
       <Grid size={{ xs: 12, md: 4 }} sx={{ display: "flex", justifyContent: "center" }}>
-        <Image
-          src={`https://image.tmdb.org/t/p/w500${media.poster_path}`}
-          alt={media.title ?? "image"}
-          width={300}
-          height={450}
-          style={{
-            borderRadius: 8,
-            width: "100%",
-            height: "auto",
-          }}
-        />
+        {media.poster_path ? (
+          <Image
+            src={`/api/image?path=${encodeURIComponent(`/t/p/w500${media.poster_path}`)}`}
+            alt={media.title ?? "image"}
+            width={300}
+            height={450}
+            style={{
+              borderRadius: 8,
+              width: "100%",
+              height: "auto",
+            }}
+          />
+        ) : null}
       </Grid>
 
       {/* Text Section: Title, Genres, Overview */}

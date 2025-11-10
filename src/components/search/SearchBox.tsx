@@ -166,7 +166,11 @@ export const SearchBox = ({ user: userProp }: SearchBoxProps): JSX.Element => {
                         }
                       }}
                     >
-                      <Avatar src={option.poster_path ? `https://image.tmdb.org/t/p/w92${option.poster_path}` : undefined} variant="rounded" sx={{ mr: 2, width: 48, height: 72, borderRadius: 2 }} />
+                      <Avatar
+                        src={option.poster_path ? `/api/image?path=${encodeURIComponent(`/t/p/w92${option.poster_path}`)}` : undefined}
+                        variant="rounded"
+                        sx={{ mr: 2, width: 48, height: 72, borderRadius: 2 }}
+                      />
                       <ListItemText
                         slotProps={{
                           primary: {

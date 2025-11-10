@@ -31,7 +31,9 @@ const TvSchedulePage = ({ watchList }: Props) => {
                 height: "100%",
               }}
             >
-              <Image src={`https://image.tmdb.org/t/p/w500${show.poster_path}`} alt={show.name ?? 'image'} width={500} height={750} style={{ width: "100%", height: "auto" }} />
+              {show.poster_path ? (
+                <Image src={`/api/image?path=${encodeURIComponent(`/t/p/w500${show.poster_path}`)}`} alt={show.name ?? 'image'} width={500} height={750} style={{ width: "100%", height: "auto" }} />
+              ) : null}
               <Box p={2}>
                 <Typography variant="h6">{show.name}</Typography>
                 <Typography variant="body2" color="grey.400">

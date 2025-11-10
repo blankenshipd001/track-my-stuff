@@ -67,7 +67,9 @@ const SelectionDialog = ({ selectedDay, selectedShows, handleCloseDialog }: Sele
                   "&:hover": { transform: "scale(1.02)" },
                 }}
               >
-                <Image src={`https://image.tmdb.org/t/p/w185${show.poster_path}`} alt={show.name ?? 'image'} width={110} height={165} style={{ borderRadius: 8 }} />
+                {show.poster_path ? (
+                  <Image src={`/api/image?path=${encodeURIComponent(`/t/p/w185${show.poster_path}`)}`} alt={show.name ?? 'image'} width={110} height={165} style={{ borderRadius: 8 }} />
+                ) : null}
 
                 <Typography variant="subtitle1" fontWeight={600} mt={1} textAlign="center" noWrap title={show.name}>
                   {show.name}
@@ -91,7 +93,7 @@ const SelectionDialog = ({ selectedDay, selectedShows, handleCloseDialog }: Sele
                     {show.providers.flatrate.map((provider: ServiceProvider) => (
                       <Chip
                         key={provider.provider_id}
-                        icon={<Image loading="lazy" src={`https://image.tmdb.org/t/p/w45${provider.logo_path}`} alt={provider.provider_name ?? 'image'} width={24} height={24} style={{ borderRadius: 4 }} />}
+                        icon={provider.logo_path ? <Image loading="lazy" src={`/api/image?path=${encodeURIComponent(`/t/p/w45${provider.logo_path}`)}`} alt={provider.provider_name ?? 'image'} width={24} height={24} style={{ borderRadius: 4 }} /> : undefined}
                         label={provider.provider_name}
                         size="small"
                         sx={{
