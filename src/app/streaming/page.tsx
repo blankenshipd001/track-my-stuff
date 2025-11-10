@@ -1,12 +1,13 @@
 import { verifySessionToken } from '@/lib/firebase/auth';
-import { cookies } from 'next/headers';
+import getCookieHeader from '@/lib/getCookieHeader';
 // import StreamingPage from './StreamingPage';
 import { adminDB } from '@/lib/firebase/admin';
 import CalendarPage from './CalendarPage';
 import { getMostRecentSeasonEpisodes } from '@/utils/api/serverContentApi';
 
 export default async function WatchedPage() {
-  const user = await verifySessionToken(cookies().toString());
+  const cookieHeader = await getCookieHeader();
+  const user = await verifySessionToken(cookieHeader);
 
   const snapshot = await adminDB.collection('/users/' + user?.uid + "/movies").get();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

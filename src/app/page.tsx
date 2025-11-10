@@ -4,10 +4,11 @@ import { Title } from "@/components/title";
 import { fetchPopularContent } from "@utils/api/serverContentApi";
 import MovieContent from "@/components/media/movie-content";
 import { verifySessionToken } from "@/lib/firebase/auth";
-import { cookies } from "next/headers";
+import getCookieHeader from '@/lib/getCookieHeader';
 
 const MovieSearch = async () => {  
-  const user = await verifySessionToken(cookies().toString());
+  const cookieHeader = await getCookieHeader();
+  const user = await verifySessionToken(cookieHeader);
 
   const popularMedia = await fetchPopularContent();
 

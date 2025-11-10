@@ -27,5 +27,5 @@ export const renderWithProviders = (ui: ReactElement, options?: Options) => {
 };
 
 export * from "@testing-library/react";
-export * from "@testing-library/jest-dom";
 // export * from "jest-axe";
+// jest-dom provides global matchers and should be imported (see top), not re-exported for TS

@@ -1,13 +1,13 @@
 "use client";
 
 import React, { useState } from "react";
-import { Container, Typography, Box, Grid, TextField, MenuItem, useMediaQuery, ToggleButtonGroup, ToggleButton } from "@mui/material";
+import { Container, Typography, Box, Grid, TextField, MenuItem, ToggleButtonGroup, ToggleButton } from "@mui/material";
 import ViewModuleIcon from "@mui/icons-material/ViewModule";
 import ViewWeekIcon from "@mui/icons-material/ViewWeek";
 import ListIcon from "@mui/icons-material/List";
 import MovieIcon from "@mui/icons-material/Movie";
 import LiveTvIcon from "@mui/icons-material/LiveTv";
-import { useTheme } from "@mui/material/styles";
+
 import dayjs, { Dayjs } from "dayjs";
 import localizedFormat from "dayjs/plugin/localizedFormat";
 import { Media } from "@/data-models/media.interface";
@@ -29,8 +29,7 @@ const CalendarPage = ({ watchList }: Props) => {
   const [currentWeekIndex, setCurrentWeekIndex] = useState(0);
   const [listType, setListType] = useState<"tv" | "movie">("tv");
 
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  // Responsiveness handled via sx props instead of useMediaQuery
 
   const networks = watchList.flatMap((movie) => movie.networks?.map((p) => p.name) || []);
   const flatRates = watchList.flatMap((movie) => movie.providers?.flatrate?.map((p) => p.provider_name) || []);
@@ -162,7 +161,9 @@ const CalendarPage = ({ watchList }: Props) => {
     <Container sx={{ py: 2 }}>
       <Picker back={handleBack} forward={handleForward} currentMonth={currentMonth} />
 
-      <Box display="flex" flexDirection={isMobile ? "column" : "row"} gap={2} mb={2}>
+      <Box display="flex" flexDirection={"column"} gap={2} mb={2}>
+
+      {/* <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, gap: 2, mb: 2 }}> */}
         <TextField label="Filter by Name" variant="outlined" size="small" fullWidth value={nameFilter} onChange={(e) => setNameFilter(e.target.value)} />
         <TextField label="Filter by Provider" variant="outlined" size="small" select fullWidth value={providerFilter} onChange={(e) => setProviderFilter(e.target.value)}>
           <MenuItem value="">All</MenuItem>
@@ -196,13 +197,8 @@ const CalendarPage = ({ watchList }: Props) => {
             }
           }}
           size="small"
-          sx={{
-            boxShadow: 1,
-            borderRadius: 2,
-            backgroundColor: (theme) => theme.palette.background.paper,
-            width: { xs: "100%", sm: "auto" },
-          }}
-          fullWidth={isMobile}
+          sx={{ boxShadow: 1, borderRadius: 2, backgroundColor: (theme) => theme.palette.background.paper, width: { xs: '100%', sm: 'auto' } }}
+          fullWidth={false}
           aria-label="View mode"
         >
           <ToggleButton value="month" aria-label="Month View">

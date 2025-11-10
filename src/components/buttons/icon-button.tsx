@@ -2,9 +2,9 @@ import React from "react";
 
 import { Button } from "@mui/material";
 
-interface IconButton {
+interface IconButtonProps {
   label: string;
-  buttonIcon: JSX.Element;
+  buttonIcon: React.ReactNode;
   onClick?(): void;
 }
 
@@ -15,7 +15,7 @@ interface IconButton {
  * @param buttonIcon icon component to display
  * @returns
  */
-export const IconButton = ({ label, buttonIcon, onClick }: IconButton) => {
+export const IconButton = ({ label, buttonIcon, onClick }: IconButtonProps) => {
   return (
     <Button
       variant="outlined"

@@ -15,6 +15,14 @@ const nextConfig = {
         hostname: "artworks.thetvdb.com",
       },
     ],
+    // Allow our internal image proxy route to be used with next/image.
+    // The pathname uses a wildcard to permit query strings like
+    // `/api/image?path=...`.
+    localPatterns: [
+      {
+        pathname: "/api/image*",
+      },
+    ],
   },
   // experimental: {
   //   serverActions: true,

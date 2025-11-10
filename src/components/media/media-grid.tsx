@@ -26,7 +26,7 @@ interface MediaGridProps {
   user?: { uid: string; email?: string } | null;
 }
 
-export const MediaGrid = ({ movies, addClicked, removeClicked, isWatchlist, user }: MediaGridProps): JSX.Element => {
+export const MediaGrid = ({ movies, addClicked, removeClicked, isWatchlist, user }: MediaGridProps): React.ReactElement => {
   const router = useRouter();
   const BASE_URL = process.env.NEXT_PUBLIC_THE_MOVIE_DB_BASE_URL;
 

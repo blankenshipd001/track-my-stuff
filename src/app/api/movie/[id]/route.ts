@@ -6,12 +6,12 @@ type CacheEntry = { ts: number; data: unknown };
 const CACHE_TTL = 1000 * 60 * 5; // 5 minutes
 const cache = new Map<string, CacheEntry>();
 
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
-  const id = params?.id;
+export async function GET(request: NextRequest, { params }: { params: any }) {
+  const id = (params && (await params).id) || params?.id;
   if (!id){
     return NextResponse.json({ error: "Missing id" }, { status: 400 });
   }
-  
+
   try {
     const cacheKey = `movie:${id}`;
     const cached = cache.get(cacheKey);

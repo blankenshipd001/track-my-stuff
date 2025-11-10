@@ -1,6 +1,6 @@
 "use client";
 
-import { ChangeEvent, useRef, useState } from "react";
+import React, { ChangeEvent, useRef, useState } from "react";
 import { OutlinedInput, InputAdornment, IconButton, styled, Box, Paper, List, ListItem, ListItemText, ClickAwayListener, useTheme, ListItemButton } from "@mui/material";
 import { debounce } from "@mui/material/utils";
 import CloseIcon from "@mui/icons-material/Close";
@@ -31,7 +31,7 @@ interface SearchBoxProps {
   user?: { uid: string; email?: string } | null;
 }
 
-export const SearchBox = ({ user: userProp }: SearchBoxProps): JSX.Element => {
+export const SearchBox = ({ user: userProp }: SearchBoxProps): React.ReactElement => {
   const [searchValue, setSearchValue] = useState("");
   const [dropdownOptions, setDropdownOptions] = useState<Media[]>([]);
   const [dropdownOpen, setDropdownOpen] = useState(false);

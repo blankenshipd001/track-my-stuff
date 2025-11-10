@@ -6,7 +6,7 @@ import { Container, Typography, Button } from "@mui/material";
 // import useFetchAllAvailableProviders from "@/hooks/useFetchAllAvailableProviders";
 // import { saveMyProviders } from "@utils/api/contentApi";
 // import { LoadingScreen } from "@/components/loading";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 // import useGetMyFavoriteProviders from "@/hooks/useGetMyFavoriteProviders";
 // import { useCurrentUser } from "@/hooks/useCurrentUser";
 
