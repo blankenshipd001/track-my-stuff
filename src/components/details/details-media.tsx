@@ -1,5 +1,6 @@
 import React from "react";
 import Image from "next/image";
+import { getProxyImageUrlForPath } from '@/lib/imageUrl';
 import { Box, Chip, Grid, Typography, useTheme } from "@mui/material";
 import ProviderLogos from "@/components/provider/ProviderLogos";
 import { Media } from "@/data-models/media.interface";
@@ -14,7 +15,7 @@ export default function DetailsMedia({ media, isTv }: { media: Media; isTv: bool
       <Grid size={{ xs: 12, md: 4 }} sx={{ display: "flex", justifyContent: "center" }}>
         {media.poster_path ? (
           <Image
-            src={`/api/image?path=${encodeURIComponent(`/t/p/w500${media.poster_path}`)}`}
+            src={getProxyImageUrlForPath(media.poster_path, 'w500')!}
             alt={media.title ?? "image"}
             width={300}
             height={450}

@@ -2,6 +2,7 @@ import { Media } from "@/data-models/media.interface";
 import { Box, Paper, Tooltip, Typography, useMediaQuery, useTheme } from "@mui/material";
 import dayjs, { Dayjs } from "dayjs";
 import Image from "next/image";
+import { getProxyImageUrlForPath } from '@/lib/imageUrl';
 import { useState } from "react";
 import SelectionDialog from "./SelectionDialog";
 
@@ -71,7 +72,7 @@ const CalendarDay = ({ shows, day, isToday = false }: CalendarDayProps) => {
           <Tooltip key={idx} title={show.name}>
             <Box sx={{ display: "inline-block", mr: 0.5 }}>
               {show.poster_path ? (
-                <Image loading="lazy" src={`/api/image?path=${encodeURIComponent(`/t/p/w185${show.poster_path}`)}`} alt={show.name ?? 'image'} width={imageWidth} height={imageHeight} style={{ borderRadius: 4 }} />
+                <Image loading="lazy" src={getProxyImageUrlForPath(show.poster_path, 'w185')!} alt={show.name ?? 'image'} width={imageWidth} height={imageHeight} style={{ borderRadius: 4 }} />
               ) : null}
             </Box>
           </Tooltip>

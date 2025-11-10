@@ -1,6 +1,7 @@
 import { ServiceProvider } from "@/data-models/service-provider.interface";
 import { Box, Grid, Typography } from "@mui/material";
 import Image from "next/image";
+import { getProxyImageUrlForPath } from '@/lib/imageUrl';
 
 interface ProviderSectionsProps {
   providers: {
@@ -20,7 +21,7 @@ export const ProviderLogos = ({ title, list }: { title?: string; list: ServicePr
         <Grid key={`${title}-${i}`}>
           {p.logo_path ? (
             <Image
-              src={`/api/image?path=${encodeURIComponent(`/t/p/w500${p.logo_path}`)}`}
+              src={getProxyImageUrlForPath(p.logo_path, 'w500')!}
               alt={p.provider_name ?? 'image'}
               width={40}
               height={40}

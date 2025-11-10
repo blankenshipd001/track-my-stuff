@@ -2,6 +2,7 @@ import { Media } from "@/data-models/media.interface";
 import { Box, Paper, TextField, Typography } from "@mui/material";
 import dayjs from "dayjs";
 import Image from "next/image";
+import { getProxyImageUrlForPath } from '@/lib/imageUrl';
 import { useMemo, useState } from "react";
 import ProviderLogos from "../provider/ProviderLogos";
 
@@ -74,7 +75,7 @@ const ListView = ({ shows }: ListViewProps) => {
             }}
           >
             {show.poster_path ? (
-              <Image src={`/api/image?path=${encodeURIComponent(`/t/p/w154${show.poster_path}`)}`} alt={show.name ?? 'image'} width={48} height={72} style={{ borderRadius: 4, flexShrink: 0 }} />
+              <Image src={getProxyImageUrlForPath(show.poster_path, 'w154')!} alt={show.name ?? 'image'} width={48} height={72} style={{ borderRadius: 4, flexShrink: 0 }} />
             ) : null}
             <Box flexGrow={1}>
               <Typography variant="subtitle1" fontWeight={600}>

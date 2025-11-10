@@ -2,6 +2,7 @@ import { Media } from "@/data-models/media.interface";
 import { ServiceProvider } from "@/data-models/service-provider.interface";
 import { Box, Chip, Dialog, DialogContent, DialogTitle, Grid, Slide, Typography, useTheme, SlideProps } from "@mui/material";
 import Image from "next/image";
+import { getProxyImageUrlForPath } from '@/lib/imageUrl';
 import React from "react";
 import dayjs from "dayjs";
 
@@ -68,7 +69,7 @@ const SelectionDialog = ({ selectedDay, selectedShows, handleCloseDialog }: Sele
                 }}
               >
                 {show.poster_path ? (
-                  <Image src={`/api/image?path=${encodeURIComponent(`/t/p/w185${show.poster_path}`)}`} alt={show.name ?? 'image'} width={110} height={165} style={{ borderRadius: 8 }} />
+                  <Image src={getProxyImageUrlForPath(show.poster_path, 'w185')!} alt={show.name ?? 'image'} width={110} height={165} style={{ borderRadius: 8 }} />
                 ) : null}
 
                 <Typography variant="subtitle1" fontWeight={600} mt={1} textAlign="center" noWrap title={show.name}>
@@ -93,7 +94,7 @@ const SelectionDialog = ({ selectedDay, selectedShows, handleCloseDialog }: Sele
                     {show.providers.flatrate.map((provider: ServiceProvider) => (
                       <Chip
                         key={provider.provider_id}
-                        icon={provider.logo_path ? <Image loading="lazy" src={`/api/image?path=${encodeURIComponent(`/t/p/w45${provider.logo_path}`)}`} alt={provider.provider_name ?? 'image'} width={24} height={24} style={{ borderRadius: 4 }} /> : undefined}
+                        icon={provider.logo_path ? <Image loading="lazy" src={getProxyImageUrlForPath(provider.logo_path, 'w45')!} alt={provider.provider_name ?? 'image'} width={24} height={24} style={{ borderRadius: 4 }} /> : undefined}
                         label={provider.provider_name}
                         size="small"
                         sx={{

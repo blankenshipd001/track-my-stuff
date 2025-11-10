@@ -1,6 +1,7 @@
 // app/movies/[slug]/RecommendedMovies.tsx
 import { Grid, Typography } from "@mui/material";
 import Image from "next/image";
+import { getProxyImageUrlForPath } from '@/lib/imageUrl';
 import { Media } from "@/data-models/media.interface";
 
 export default function Recommended({ shows, handleClick }: { shows: Media[], handleClick: (movie: Media) => void }) {
@@ -11,7 +12,7 @@ export default function Recommended({ shows, handleClick }: { shows: Media[], ha
           <Grid size={{xs: 6, sm: 4, md: 2}} key={show.id}>
             {show.poster_path ? (
               <Image
-                src={`/api/image?path=${encodeURIComponent(`/t/p/w500${show.poster_path}`)}`}
+                src={getProxyImageUrlForPath(show.poster_path, 'w500')!}
                 alt={show.title ?? 'image'}
                 width={150}
                 height={225}

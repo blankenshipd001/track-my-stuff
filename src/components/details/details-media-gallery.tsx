@@ -1,5 +1,6 @@
 import React from "react"
 import Image from "next/image";
+import { getProxyImageUrlForPath } from '@/lib/imageUrl';
 import { Box, Grid, Typography } from "@mui/material";
 import { Media } from "@/data-models/media.interface";
 
@@ -48,7 +49,7 @@ export default function DetailsMediaGallery({media}: { media: Media }) {
             <Grid size={{ xs: 6, md: 3 }} key={index}>
               {img.file_path ? (
                 <Image
-                  src={`/api/image?path=${encodeURIComponent(`/t/p/w780${img.file_path}`)}`}
+                  src={getProxyImageUrlForPath(img.file_path, 'w780')!}
                   alt={`Backdrop ${index + 1}`}
                   width={300}
                   height={170}

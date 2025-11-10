@@ -1,7 +1,7 @@
 "use client";
 
 import { ChangeEvent, useRef, useState } from "react";
-import { OutlinedInput, InputAdornment, IconButton, styled, Box, Paper, List, ListItem, ListItemText, Avatar, ClickAwayListener, useTheme, ListItemButton } from "@mui/material";
+import { OutlinedInput, InputAdornment, IconButton, styled, Box, Paper, List, ListItem, ListItemText, ClickAwayListener, useTheme, ListItemButton } from "@mui/material";
 import { debounce } from "@mui/material/utils";
 import CloseIcon from "@mui/icons-material/Close";
 import SearchIcon from "@mui/icons-material/Search";
@@ -11,6 +11,7 @@ import { BookmarkAdd } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
 import useNotificationBar from "@/components/notifications/useNotificationBar";
 import { Media } from "@/data-models/media.interface";
+import { getProxyImageUrlForPath } from '@/lib/imageUrl';
 
 const SearchInput = styled(OutlinedInput)(({ theme }) => ({
   width: "100%",
@@ -166,11 +167,13 @@ export const SearchBox = ({ user: userProp }: SearchBoxProps): JSX.Element => {
                         }
                       }}
                     >
-                      <Avatar
-                        src={option.poster_path ? `/api/image?path=${encodeURIComponent(`/t/p/w92${option.poster_path}`)}` : undefined}
-                        variant="rounded"
-                        sx={{ mr: 2, width: 48, height: 72, borderRadius: 2 }}
-                      />
+                      <Box sx={{ mr: 2, width: 48, height: 72, borderRadius: 2, overflow: 'hidden', flexShrink: 0 }}>
+                        {option.poster_path ? (
+                          // Avatar component expects a string src; use Box wrapper with Image for consistent typing.
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img src={getProxyImageUrlForPath(option.poster_path, 'w92')!} alt={option.title || option.name || 'image'} style={{ width: 48, height: 72, objectFit: 'cover', borderRadius: 6 }} />
+                        ) : null}
+                      </Box>
                       <ListItemText
                         slotProps={{
                           primary: {

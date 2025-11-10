@@ -2,6 +2,7 @@
 // app/tv-schedule/page.tsx
 import { Box, Container, Grid, Paper, Typography } from "@mui/material";
 import Image from "next/image";
+import { getProxyImageUrlForPath } from "@/lib/imageUrl";
 
 interface Props {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -32,7 +33,7 @@ const TvSchedulePage = ({ watchList }: Props) => {
               }}
             >
               {show.poster_path ? (
-                <Image src={`/api/image?path=${encodeURIComponent(`/t/p/w500${show.poster_path}`)}`} alt={show.name ?? 'image'} width={500} height={750} style={{ width: "100%", height: "auto" }} />
+                <Image src={getProxyImageUrlForPath(show.poster_path, 'w500')!} alt={show.name ?? 'image'} width={500} height={750} style={{ width: "100%", height: "auto" }} />
               ) : null}
               <Box p={2}>
                 <Typography variant="h6">{show.name}</Typography>
