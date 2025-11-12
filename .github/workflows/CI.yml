@@ -1,40 +1,58 @@
-name: 'Track-It build'
+name: CI
 
 on:
-  push:
-    branches: [ master ]
   pull_request:
+    branches: [ master ]
+  push:
     branches: [ master ]
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x]
+
     steps:
-      - name: Checkout to the repository
-        uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Set up NodeJS environment
-        uses: actions/setup-node@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version-file: '.nvmrc'
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
 
-      - name: Install package dependencies
-        run: npm install
+      - name: Install dependencies
+        run: npm ci
 
-      - name: Check linting and formatting
+      - name: Lint
         run: npm run lint
 
-      - name: Create test build
+      - name: Build (optional)
         run: npm run build
         env:
-          NEXT_PUBLIC_THE_MOVIE_DB_API_KEY: ${{secrets.MOVIE_DB_API_KEY}}
-          NEXT_PUBLIC_OMDB_API_KEY: ${{secrets.OMDB_API_KEY}}
-          NEXT_PUBLIC_FF_API_KEY: ${{secrets.FF_API_KEY}}
-          NEXT_PUBLIC_FIREBASE_API_KEY: ${{secrets.FIREBASE_API_KEY}}
-          NEXT_PUBLIC_FIREBASE_APP_ID: ${{secrets.FIREBASE_APP_ID}}
-          NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: ${{secrets.FIREBASE_AUTH_DOMAIN}}
-          NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: ${{secrets.FIREBASE_MESSAGING_SENDER_ID}}
-          NEXT_PUBLIC_FIREBASE_PROJECT_ID: ${{secrets.FIREBASE_PROJECT_ID}}
-          NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET: ${{secrets.FIREBASE_STORAGE_BUCKET}}
-          NEXT_PUBLIC_THE_MOVIE_DB_BASE_URL: ${{secrets.THE_MOVIE_DB_BASE_URL}}
-          FIREBASE_PRIVATE_KEY: ${{secrets.FIREBASE_PRIVATE_KEY}}
+          NEXT_PUBLIC_THE_MOVIE_DB_API_KEY: ${{ secrets.MOVIE_DB_API_KEY }}
+          NEXT_PUBLIC_OMDB_API_KEY: ${{ secrets.OMDB_API_KEY }}
+          NEXT_PUBLIC_FF_API_KEY: ${{ secrets.FF_API_KEY }}
+          NEXT_PUBLIC_FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
+          NEXT_PUBLIC_FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
+          NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: ${{ secrets.FIREBASE_AUTH_DOMAIN }}
+          NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}
+          NEXT_PUBLIC_FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+          NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET: ${{ secrets.FIREBASE_STORAGE_BUCKET }}
+          NEXT_PUBLIC_THE_MOVIE_DB_BASE_URL: ${{ secrets.THE_MOVIE_DB_BASE_URL }}
+          FIREBASE_PRIVATE_KEY: ${{ secrets.FIREBASE_PRIVATE_KEY }}
+
+      - name: Run tests with coverage
+        run: npm run test:coverage
+        env:
+          CI: true
+
+      - name: Upload coverage artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage
