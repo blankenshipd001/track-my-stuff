@@ -9,7 +9,9 @@ export async function getCookieHeader(): Promise<string> {
     const c: any = await cookies();
     const all = typeof c.getAll === 'function' ? c.getAll() : [];
     if (!all || all.length === 0) return '';
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return all.map((cookie: any) => `${cookie.name}=${cookie.value}`).join('; ');
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (e) {
     // cookies() may throw in some runtime contexts; return empty string on error
     return '';

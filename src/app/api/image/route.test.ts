@@ -1,5 +1,4 @@
 /* eslint-env jest */
-/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-var-requires, @typescript-eslint/ban-types, no-extra-semi */
 
 // Minimal polyfills for Response and Headers so the route code (which uses
 // the Web Fetch Response/Headers API) can run inside Jest's Node environment.
@@ -39,6 +38,7 @@ class MockResponse {
 ;(global as any).Headers = MockHeaders
 ;(global as any).Response = MockResponse
 
+// eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-unsafe-function-type
 const { GET } = require('./route') as { GET: Function }
 
 describe('GET /api/image', () => {

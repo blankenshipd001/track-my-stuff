@@ -6,6 +6,7 @@ type CacheEntry = { ts: number; data: unknown };
 const CACHE_TTL = 1000 * 60 * 5; // 5 minutes
 const cache = new Map<string, CacheEntry>();
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function GET(request: NextRequest, { params }: { params: any }) {
   const id = (params && (await params).id) || params?.id;
   if (!id){

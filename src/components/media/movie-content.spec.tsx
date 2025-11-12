@@ -6,8 +6,8 @@ const pushMock = jest.fn();
 jest.mock('next/navigation', () => ({ useRouter: () => ({ push: pushMock, refresh: jest.fn() }) }));
 
 // Mock SearchBox and TabsWrapper to isolate MovieContent
-jest.mock('@/components/search', () => ({ SearchBox: (props: any) => <div data-testid="search" /> }));
-jest.mock('../panels/tab-wrapper', () => (props: any) => <div data-testid="tabs" />);
+jest.mock('@/components/search', () => ({ SearchBox: () => <div data-testid="search" /> }));
+jest.mock('../panels/tab-wrapper', () => () => <div data-testid="tabs" />);
 
 // Mock getContent to control watchlist loading
 const getContentMock = jest.fn();

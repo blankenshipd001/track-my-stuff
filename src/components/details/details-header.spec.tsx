@@ -2,7 +2,7 @@ import React from 'react';
 import { renderWithProviders, screen, fireEvent } from '@/utils/test-utils';
 
 // Mock AddToWatchlist so we don't bring in extra dependencies
-jest.mock('@/components/buttons/AddToWatchlist', () => (props: any) => <div data-testid="add">AddStub</div>);
+jest.mock('@/components/buttons/AddToWatchlist', () => () => <div data-testid="add">AddStub</div>);
 
 const backMock = jest.fn();
 jest.mock('next/navigation', () => ({ useRouter: () => ({ back: backMock }) }));

@@ -51,6 +51,7 @@ export async function GET(request: NextRequest) {
               providers: providerJson?.results?.US ?? [],
             };
           } catch (e) {
+            console.error(e);
             return { ...item, movieId: item.id, providers: [] };
           }
         })

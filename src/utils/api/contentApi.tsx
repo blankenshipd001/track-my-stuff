@@ -74,6 +74,7 @@ export const saveMyProviders = async (uid: string | undefined, providers: Servic
 
     await batchDelete.commit();
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
     console.error("Error deleting existing favorites");
   }

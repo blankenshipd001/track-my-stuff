@@ -170,7 +170,6 @@ export const SearchBox = ({ user: userProp }: SearchBoxProps): React.ReactElemen
                       <Box sx={{ mr: 2, width: 48, height: 72, borderRadius: 2, overflow: 'hidden', flexShrink: 0 }}>
                         {option.poster_path ? (
                           // Avatar component expects a string src; use Box wrapper with Image for consistent typing.
-                          // eslint-disable-next-line @next/next/no-img-element
                           <img src={getProxyImageUrlForPath(option.poster_path, 'w92')!} alt={option.title || option.name || 'image'} style={{ width: 48, height: 72, objectFit: 'cover', borderRadius: 6 }} />
                         ) : null}
                       </Box>
@@ -203,6 +202,7 @@ export const SearchBox = ({ user: userProp }: SearchBoxProps): React.ReactElemen
                             try {
                               await addToWatchList((userProp?.uid) as string, option);
                               enqueueNotificationBar("Added to watchlist!", "success");
+                            // eslint-disable-next-line @typescript-eslint/no-unused-vars
                             } catch (err) {
                               enqueueNotificationBar("Failed to add to watchlist", "error");
                             }

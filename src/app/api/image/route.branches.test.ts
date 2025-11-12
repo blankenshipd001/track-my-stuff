@@ -1,6 +1,8 @@
 /* eslint-env jest */
 /* Simple branch tests for the image proxy route */
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const routeModule = require('./route');
+// eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
 const routeGET = routeModule.GET as Function;
 
 // only define minimal polyfills if they don't already exist (avoid duplicate identifiers across test files)

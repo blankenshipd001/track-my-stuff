@@ -2,7 +2,6 @@ import React from 'react';
 import { renderWithProviders, screen, fireEvent, waitFor } from '@/utils/test-utils';
 
 jest.mock('next/image', () => (props: any) => {
-  // eslint-disable-next-line @next/next/no-img-element
   return <img {...props} alt={props.alt} />;
 });
 

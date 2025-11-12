@@ -2,10 +2,10 @@ import React from 'react';
 import { renderWithProviders, screen, fireEvent } from '@/utils/test-utils';
 
 // Stub child components to focus on DetailsPage behavior (episodes toggles)
-jest.mock('./details-header', () => (props: any) => <div data-testid="header">HeaderStub</div>);
-jest.mock('./details-media', () => (props: any) => <div data-testid="media">MediaStub</div>);
-jest.mock('./details-media-gallery', () => (props: any) => <div data-testid="gallery">GalleryStub</div>);
-jest.mock('./details-recommended', () => (props: any) => <div data-testid="recommended">RecommendedStub</div>);
+jest.mock('./details-header', () => () => <div data-testid="header">HeaderStub</div>);
+jest.mock('./details-media', () => () => <div data-testid="media">MediaStub</div>);
+jest.mock('./details-media-gallery', () => () => <div data-testid="gallery">GalleryStub</div>);
+jest.mock('./details-recommended', () => () => <div data-testid="recommended">RecommendedStub</div>);
 
 import DetailsPage from './details-page';
 

@@ -3,7 +3,6 @@ import { renderWithProviders, screen, fireEvent, within } from '@/utils/test-uti
 
 // Mock next/image to a simple img for tests
 jest.mock('next/image', () => (props: any) => {
-  // eslint-disable-next-line @next/next/no-img-element
   return <img {...props} alt={props.alt} />;
 });
 
@@ -47,6 +46,7 @@ describe('HeaderClient', () => {
   });
 
   it('shows user menu when user is present and handles logout', async () => {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     const { logoutUser } = require('@/lib/clientLogout');
 
     renderWithProviders(<HeaderClient user={{ uid: 'u1', email: 'a@b.com' }} navItems={[{ label: 'Home', path: '/home' }]} />);
@@ -68,6 +68,7 @@ describe('HeaderClient', () => {
   });
 
   it('opens mobile drawer and navigates when drawer item clicked; logout in drawer triggers logoutUser', () => {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     const { logoutUser } = require('@/lib/clientLogout');
 
     renderWithProviders(<HeaderClient user={{ uid: 'u1' }} navItems={[{ label: 'Movies', path: '/movies' }]} />);

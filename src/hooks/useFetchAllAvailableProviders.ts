@@ -23,7 +23,7 @@ const useFetchAllAvailableProviders = () => {
         setTvShows(json.tv || []);
         setAllProviders(json.all || []);
       } catch (e) {
-        // ignore
+        console.error(e);
       } finally {
         setStatus(false);
       }
