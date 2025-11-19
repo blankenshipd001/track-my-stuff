@@ -2,10 +2,9 @@ import { Media } from "@/data-models/media.interface";
 import { Box, Paper, TextField, Typography } from "@mui/material";
 import dayjs from "dayjs";
 import Image from "next/image";
-import { getProxyImageUrlForPath } from '@/lib/imageUrl';
+import { getProxyImageUrlForPath } from "@/lib/imageUrl";
 import { useMemo, useState } from "react";
 import ProviderLogos from "../provider/ProviderLogos";
-
 
 interface ListViewProps {
   shows: Media[];
@@ -33,9 +32,9 @@ const ListView = ({ shows }: ListViewProps) => {
   // Helper to normalize strings for fuzzy search (removes accents, special chars, lowercases)
   function normalize(str: string) {
     return str
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '') // Remove diacritics
-      .replace(/[^\w\s]/gi, '') // Remove special characters
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "") // Remove diacritics
+      .replace(/[^\w\s]/gi, "") // Remove special characters
       .toLowerCase();
   }
 
@@ -50,7 +49,7 @@ const ListView = ({ shows }: ListViewProps) => {
       )
       .filter((item) => {
         // Search by name (TV) or title (movie)
-        const nameOrTitle = item?.name || item?.title || '';
+        const nameOrTitle = item?.name || item?.title || "";
         return normalize(nameOrTitle).includes(normSearch);
       });
   }, [showsByDate, search]);
@@ -74,15 +73,13 @@ const ListView = ({ shows }: ListViewProps) => {
               borderRadius: 2,
             }}
           >
-            {show.poster_path ? (
-              <Image src={getProxyImageUrlForPath(show.poster_path, 'w154')!} alt={show.name ?? 'image'} width={48} height={72} style={{ borderRadius: 4, flexShrink: 0 }} />
-            ) : null}
+            {show.poster_path ? <Image src={getProxyImageUrlForPath(show.poster_path, "w154")!} alt={show.name ?? "image"} width={48} height={72} style={{ borderRadius: 4, flexShrink: 0 }} /> : null}
             <Box flexGrow={1}>
               <Typography variant="subtitle1" fontWeight={600}>
                 {show.name || show.title}
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                {show.release_date ? 'Release: ' : 'Airs: '} {dayjs(show.airDate).format("MMM D, YYYY")}
+                {show.release_date ? "Release: " : "Airs: "} {dayjs(show.airDate).format("MMM D, YYYY")}
               </Typography>
               {show?.next_episode_to_air?.name && (
                 <Typography variant="body2" color="text.secondary">

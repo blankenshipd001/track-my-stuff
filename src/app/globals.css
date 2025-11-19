@@ -1,4 +1,4 @@
-/* @tailwind base;
+@tailwind base;
 @tailwind components;
 @tailwind utilities;
 
@@ -23,4 +23,4 @@
 body {
   /* color: rgb(var(--foreground-rgb)); */
   /* background: #1A1A1A; */
-/* } */
+}

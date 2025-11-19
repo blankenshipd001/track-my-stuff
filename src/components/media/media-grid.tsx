@@ -139,6 +139,7 @@ export const MediaGrid = ({ movies, addClicked, removeClicked, isWatchlist, user
                 borderRadius: 4,
                 overflow: "hidden",
                 width: "100%",
+                background: "black",
               }}
             >
               <Image
@@ -182,7 +183,7 @@ export const MediaGrid = ({ movies, addClicked, removeClicked, isWatchlist, user
                 // TODO: Add this back but we will have to re-fetch the tv show because it's not adding
                 actionIcon={getBookmarkIcon(movie)}
               />
-              <Box bgcolor="black">{getProviders(movie)}</Box>
+              <Box sx={{margin: "0 0 -10px 10px"}} bgcolor="black">{getProviders(movie)}</Box>
             </ImageListItem>
           );
         })}

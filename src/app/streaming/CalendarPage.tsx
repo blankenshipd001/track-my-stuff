@@ -25,7 +25,7 @@ const CalendarPage = ({ watchList }: Props) => {
   const [currentMonth, setCurrentMonth] = useState<Dayjs>(dayjs().startOf("month"));
   const [nameFilter, setNameFilter] = useState("");
   const [providerFilter, setProviderFilter] = useState("");
-  const [viewMode, setViewMode] = useState<"month" | "week" | "list">("month");
+  const [viewMode, setViewMode] = useState<"month" | "week" | "list">("list");
   const [currentWeekIndex, setCurrentWeekIndex] = useState(0);
   const [listType, setListType] = useState<"tv" | "movie">("tv");
 
