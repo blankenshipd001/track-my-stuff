@@ -6,7 +6,7 @@ import { Plus, Film, Tv, Edit2, X, Check, Trash2 } from "lucide-react";
 
 interface ButtonProps {
   variant?: "primary" | "secondary";
-  active?: boolean;
+  active?: string;
 }
 
 interface DivProps {
@@ -644,7 +644,7 @@ const StreamingWatchlist = () => {
 
         <FilterContainer>
           {["all", "watching", "completed", "watchlist", "movies", "tv"].map((f) => (
-            <FilterButton key={f} active={!!(filter === f)} onClick={() => setFilter(f)}>
+            <FilterButton key={f} active={(filter === f).toString()} onClick={() => setFilter(f)}>
               {f.charAt(0).toUpperCase() + f.slice(1)}
             </FilterButton>
           ))}
