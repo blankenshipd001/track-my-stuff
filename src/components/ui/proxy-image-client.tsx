@@ -30,7 +30,7 @@ export default function ProxyImage({ path, srcUrl, size = 'w500', plainImg = fal
 
   // When consumers need a plain <img> (e.g., inside Avatar), they can opt-in.
   if (plainImg) {
-    // eslint-disable-next-line @next/next/no-img-element, @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return <img src={proxySrc} alt={alt} style={{ width: width ?? 'auto', height: height ?? 'auto', objectFit: (style as any)?.objectFit ?? 'cover', borderRadius: (style as any)?.borderRadius }} {...(rest as any)} />
   }
 

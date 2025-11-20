@@ -76,7 +76,7 @@ export async function getMostRecentSeasonEpisodes(tvId: string | number): Promis
   const seasonRes = await fetch(`https://api.themoviedb.org/3/tv/${tvId}/season/${season_number}?api_key=${movie_api_key}`);
 
   if (!seasonRes.ok) {
-    return null; (!seasonRes.ok);
+    return null;
   } 
 
   const seasonData = await seasonRes.json();
