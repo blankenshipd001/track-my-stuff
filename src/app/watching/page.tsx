@@ -10,13 +10,36 @@ interface ButtonProps {
 }
 
 interface DivProps {
-  status?: "watching" | "completed" | "watchlist";
+  status?: "watching" | "completed" | "watchlist" | undefined;
   width?: number;
+  color?: string;
 }
 
 interface SvgProps {
   filled?: boolean;
 }
+
+type Progress = {
+  current?: number;
+  total?: number;
+};
+interface ProviderDetails {
+  name: string;
+  color: string;
+}
+type ProviderKey = "netflix" | "hulu" | "disney" | "hbo" | "prime" | "apple";
+type Providers = Record<ProviderKey, ProviderDetails>;
+
+type Media = {
+  id?: number;
+  title: string;
+  type: string;
+  provider: string;
+  status?: "watching" | "completed" | "watchlist" | undefined;
+  progress?: Progress;
+  rating: number;
+  image: string;
+};
 
 const Container = styled.div`
   min-height: 100vh;
@@ -203,7 +226,7 @@ const StatCard = styled.div`
   border: 1px solid rgba(75, 85, 99, 0.5);
 `;
 
-const StatNumber = styled.div`
+const StatNumber = styled.div<DivProps>`
   font-size: 1.875rem;
   font-weight: bold;
   color: ${(props) => props.color || "#60a5fa"};
@@ -312,7 +335,7 @@ const IconButton = styled.button<ButtonProps>`
   }
 `;
 
-const ProviderBadge = styled.div`
+const ProviderBadge = styled.div<DivProps>`
   position: absolute;
   top: 0.75rem;
   right: 0.75rem;
@@ -453,8 +476,8 @@ const LegendLabel = styled.span`
 const StreamingWatchlist = () => {
   const [filter, setFilter] = useState("all");
   const [showModal, setShowModal] = useState(false);
-  const [editingId, setEditingId] = useState(null);
-  const [formData, setFormData] = useState({
+  const [editingId, setEditingId] = useState<number | null | undefined>(null);
+  const [formData, setFormData] = useState<Media>({
     title: "",
     type: "movie",
     provider: "netflix",
@@ -464,7 +487,7 @@ const StreamingWatchlist = () => {
     image: "",
   });
 
-  const providers: object = {
+  const providers: Providers = {
     netflix: { name: "Netflix", color: "#dc2626" },
     hulu: { name: "Hulu", color: "#22c55e" },
     disney: { name: "Disney+", color: "#2563eb" },
@@ -473,7 +496,7 @@ const StreamingWatchlist = () => {
     apple: { name: "Apple TV+", color: "#1f2937" },
   };
 
-  const [items, setItems] = useState([
+  const [items, setItems] = useState<Media[]>([
     {
       id: 1,
       title: "The Last of Us",
@@ -534,7 +557,7 @@ const StreamingWatchlist = () => {
     },
   ]);
 
-  const filteredItems = items.filter((item) => {
+  const filteredItems: Media[] = items.filter((item) => {
     if (filter === "all") return true;
     if (filter === "movies") return item.type === "movie";
     if (filter === "tv") return item.type === "tv";
@@ -565,7 +588,7 @@ const StreamingWatchlist = () => {
     setShowModal(true);
   };
 
-  const handleEdit = (item) => {
+  const handleEdit = (item: Media) => {
     setEditingId(item.id);
     setFormData({
       title: item.title,
@@ -585,8 +608,8 @@ const StreamingWatchlist = () => {
     if (editingId) {
       setItems(items.map((item) => (item.id === editingId ? { ...item, ...formData } : item)));
     } else {
-      const newItem = {
-        id: Math.max(...items.map((i) => i.id), 0) + 1,
+      const newItem: Media = {
+        id: Math.max(...items.map((i) => Number(i.id)), 0) + 1,
         ...formData,
         image: formData.image || "https://images.unsplash.com/photo-1485846234645-a62644f84728?w=400&h=600&fit=crop",
       };
@@ -598,7 +621,11 @@ const StreamingWatchlist = () => {
     resetForm();
   };
 
-  const handleDelete = (id) => {
+  const handleDelete = (id: number | undefined) => {
+    if (id === undefined) {
+      return;
+    }
+    
     setItems(items.filter((item) => item.id !== id));
   };
 
@@ -608,11 +635,20 @@ const StreamingWatchlist = () => {
     resetForm();
   };
 
-  const calculateProgress = (progress) => {
+  const getStatus = (item: Media) => {
+    if (item.status) {
+      return item.status.charAt(0).toUpperCase() + item.status.slice(1);
+    } else { 
+      return "U";
+    }
+  }
+
+  const calculateProgress = (progress: Progress) => {
     if (!progress || !progress.total) return 0;
-    return (progress.current / progress.total) * 100;
+    return progress?.current ? (progress.current / progress.total) * 100 : 0;
   };
 
+  
   return (
     <Container>
       <Header>
@@ -668,7 +704,7 @@ const StreamingWatchlist = () => {
                   </IconButton>
                 </CardActions>
 
-                <ProviderBadge color={providers[item.provider].color}>{providers[item.provider].name}</ProviderBadge>
+                <ProviderBadge color={providers[item.provider as keyof typeof providers].color}>{providers[item.provider as keyof typeof providers].name}</ProviderBadge>
 
                 <TypeBadge>
                   {item.type === "movie" ? <Film size={12} /> : <Tv size={12} />}
@@ -678,7 +714,7 @@ const StreamingWatchlist = () => {
                 <CardInfo>
                   <CardTitle>{item.title}</CardTitle>
 
-                  {item.progress && item.progress.total > 0 && (
+                  {item.progress && item.progress.total && item.progress.total > 0 && (
                     <ProgressContainer>
                       <ProgressText>
                         {item.progress.current}/{item.progress.total} episodes
@@ -698,7 +734,7 @@ const StreamingWatchlist = () => {
                       ))}
                     </Stars>
 
-                    <StatusBadge status={item.status}>{item.status.charAt(0).toUpperCase() + item.status.slice(1)}</StatusBadge>
+                    <StatusBadge status={item.status}>{getStatus(item)}</StatusBadge>
                   </CardBottom>
                 </CardInfo>
               </ImageContainer>
@@ -738,7 +774,11 @@ const StreamingWatchlist = () => {
 
             <FormGroup>
               <Label>Status</Label>
-              <Select value={formData.status} onChange={(e) => setFormData({ ...formData, status: e.target.value })}>
+              <Select value={formData.status} onChange={(e) => setFormData(
+                {
+                  ...formData,
+                  status: e.target.value as "watching" | "completed" | "watchlist"
+                })}>
                 <option value="watchlist">Watchlist</option>
                 <option value="watching">Watching</option>
                 <option value="completed">Completed</option>
@@ -752,7 +792,7 @@ const StreamingWatchlist = () => {
                   <Input
                     type="number"
                     min="0"
-                    value={formData.progress.current}
+                    value={formData?.progress?.current || 0}
                     onChange={(e) =>
                       setFormData({
                         ...formData,
@@ -764,7 +804,7 @@ const StreamingWatchlist = () => {
                   <Input
                     type="number"
                     min="0"
-                    value={formData.progress.total}
+                    value={formData?.progress?.total || 0}
                     onChange={(e) =>
                       setFormData({
                         ...formData,
