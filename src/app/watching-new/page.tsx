@@ -1,7 +1,7 @@
 "use client"
 
-import React, { useState } from 'react';
-import { Plus, X, Edit2, Check, Film, Tv } from 'lucide-react';
+// import React, { useState } from 'react';
+// import { Plus, X, Edit2, Check, Film, Tv } from 'lucide-react';
 
 const StreamingWatchlist = () => {
     return (

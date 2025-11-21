@@ -119,9 +119,11 @@ export const MediaGrid = ({ movies, addClicked, removeClicked, isWatchlist, user
   };
 
   const getProviders = (media: Media): ReactNode => {
-    if (media?.providers?.flatrate?.length > 0) {
-      return <ProviderLogos list={media?.providers?.flatrate} />;
+    const providers = media?.providers?.flatrate;
+    if (Array.isArray(providers) && providers.length > 0) {
+      return <ProviderLogos list={providers} />;
     }
+    return null;
   };
 
   return (

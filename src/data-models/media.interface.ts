@@ -1,7 +1,20 @@
 import { ServiceProvider } from "./service-provider.interface";
 
 export interface Media {
+  //this field is NOT pulled from an API. type is added to indicate if it's a tv show or movie
   type?: string;
+  //this field is NOT pulled from an API but added from the watchilst to indicate the watching status
+  status?: "watching" | "completed" | "watchlist" | undefined; 
+  provider: string;
+  selectedStreamer?: string;
+  selectedPoster?: string;
+  rating: number;
+  episodeCount?: number;
+  currentEpisode?: number;
+  progress: {
+    current: number, 
+    total: number,
+  },
   airDate?: string;
   adult: boolean;
   backdrop_path: string;
@@ -26,10 +39,10 @@ export interface Media {
     origin_country: string;
   }]
   providers: {
-    buy: [ServiceProvider];
-    link: string;
-    rent: [ServiceProvider];
-    flatrate: [ServiceProvider];
+    buy?: [ServiceProvider];
+    link?: string;
+    rent?: [ServiceProvider];
+    flatrate?: [ServiceProvider];
   };
   release_date: string;
   title: string;

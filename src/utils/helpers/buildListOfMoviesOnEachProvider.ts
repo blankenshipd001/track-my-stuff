@@ -2,7 +2,7 @@ import { Media } from "@/data-models/media.interface";
 import { ServiceProvider } from "@/data-models/service-provider.interface";
 
 
-export const addMovieToProviderList = (providersByMovie: ServiceProvider[], movie: Media, providerList: ServiceProvider[], movieList: Map<string, Media[]> = new Map<string, Media[]>) => {
+export const addMovieToProviderList = (providersByMovie: ServiceProvider[] | undefined, movie: Media, providerList: ServiceProvider[], movieList: Map<string, Media[]> = new Map<string, Media[]>) => {
   providersByMovie?.forEach((movieProvider) => {
     //find out if each one exists in my favorites list
     const provider = providerList.find((p) => {

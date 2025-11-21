@@ -87,7 +87,7 @@ const ListView = ({ shows }: ListViewProps) => {
                 </Typography>
               )}
               {/* Providers as icons */}
-              {show.providers?.flatrate?.length > 0 && (
+              {(show.providers?.flatrate?.length ?? 0) > 0 && (
                 <Box display="flex" flexWrap="wrap" gap={1} mt={0.5}>
                   <ProviderLogos providers={show.providers} />
                 </Box>

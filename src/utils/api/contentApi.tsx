@@ -2,6 +2,7 @@ import { doc, deleteDoc, writeBatch, DocumentData, collection, getDocs, setDoc, 
 import { db } from "@/lib/firebase/client";
 import { Media } from "@/data-models/media.interface";
 import { ServiceProvider } from "@/data-models/service-provider.interface";
+import { getTVDetails } from "./serverContentApi";
 
 /**
  * Get all items from your watchlist
@@ -39,10 +40,9 @@ export const requestRemoveFromWatchList = async (uid: string | undefined, movie:
   }
 
   try {
-    const path:string = "users/" + uid + "/movies";
+    const path: string = "users/" + uid + "/movies";
 
     return await deleteDoc(doc(db, path, `${movie.id}`));
-    
   } catch (error) {
     console.error("Error removing movie from watchlist: ", error);
   }
@@ -54,7 +54,7 @@ export const requestRemoveFromWatchList = async (uid: string | undefined, movie:
  * @param providers {ServiceProvider} list of providers
  * @returns {Promise}
  */
-export const saveMyProviders = async (uid: string | undefined, providers: ServiceProvider[]): Promise<void>  => {
+export const saveMyProviders = async (uid: string | undefined, providers: ServiceProvider[]): Promise<void> => {
   if (uid == null) {
     return new Promise((resolve) => {
       // If we didn't send a user fail silently
@@ -74,7 +74,7 @@ export const saveMyProviders = async (uid: string | undefined, providers: Servic
 
     await batchDelete.commit();
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
     console.error("Error deleting existing favorites");
   }
@@ -87,7 +87,6 @@ export const saveMyProviders = async (uid: string | undefined, providers: Servic
     });
 
     await batchWrite.commit();
-
   } catch (error) {
     console.error("Error saving providers: ", error);
   }
@@ -115,12 +114,30 @@ export const addToWatchList = async (uid: string, movie: Media): Promise<Media |
       if (res.ok) {
         const json = await res.json();
         movie.imdb_id = json.imdb_id;
+        movie.type = "movie";
       }
     } catch (e) {
       // ignore enrichment failure; still save the movie
       console.error("Failed to fetch movie details for enrichment: ", e);
     }
+  } else {
+    movie.type = "tv";
+    const tvShow = await getTVDetails(`${movie.movieId}`);
+    if (tvShow) {
+      if (tvShow.episodes && Array.isArray(tvShow.episodes)) {
+        movie.episodeCount = tvShow.episodes.reduce((total: number, season) => {
+          const seasonEpisodes = season && Array.isArray(season.episodes) ? season.episodes.length : 0;
+          return total + seasonEpisodes;
+        }, 0);
+        movie.progress = { current: 0, total: movie.episodeCount ?? 0 };
+      }
+    } else {
+      movie.episodeCount = 0;
+      movie.progress = { current: 0, total: movie.episodeCount ?? 0 };
+    }
   }
+
+  movie.status = "watchlist";
 
   // Remove episodes property before saving
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -133,12 +150,41 @@ export const addToWatchList = async (uid: string, movie: Media): Promise<Media |
 
   await setDoc(documentRef, {
     ...movieWithoutEpisodes,
-  }).then(() => {
-    docRef = movieWithoutEpisodes;
-  }).catch(error => {
-    console.error("Error adding movie to watchlist: ", error);
-    docRef = movieWithoutEpisodes;
   })
+    .then(() => {
+      docRef = movieWithoutEpisodes;
+    })
+    .catch((error) => {
+      console.error("Error adding movie to watchlist: ", error);
+      docRef = movieWithoutEpisodes;
+    });
+
+  return docRef;
+};
+
+export const updateMovie = async (uid: string, movie: Media): Promise<Media | string> => {
+  if (uid == null) {
+    return new Promise((resolve) => {
+      // If we didn't send a user fail silently
+      return resolve("No User ID");
+    });
+  }
+
+  const path: string = `users/${uid}/movies`;
+  const documentRef: DocumentReference = doc(db, path, `${movie.id}`);
+
+  let docRef: Media = movie;
+
+  await setDoc(documentRef, {
+    ...movie,
+  })
+    .then(() => {
+      docRef = movie;
+    })
+    .catch((error) => {
+      console.error("Error adding movie to watchlist: ", error);
+      docRef = movie;
+    });
 
   return docRef;
 };

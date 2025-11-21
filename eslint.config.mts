@@ -38,6 +38,7 @@ export default defineConfig([
   globalIgnores([
     "node_modules/*",
     ".next/*",
+    "/.next/",
     ".vscode/*",
     ".swc/*",
     ".github/*",

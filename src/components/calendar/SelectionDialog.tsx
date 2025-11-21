@@ -89,9 +89,9 @@ const SelectionDialog = ({ selectedDay, selectedShows, handleCloseDialog }: Sele
                 )}
 
                 {/* Providers */}
-                {show.providers?.flatrate?.length > 0 && (
+                {((show.providers?.flatrate?.length ?? 0) > 0) && (
                   <Box display="flex" flexWrap="wrap" justifyContent="center" gap={1} mt={1}>
-                    {show.providers.flatrate.map((provider: ServiceProvider) => (
+                    {(show.providers?.flatrate ?? []).map((provider: ServiceProvider) => (
                       <Chip
                         key={provider.provider_id}
                         icon={provider.logo_path ? <Image loading="lazy" src={getProxyImageUrlForPath(provider.logo_path, 'w45')!} alt={provider.provider_name ?? 'image'} width={24} height={24} style={{ borderRadius: 4 }} /> : undefined}
