@@ -19,6 +19,7 @@ The testPage folder under `/app` can be used to test out styles and components a
  - Run the development environment
 ```bash
 npm run dev
+```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
@@ -29,11 +30,14 @@ This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-opti
 ## Creating a new page
 To create a new page add a folder under the `/app` folder space with a `page.tsx` file. The `page.tsx` is your "landing" page for that site.
 
-
 ## Testing
+```bash
+npm run test
+```
+
 To run tests you can either run `npm run test` to run all tests or if working on them you can run `npm run test:watch` to have them run with every change int he window
 
-### NOTES / TODOs
+### NOTES
 
  - CSS Fonts
   This was removed from globals.css in favor of trying to use the nextjs optimized fonts
@@ -64,8 +68,15 @@ https://www.themoviedb.org/settings/api/details
 
 https://www.themoviedb.org/about/logos-attribution
 
-https://app.flagsmith.com/project/11256/environment/DeXpwrBU9vViXjt3ZrwJK2/features
-
-Global State provider with Gastby: https://dev.to/changoman/gatsby-js-global-state-w-react-context-usereducer-3c1
+## TODOs
+ - Update to allow easy updating of the season and episode when on mobile screens
+ - Make the tiles on the MyWatchlist tapable for edit especially on mobile screens
+ - Make it so the legend can be dismissed and brought back up
+ - Make it so the legend is populated by your list of providers
+ - Make a way to save your list of providers
+ - Make a way to know what providers a show is available on
+ - Make a way to select which provider you're watching from
+ - Make the "Add Title" on MyWatchlist.tsx actually search for titles and add them to the watchlist
+ - 
 
 ## ISSUES

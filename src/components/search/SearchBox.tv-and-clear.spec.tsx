@@ -33,7 +33,7 @@ describe('SearchBox TV navigation and clear behavior', () => {
     const input = screen.getByPlaceholderText('Search title...');
     fireEvent.change(input, { target: { value: 'ShowZ' } });
 
-  act(() => jest.advanceTimersByTime(250));
+    act(() => jest.advanceTimersByTime(250));
 
     const item = await screen.findByText(/ShowZ/i);
     expect(item).toBeVisible();
@@ -50,14 +50,14 @@ describe('SearchBox TV navigation and clear behavior', () => {
     renderWithProviders(<SearchBox user={null} />);
     const input = screen.getByPlaceholderText('Search title...');
     fireEvent.change(input, { target: { value: 'M1' } });
-  act(() => jest.advanceTimersByTime(250));
+    act(() => jest.advanceTimersByTime(250));
 
     // ensure item rendered
     await screen.findByText(/M1/i);
 
     // now clear input — call change to empty string which should trigger the early return branch
     fireEvent.change(input, { target: { value: '' } });
-    jest.advanceTimersByTime(250);
+    act(() => jest.advanceTimersByTime(250));
 
     await waitFor(() => {
       expect(screen.queryByText(/M1/i)).toBeNull();

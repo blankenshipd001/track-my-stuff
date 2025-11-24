@@ -1,9 +1,11 @@
 import { Roboto } from "next/font/google";
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Analytics } from "@vercel/analytics/react"
-import { Container, CssBaseline } from "@mui/material";
+import { CssBaseline } from "@mui/material";
 import { Providers } from "@utils/providers/providers";
 import { Header } from "@/components/header";
+import { Footer } from "@/components/footer";
+import "./globals.css";
 
 // export const dynamic = 'force-dynamic';
 
@@ -25,12 +27,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <Providers>
         <body className={roboto.className}>
           <CssBaseline />
-          <Container>
-            <Header />
+          <Header />
+          <main style={{ minHeight: "calc(100vh - 200px)" }}>
             {children}
-            <SpeedInsights />
-            <Analytics />
-          </Container>
+          </main>
+          <Footer />
+          <SpeedInsights />
+          <Analytics />
         </body>
       </Providers>
     </html>

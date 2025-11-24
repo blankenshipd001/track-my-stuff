@@ -10,7 +10,9 @@ export interface Media {
   selectedPoster?: string;
   rating: number;
   episodeCount?: number;
+  seasonCount?: number;
   currentEpisode?: number;
+  currentSeason?: number;
   progress: {
     current: number, 
     total: number,

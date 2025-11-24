@@ -48,6 +48,15 @@ const WatchlistModal = ({
 }: WatchlistModalProps) => {
   if (!show) return null;
 
+  // Derive totals for TV shows (display only)
+  const totalNumberOfSeasons = formData.type === 'tv' && Array.isArray(formData.episodes) ? formData.episodes.length : 0;
+  const totalNumberOfEpisodes = formData.type === 'tv' && Array.isArray(formData.episodes)
+    ? formData.episodes.reduce((sum, season) => {
+        const count = Array.isArray(season.episodes) ? season.episodes.length : 0;
+        return sum + count;
+      }, 0)
+    : 0;
+
   return (
     <Modal onClick={handleCancel}>
       <ModalContent onClick={(e) => e.stopPropagation()}>
@@ -60,24 +69,24 @@ const WatchlistModal = ({
         </FormGroup>
 
         <FormGroup>
-          <Label>Type</Label>
-          <Select aria-label="Type" value={formData.type} disabled aria-disabled="true">
+          <Label htmlFor="typeSelect">Type</Label>
+          <Select id="typeSelect" aria-label="Type" value={formData.type} disabled aria-disabled="true">
             <option value="movie">Movie</option>
             <option value="tv">TV Show</option>
           </Select>
         </FormGroup>
 
         <FormGroup>
-          <Label>Streaming Provider</Label>
-          {/* Provider can now be changed; also sets selectedStreamer */}
+          <Label htmlFor="providerSelect">Streaming Provider</Label>
           <Select
+            id="providerSelect"
             aria-label="Streaming Provider"
             value={formData.provider}
-            onChange={(e) => setFormData({
-              ...formData,
+            onChange={(e) => setFormData(prev => ({
+              ...prev,
               provider: e.target.value,
               selectedStreamer: e.target.value,
-            })}
+            }))}
           >
             {Object.entries(providers).map(([key, provider]) => (
               <option key={key} value={key}>
@@ -86,10 +95,9 @@ const WatchlistModal = ({
             ))}
           </Select>
         </FormGroup>
-
         <FormGroup>
-          <Label>Status</Label>
-          <Select aria-label="Choose a status" value={formData.status} onChange={(e) => setFormData(
+          <Label htmlFor="statusSelect">Status</Label>
+          <Select id="statusSelect" aria-label="Choose a status" value={formData.status} onChange={(e) => setFormData(
             {
               ...formData,
               status: e.target.value as "watching" | "completed" | "watchlist"
@@ -107,28 +115,73 @@ const WatchlistModal = ({
               <Input
                 type="number"
                 min="0"
-                value={formData?.progress?.current || 0}
+                value={formData?.progress?.current ?? 0}
                 onChange={(e) => {
-                  setFormData({
-                    ...formData,
-                    progress: { ...formData.progress, current: parseInt(e.target.value) || 0 },
-                  })
+                  const val = e.target.value;
+                  const current = val === '' ? 0 : Math.max(0, parseInt(val, 10) || 0);
+                  setFormData(prev => ({
+                    ...prev,
+                    progress: { ...(prev.progress || { current: 0, total: 0 }), current }
+                  }));
                 }}
                 placeholder="Current"
               />
               <Input
                 type="number"
                 min="0"
-                value={formData?.progress?.total || 0}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    progress: { ...formData.progress, total: parseInt(e.target.value) || 0 },
-                  })
-                }
+                value={formData?.progress?.total ?? 0}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  const total = val === '' ? 0 : Math.max(0, parseInt(val, 10) || 0);
+                  setFormData(prev => ({
+                    ...prev,
+                    progress: { ...(prev.progress || { current: 0, total: 0 }), total }
+                  }));
+                }}
                 placeholder="Total"
               />
             </ProgressInputs>
+          </FormGroup>
+        )}
+
+        {formData.type === 'tv' && (
+          <FormGroup>
+            <Label>Current Season</Label>
+            <Input
+              type="number"
+              min="1"
+              value={(formData as Media & { currentSeason?: number }).currentSeason ?? 1}
+              onChange={(e) => {
+                const seasonVal = e.target.value === '' ? 1 : Math.max(1, parseInt(e.target.value, 10) || 1);
+                setFormData(prev => ({ ...prev, currentSeason: seasonVal }));
+              }}
+              placeholder="Season"
+            />
+          </FormGroup>
+        )}
+
+        {formData.type === 'tv' && (
+          <FormGroup>
+            <Label>Current Episode</Label>
+            <Input
+              type="number"
+              min="1"
+              value={(formData as Media & { currentEpisode?: number }).currentEpisode ?? 1}
+              onChange={(e) => {
+                const epVal = e.target.value === '' ? 1 : Math.max(1, parseInt(e.target.value, 10) || 1);
+                setFormData(prev => ({ ...prev, currentEpisode: epVal }));
+              }}
+              placeholder="Episode"
+            />
+          </FormGroup>
+        )}
+
+        {formData.type === 'tv' && (
+          <FormGroup>
+            <Label>Total Seasons / Episodes</Label>
+            <div style={{ fontSize: '0.875rem', color: '#d1d5db' }}>
+              {totalNumberOfSeasons} season{totalNumberOfSeasons === 1 ? '' : 's'} • {totalNumberOfEpisodes} episode{totalNumberOfEpisodes === 1 ? '' : 's'}
+            </div>
           </FormGroup>
         )}
 
@@ -144,7 +197,7 @@ const WatchlistModal = ({
         </FormGroup>
 
         <FormGroup>
-          <Label>Poster</Label>
+          <Label htmlFor="posterSelect">Poster</Label>
           <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
             {formData.poster_path && (
               // small preview image
@@ -155,6 +208,7 @@ const WatchlistModal = ({
               />
             )}
             <Select
+              id="posterSelect"
               aria-label="Select poster"
               value={formData.poster_path || ''}
               onChange={(e) => setFormData({ ...formData, poster_path: e.target.value })}

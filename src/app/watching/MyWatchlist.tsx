@@ -69,6 +69,8 @@ const StreamingWatchlist = ({ watchlist, user }: MyWatchlistProps) => {
   const [showModal, setShowModal] = useState(false);
   const [editingId, setEditingId] = useState<number | null | undefined>(null);
   const [formData, setFormData] = useState<Media>({} as Media);
+  
+console.log('Rendering MyWatchlist with watchlist:', watchlist);
 
   const providers: Providers = {
     netflix: { name: "Netflix", color: "#dc2626"},

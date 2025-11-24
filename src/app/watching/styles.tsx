@@ -23,6 +23,8 @@ export const Container = styled.div`
   background: linear-gradient(to bottom right, #111827, #1f2937, #111827);
   color: white;
   padding: 1.5rem;
+  max-width: 1600px;
+  margin: 0 auto;
 `;
 
 export const Header = styled.div`
@@ -201,6 +203,13 @@ export const StatCard = styled.div`
   border-radius: 0.75rem;
   padding: 1rem;
   border: 1px solid rgba(75, 85, 99, 0.5);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2), 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s;
+
+  &:hover {
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.3), 0 4px 6px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+  }
 `;
 
 export const StatNumber = styled.div<DivProps>`
@@ -253,11 +262,13 @@ export const Card = styled.div`
   border-radius: 0.75rem;
   overflow: hidden;
   border: 1px solid rgba(75, 85, 99, 0.5);
-  transition: all 0.3s;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2), 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
   &:hover {
-    border-color: rgba(168, 85, 247, 0.5);
-    transform: scale(1.05);
+    border-color: rgba(168, 85, 247, 0.6);
+    box-shadow: 0 12px 24px rgba(168, 85, 247, 0.2), 0 8px 12px rgba(0, 0, 0, 0.3);
+    transform: translateY(-4px) scale(1.02);
   }
 `;
 

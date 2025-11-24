@@ -45,10 +45,14 @@ const HeaderClient = ({ user, navItems }: HeaderClientProps) => {
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
-        px: 4,
+        px: { xs: 2, md: 4 },
         py: 2,
-        backgroundColor: "#121212",
-        borderBottom: "1px solid #333",
+        backgroundColor: "rgba(17, 24, 39, 0.8)",
+        backdropFilter: "blur(12px)",
+        borderBottom: "1px solid rgba(75, 85, 99, 0.3)",
+        position: "sticky",
+        top: 0,
+        zIndex: 1000,
       }}
     >
       <Box onClick={() => handleNav("/")} sx={{ cursor: "pointer", display: "flex", alignItems: "center" }}>
@@ -80,9 +84,11 @@ const HeaderClient = ({ user, navItems }: HeaderClientProps) => {
         slotProps={{
           paper: {
             sx: {
-              backgroundColor: "#121212",
+              backgroundColor: "rgba(17, 24, 39, 0.95)",
+              backdropFilter: "blur(12px)",
               color: "white",
               width: 250,
+              borderLeft: "1px solid rgba(75, 85, 99, 0.3)",
             },
           },
         }}

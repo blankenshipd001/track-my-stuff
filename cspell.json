@@ -18,7 +18,8 @@
         "TMDB",
         "vercel",
         "WATCHLIST",
-        "watchlists"
+        "watchlists",
+        "watchlist"
     ],
     "ignoreWords": [],
     "import": []
