@@ -109,4 +109,8 @@ export interface Media {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     episodes: any[];
   }>;
+  seasons?: Array<{
+    season_number: number;
+    episode_count: number;
+  }>;
 }

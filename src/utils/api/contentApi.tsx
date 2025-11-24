@@ -123,9 +123,19 @@ export const addToWatchList = async (uid: string, movie: Media): Promise<Media |
   } else {
     movie.type = "tv";
     const tvShow = await getTVDetails(`${movie.movieId}`);
-    console.log('Fetched TV details for enrichment:', tvShow);
     if (tvShow) {
       if (tvShow.episodes && Array.isArray(tvShow.episodes)) {
+        // Attach episodes data with season and episode information
+        movie.episodes = tvShow.episodes.map((season) => ({
+          season_number: season.season_number,
+          episodes: season.episodes || []
+        }));
+
+        movie.seasons = tvShow.episodes.map((season) => ({
+          season_number: season.season_number,
+          episode_count: season.episodes ? season.episodes.length : 0
+        }));
+
         // Season count derived from number of season objects present
         movie.seasonCount = tvShow.episodes.length;
         movie.episodeCount = tvShow.episodes.reduce((total: number, season) => {
@@ -151,7 +161,6 @@ export const addToWatchList = async (uid: string, movie: Media): Promise<Media |
   const documentRef: DocumentReference = doc(db, path, `${movie.id}`);
 
   let docRef: Media = movieWithoutEpisodes;
-console.log('Adding to watchlist:', movieWithoutEpisodes);
   await setDoc(documentRef, {
     ...movieWithoutEpisodes,
   })

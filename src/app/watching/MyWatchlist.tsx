@@ -1,9 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { Plus, Film, Tv, Edit2, Trash2 } from "lucide-react";
+import { Plus, Film, Tv, Edit2, Trash2, ChevronDown, ChevronUp } from "lucide-react";
+import { useRouter } from "next/navigation";
+import useGetMyFavoriteProviders from "@/hooks/useGetMyFavoriteProviders";
 import { Media } from "@/data-models/media.interface";
 import { getProxyImageUrlForPath } from "@/lib/imageUrl";
+import NextImage from "next/image";
 import WatchlistModal from "./WathlistModal";
 import {
   Container,
@@ -48,10 +51,6 @@ import {
 } from "./styles";
 import { requestRemoveFromWatchList, updateMovie } from "@/utils/api/contentApi";
 
-type Progress = {
-  current?: number;
-  total?: number;
-};
 interface ProviderDetails {
   name: string;
   color: string;
@@ -65,13 +64,14 @@ interface MyWatchlistProps {
 }
 
 const StreamingWatchlist = ({ watchlist, user }: MyWatchlistProps) => {
+  const router = useRouter();
   const [filter, setFilter] = useState("all");
   const [showModal, setShowModal] = useState(false);
   const [editingId, setEditingId] = useState<number | null | undefined>(null);
   const [formData, setFormData] = useState<Media>({} as Media);
+  const [isLegendCollapsed, setIsLegendCollapsed] = useState(false);
+  const { myFavoriteProviders } = useGetMyFavoriteProviders(user?.uid || "");
   
-console.log('Rendering MyWatchlist with watchlist:', watchlist);
-
   const providers: Providers = {
     netflix: { name: "Netflix", color: "#dc2626"},
     hulu: { name: "Hulu", color: "#22c55e" },
@@ -111,16 +111,19 @@ console.log('Rendering MyWatchlist with watchlist:', watchlist);
     setShowModal(true);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if(!user) {
       return;
     }
 
-    updateMovie(user.uid, formData);
+    await updateMovie(user.uid, formData);
 
     setShowModal(false);
     setEditingId(null);
     resetForm();
+    
+    // Refresh the page data
+    router.refresh();
   };
 
   const handleDelete = async (movie: Media) => {
@@ -145,9 +148,48 @@ console.log('Rendering MyWatchlist with watchlist:', watchlist);
     }
   }
 
-  const calculateProgress = (progress: Progress) => {
-    if (!progress || !progress.total) return 0;
-    return progress?.current ? (progress.current / progress.total) * 100 : 0;
+  const calculateProgress = (item: Media) => {
+    if (item.type !== 'tv') return 0;
+    
+    const currentSeason = (item as Media & { currentSeason?: number }).currentSeason ?? 1;
+    const currentEpisode = (item as Media & { currentEpisode?: number }).currentEpisode ?? 1;
+    
+    // Calculate total episodes watched up to current point
+    let totalWatched = 0;
+    let totalEpisodes = 0;
+    
+    // Try to use episodes array first (has full episode data)
+    if (item.episodes && item.episodes.length > 0) {
+      item.episodes.forEach((season) => {
+        const episodeCount = Array.isArray(season.episodes) ? season.episodes.length : 0;
+        totalEpisodes += episodeCount;
+        
+        if (season.season_number < currentSeason) {
+          // All episodes from previous seasons are watched
+          totalWatched += episodeCount;
+        } else if (season.season_number === currentSeason) {
+          // Add current episode count from current season
+          totalWatched += currentEpisode;
+        }
+      });
+    } 
+    // Fallback to seasons array (has episode counts per season)
+    else if (item.seasons && item.seasons.length > 0) {
+      item.seasons.forEach((season) => {
+        const episodeCount = season.episode_count || 0;
+        totalEpisodes += episodeCount;
+        
+        if (season.season_number < currentSeason) {
+          // All episodes from previous seasons are watched
+          totalWatched += episodeCount;
+        } else if (season.season_number === currentSeason) {
+          // Add current episode count from current season
+          totalWatched += currentEpisode;
+        }
+      });
+    }
+    
+    return totalEpisodes > 0 ? (totalWatched / totalEpisodes) * 100 : 0;
   };
 
   const getProviderBadgesForTile = (item: Media) => {
@@ -155,16 +197,40 @@ console.log('Rendering MyWatchlist with watchlist:', watchlist);
       return null;
     }
     
-    const providerKey = item.provider as keyof typeof providers;
-    const providerMeta = providers[providerKey];
+    // Try to find the provider in myFavoriteProviders
+    const provider = myFavoriteProviders.find(p => String(p.provider_id) === String(item.provider));
     
-    if (!providerMeta) {
-      return null;
+    if (!provider) {
+      // Fallback to old providers object
+      const providerKey = item.provider as keyof typeof providers;
+      const providerMeta = providers[providerKey];
+      
+      if (!providerMeta) {
+        return null;
+      }
+
+      return (
+        <ProviderBadgesContainer>
+          <ProviderBadge color={providerMeta.color}>{providerMeta.name}</ProviderBadge>
+        </ProviderBadgesContainer>
+      );
     }
 
     return (
       <ProviderBadgesContainer>
-        <ProviderBadge color={providerMeta.color}>{providerMeta.name}</ProviderBadge>
+        {provider.logo_path ? (
+          <div style={{ width: '28px', height: '28px', borderRadius: '6px', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)' }}>
+            <NextImage
+              src={getProxyImageUrlForPath(provider.logo_path, 'w45')!}
+              alt={provider.provider_name}
+              width={24}
+              height={24}
+              style={{ objectFit: 'contain' }}
+            />
+          </div>
+        ) : (
+          <ProviderBadge color="#a855f7">{provider.provider_name}</ProviderBadge>
+        )}
       </ProviderBadgesContainer>
     );
   }
@@ -234,16 +300,50 @@ console.log('Rendering MyWatchlist with watchlist:', watchlist);
                 <CardInfo>
                   <CardTitle>{item.title}</CardTitle>
 
-                  {item.progress && item.progress.total && item.progress.total > 0 && (
-                    <ProgressContainer>
-                      <ProgressText>
-                        {item.progress.current}/{item.progress.total} episodes
-                      </ProgressText>
-                      <ProgressBar>
-                        <ProgressFill width={calculateProgress(item.progress)} />
-                      </ProgressBar>
-                    </ProgressContainer>
-                  )}
+                  {item.type === 'tv' && (() => {
+                    const currentSeason = (item as Media & { currentSeason?: number }).currentSeason;
+                    const currentEpisode = (item as Media & { currentEpisode?: number }).currentEpisode;
+                    
+                    let totalEpisodes = 0;
+                    
+                    // Calculate total episodes from episodes array or seasons array
+                    if (item.episodes && item.episodes.length > 0) {
+                      totalEpisodes = item.episodes.reduce((sum, season) => {
+                        return sum + (Array.isArray(season.episodes) ? season.episodes.length : 0);
+                      }, 0);
+                    } else if (item.seasons && item.seasons.length > 0) {
+                      totalEpisodes = item.seasons.reduce((sum, season) => {
+                        return sum + (season.episode_count || 0);
+                      }, 0);
+                    }
+                    
+                    // Show progress if we have episode data
+                    if (totalEpisodes > 0) {
+                      return (
+                        <ProgressContainer>
+                          <ProgressText>
+                            S{currentSeason ?? 1} E{currentEpisode ?? 1} • {totalEpisodes} total episodes
+                          </ProgressText>
+                          <ProgressBar>
+                            <ProgressFill width={calculateProgress(item)} />
+                          </ProgressBar>
+                        </ProgressContainer>
+                      );
+                    }
+                    
+                    // Fallback: show season/episode if available
+                    if (currentSeason && currentEpisode) {
+                      return (
+                        <ProgressContainer>
+                          <ProgressText>
+                            Season {currentSeason}, Episode {currentEpisode}
+                          </ProgressText>
+                        </ProgressContainer>
+                      );
+                    }
+                    
+                    return null;
+                  })()}
 
                   <CardBottom>
                     <Stars>
@@ -268,24 +368,47 @@ console.log('Rendering MyWatchlist with watchlist:', watchlist);
           show={showModal}
           editingId={editingId}
           formData={formData}
-          providers={providers}
+          myFavoriteProviders={myFavoriteProviders}
           handleCancel={handleCancel}
           handleSave={handleSave}
           setFormData={setFormData}
         />
       )}
 
-      <Legend>
-        <LegendTitle>STREAMING SERVICES</LegendTitle>
-        <LegendItems>
-          {Object.entries(providers).map(([key, provider]) => (
-            <LegendItem key={key}>
-              <LegendDot color={provider.color} />
-              <LegendLabel>{provider.name}</LegendLabel>
-            </LegendItem>
-          ))}
-        </LegendItems>
-      </Legend>
+      {myFavoriteProviders.length > 0 && (
+        <Legend>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: isLegendCollapsed ? '0' : '1rem' }}>
+            <LegendTitle>MY STREAMING SERVICES</LegendTitle>
+            <IconButton onClick={() => setIsLegendCollapsed(!isLegendCollapsed)} style={{ position: 'relative' }}>
+              {isLegendCollapsed ? <ChevronDown size={20} /> : <ChevronUp size={20} />}
+            </IconButton>
+          </div>
+          {!isLegendCollapsed && (
+            <LegendItems>
+              {myFavoriteProviders
+                .sort((a, b) => a.display_priority - b.display_priority)
+                .map((provider) => (
+                  <LegendItem key={provider.provider_id}>
+                    {provider.logo_path ? (
+                      <div style={{ width: '24px', height: '24px', borderRadius: '4px', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', marginRight: '0.5rem' }}>
+                        <NextImage
+                          src={getProxyImageUrlForPath(provider.logo_path, 'w45')!}
+                          alt={provider.provider_name}
+                          width={24}
+                          height={24}
+                          style={{ objectFit: 'contain' }}
+                        />
+                      </div>
+                    ) : (
+                      <LegendDot color="#a855f7" />
+                    )}
+                    <LegendLabel>{provider.provider_name}</LegendLabel>
+                  </LegendItem>
+                ))}
+            </LegendItems>
+          )}
+        </Legend>
+      )}
     </Container>
   );
 };
