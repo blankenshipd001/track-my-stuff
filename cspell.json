@@ -17,9 +17,10 @@
         "Signin",
         "TMDB",
         "vercel",
+        "watchilst",
+        "watchlist",
         "WATCHLIST",
-        "watchlists",
-        "watchlist"
+        "watchlists"
     ],
     "ignoreWords": [],
     "import": []

@@ -44,12 +44,8 @@ const WatchlistModal = ({
 
   // Derive totals for TV shows (display only)
   const totalNumberOfSeasons = formData.type === 'tv' && Array.isArray(formData.episodes) ? formData.episodes.length : 0;
-  interface Season {
-    episodes: unknown[];
-  }
-
   const totalNumberOfEpisodes = formData.type === 'tv' && Array.isArray(formData.episodes)
-    ? formData.episodes.reduce((sum: number, season: Season) => {
+    ? formData.episodes.reduce((sum, season) => {
         const count = Array.isArray(season.episodes) ? season.episodes.length : 0;
         return sum + count;
       }, 0)

@@ -7,7 +7,7 @@ import useGetMyFavoriteProviders from "@/hooks/useGetMyFavoriteProviders";
 import { Media } from "@/data-models/media.interface";
 import { getProxyImageUrlForPath } from "@/lib/imageUrl";
 import NextImage from "next/image";
-import WatchlistModal from "./WathlistModal";
+import WatchlistModal from "./WatchlistModal";
 import {
   Container,
   Header,
