@@ -18,7 +18,7 @@ import {
   AddButton,
   GridContainer,
   Grid,
-} from "../watching/styles";
+} from "../activity/styles";
 import styled from "styled-components";
 import Image from "next/image";
 import { getProxyImageUrlForPath } from '@/lib/imageUrl';

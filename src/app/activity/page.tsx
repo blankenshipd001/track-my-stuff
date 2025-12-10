@@ -2,7 +2,7 @@ import { verifySessionToken } from '@/lib/firebase/auth';
 import getCookieHeader from '@/lib/getCookieHeader';
 // import StreamingPage from './StreamingPage';
 import { adminDB } from '@/lib/firebase/admin';
-import MyWatchlist from './MyWatchlist';
+import MyWatchlist from './Activity';
 import { getMostRecentSeasonEpisodes } from '@/utils/api/serverContentApi';
 
 export default async function WatchedPage() {

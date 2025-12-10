@@ -19,7 +19,7 @@ export default function LoginPage() {
       body: JSON.stringify({ token }),
     });
 
-    router.push('/');
+    router.push('/watching');
     router.refresh();
   };
 

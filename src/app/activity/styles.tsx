@@ -4,17 +4,17 @@ import styled, { css } from "styled-components";
 
 export interface ButtonProps {
   variant?: "primary" | "secondary";
-  active?: string;
+  $active?: string;
 }
 
 export interface DivProps {
-  status?: "watching" | "completed" | "watchlist" | undefined;
+  $status?: "watching" | "completed" | "watchlist" | undefined;
   width?: number;
   color?: string;
 }
 
 export interface SvgProps {
-  filled?: boolean;
+  $filled?: boolean;
 }
 
 
@@ -237,11 +237,11 @@ export const FilterButton = styled.button<ButtonProps>`
   border: none;
   cursor: pointer;
   transition: all 0.2s;
-  background: ${(props) => (props.active ? "#a855f7" : "rgba(31, 41, 55, 0.5)")};
-  color: ${(props) => (props.active ? "white" : "#d1d5db")};
+  background: ${(props) => (props.$active ? "#a855f7" : "rgba(31, 41, 55, 0.5)")};
+  color: ${(props) => (props.$active ? "white" : "#d1d5db")};
 
   &:hover {
-    background: ${(props) => (props.active ? "#a855f7" : "rgba(55, 65, 81, 0.5)")};
+    background: ${(props) => (props.$active ? "#a855f7" : "rgba(55, 65, 81, 0.5)")};
   }
 `;
 
@@ -428,7 +428,7 @@ export const Stars = styled.div`
 export const Star = styled.svg<SvgProps>`
   width: 1rem;
   height: 1rem;
-  fill: ${(props) => (props.filled ? "#fbbf24" : "#4b5563")};
+  fill: ${(props) => (props.$filled ? "#fbbf24" : "#4b5563")};
   cursor: pointer;
   transition: fill 0.2s;
 
@@ -442,8 +442,8 @@ export const StatusBadge = styled.div<DivProps>`
   border-radius: 0.25rem;
   font-size: 0.75rem;
   font-weight: 600;
-  background: ${(props) => (props.status === "watching" ? "rgba(59, 130, 246, 0.2)" : props.status === "completed" ? "rgba(34, 197, 94, 0.2)" : "rgba(168, 85, 247, 0.2)")};
-  color: ${(props) => (props.status === "watching" ? "#93c5fd" : props.status === "completed" ? "#86efac" : "#d8b4fe")};
+  background: ${(props) => (props.$status === "watching" ? "rgba(59, 130, 246, 0.2)" : props.$status === "completed" ? "rgba(34, 197, 94, 0.2)" : "rgba(168, 85, 247, 0.2)")};
+  color: ${(props) => (props.$status === "watching" ? "#93c5fd" : props.$status === "completed" ? "#86efac" : "#d8b4fe")};
 `;
 
 export const Legend = styled.div`

@@ -107,7 +107,7 @@ const WatchlistModal = ({
                 {[...Array(5)].map((_, i) => (
                   <Star 
                     key={i} 
-                    filled={i < formData.rating} 
+                    $filled={i < formData.rating} 
                     viewBox="0 0 20 20" 
                     onClick={() => setFormData({ ...formData, rating: i + 1 })}
                     style={{ cursor: 'pointer' }}

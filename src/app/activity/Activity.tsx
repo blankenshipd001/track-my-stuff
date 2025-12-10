@@ -7,7 +7,7 @@ import useGetMyFavoriteProviders from "@/hooks/useGetMyFavoriteProviders";
 import { Media } from "@/data-models/media.interface";
 import { getProxyImageUrlForPath } from "@/lib/imageUrl";
 import NextImage from "next/image";
-import WatchlistModal from "./WatchlistModal";
+import WatchlistModal from "./ActivityModal";
 import {
   Container,
   Header,
@@ -240,7 +240,7 @@ const StreamingWatchlist = ({ watchlist, user }: MyWatchlistProps) => {
       <Header>
         <HeaderTop>
           <div>
-            <Title>My Watchlist</Title>
+            <Title>Activity</Title>
             <Subtitle>Track what you&apos;re watching across all platforms</Subtitle>
           </div>
           <AddButton onClick={handleAdd}>
@@ -266,7 +266,7 @@ const StreamingWatchlist = ({ watchlist, user }: MyWatchlistProps) => {
 
         <FilterContainer>
           {["all", "watching", "completed", "watchlist", "movies", "tv"].map((f) => (
-            <FilterButton key={f} active={(filter === f).toString()} onClick={() => setFilter(f)}>
+            <FilterButton key={f} $active={(filter === f).toString()} onClick={() => setFilter(f)}>
               {f.charAt(0).toUpperCase() + f.slice(1)}
             </FilterButton>
           ))}
@@ -348,13 +348,13 @@ const StreamingWatchlist = ({ watchlist, user }: MyWatchlistProps) => {
                   <CardBottom>
                     <Stars>
                       {[...Array(5)].map((_, i) => (
-                        <Star key={i} filled={i < item.rating && true} viewBox="0 0 20 20">
+                        <Star key={i} $filled={i < item.rating ? true : undefined} viewBox="0 0 20 20">
                           <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                         </Star>
                       ))}
                     </Stars>
 
-                    <StatusBadge status={item.status}>{getStatus(item)}</StatusBadge>
+                    <StatusBadge $status={item.status}>{getStatus(item)}</StatusBadge>
                   </CardBottom>
                 </CardInfo>
               </ImageContainer>
