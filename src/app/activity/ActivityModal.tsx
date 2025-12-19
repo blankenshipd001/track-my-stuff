@@ -179,11 +179,18 @@ const WatchlistModal = ({
                       <label style={{ fontSize: '0.75rem', color: '#9ca3af', display: 'block', marginBottom: '0.25rem' }}>Season</label>
                       <Input
                         type="number"
+                        inputMode="numeric"
+                        pattern="[0-9]*"
                         min="1"
                         max={totalNumberOfSeasons > 0 ? totalNumberOfSeasons : undefined}
                         value={(formData as Media & { currentSeason?: number }).currentSeason ?? 1}
                         onChange={(e) => {
-                          const seasonVal = e.target.value === '' ? 1 : Math.max(1, Math.min(totalNumberOfSeasons || 1, parseInt(e.target.value, 10) || 1));
+                          const val = e.target.value;
+                          if (val === '') {
+                            setFormData(prev => ({ ...prev, currentSeason: 1 }));
+                            return;
+                          }
+                          const seasonVal = Math.max(1, Math.min(totalNumberOfSeasons || 1, parseInt(val, 10) || 1));
                           
                           // Check if the new season has fewer episodes than the current episode number
                           const maxEpisodesInNewSeason = Array.isArray(formData.seasons)
@@ -201,6 +208,29 @@ const WatchlistModal = ({
                             currentEpisode: adjustedEpisode
                           }));
                         }}
+                        onKeyDown={(e) => {
+                          // Prevent backspace from navigating back
+                          if (e.key === 'Backspace' && e.currentTarget.value.length === 1) {
+                            e.preventDefault();
+                            setFormData(prev => ({ ...prev, currentSeason: 1 }));
+                          }
+                          // Allow: backspace, delete, tab, escape, enter, arrows, and numbers
+                          if (
+                            e.key === 'Backspace' ||
+                            e.key === 'Delete' ||
+                            e.key === 'Tab' ||
+                            e.key === 'Escape' ||
+                            e.key === 'Enter' ||
+                            e.key === 'ArrowLeft' ||
+                            e.key === 'ArrowRight' ||
+                            e.key === 'ArrowUp' ||
+                            e.key === 'ArrowDown' ||
+                            (e.key >= '0' && e.key <= '9')
+                          ) {
+                            return;
+                          }
+                          e.preventDefault();
+                        }}
                         placeholder="Season"
                       />
                     </div>
@@ -208,12 +238,42 @@ const WatchlistModal = ({
                       <label style={{ fontSize: '0.75rem', color: '#9ca3af', display: 'block', marginBottom: '0.25rem' }}>Episode</label>
                       <Input
                         type="number"
+                        inputMode="numeric"
+                        pattern="[0-9]*"
                         min="1"
                         max={maxEpisodesInCurrentSeason > 0 ? maxEpisodesInCurrentSeason : undefined}
                         value={(formData as Media & { currentEpisode?: number }).currentEpisode ?? 1}
                         onChange={(e) => {
-                          const epVal = e.target.value === '' ? 1 : Math.max(1, Math.min(maxEpisodesInCurrentSeason || 1, parseInt(e.target.value, 10) || 1));
+                          const val = e.target.value;
+                          if (val === '') {
+                            setFormData(prev => ({ ...prev, currentEpisode: 1 }));
+                            return;
+                          }
+                          const epVal = Math.max(1, Math.min(maxEpisodesInCurrentSeason || 1, parseInt(val, 10) || 1));
                           setFormData(prev => ({ ...prev, currentEpisode: epVal }));
+                        }}
+                        onKeyDown={(e) => {
+                          // Prevent backspace from navigating back
+                          if (e.key === 'Backspace' && e.currentTarget.value.length === 1) {
+                            e.preventDefault();
+                            setFormData(prev => ({ ...prev, currentEpisode: 1 }));
+                          }
+                          // Allow: backspace, delete, tab, escape, enter, arrows, and numbers
+                          if (
+                            e.key === 'Backspace' ||
+                            e.key === 'Delete' ||
+                            e.key === 'Tab' ||
+                            e.key === 'Escape' ||
+                            e.key === 'Enter' ||
+                            e.key === 'ArrowLeft' ||
+                            e.key === 'ArrowRight' ||
+                            e.key === 'ArrowUp' ||
+                            e.key === 'ArrowDown' ||
+                            (e.key >= '0' && e.key <= '9')
+                          ) {
+                            return;
+                          }
+                          e.preventDefault();
                         }}
                         placeholder="Episode"
                       />

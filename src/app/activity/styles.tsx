@@ -264,12 +264,44 @@ export const Card = styled.div`
   border: 1px solid rgba(75, 85, 99, 0.5);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2), 0 2px 4px rgba(0, 0, 0, 0.1);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  perspective: 1000px;
+  height: 20rem;
 
   &:hover {
     border-color: rgba(168, 85, 247, 0.6);
     box-shadow: 0 12px 24px rgba(168, 85, 247, 0.2), 0 8px 12px rgba(0, 0, 0, 0.3);
     transform: translateY(-4px) scale(1.02);
   }
+`;
+
+export const CardInner = styled.div<{ $flipped?: boolean }>`
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+  transform: ${props => props.$flipped ? 'rotateY(180deg)' : 'rotateY(0)'};
+`;
+
+export const CardFace = styled.div`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+`;
+
+export const CardFront = styled(CardFace)``;
+
+export const CardBack = styled(CardFace)`
+  transform: rotateY(180deg);
+  background: linear-gradient(135deg, rgba(31, 41, 55, 0.95) 0%, rgba(17, 24, 39, 0.95) 100%);
+  backdrop-filter: blur(12px);
+  padding: 1.5rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 `;
 
 export const ImageContainer = styled.div`
@@ -293,7 +325,7 @@ export const CardActions = styled.div`
   position: absolute;
   top: 0.75rem;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translateX(-30%);
   display: flex;
   gap: 0.5rem;
   opacity: 0;

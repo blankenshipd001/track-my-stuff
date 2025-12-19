@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Plus, Film, Tv, Edit2, Trash2, ChevronDown, ChevronUp } from "lucide-react";
+import { Plus, Film, Tv, Edit2, Trash2, ChevronDown, ChevronUp, Info, ExternalLink } from "lucide-react";
 import { useRouter } from "next/navigation";
 import useGetMyFavoriteProviders from "@/hooks/useGetMyFavoriteProviders";
 import { Media } from "@/data-models/media.interface";
@@ -25,6 +25,9 @@ import {
   GridContainer,
   Grid,
   Card,
+  CardInner,
+  CardFront,
+  CardBack,
   ImageContainer,
   Image,
   ImageOverlay,
@@ -72,6 +75,7 @@ const StreamingWatchlist = ({ watchlist, user }: MyWatchlistProps) => {
   const [editingId, setEditingId] = useState<number | null | undefined>(null);
   const [formData, setFormData] = useState<Media>({} as Media);
   const [isLegendCollapsed, setIsLegendCollapsed] = useState(false);
+  const [flippedCards, setFlippedCards] = useState<Set<number>>(new Set());
   const { myFavoriteProviders } = useGetMyFavoriteProviders(user?.uid || "");
   
   const providers: Providers = {
@@ -157,6 +161,28 @@ const StreamingWatchlist = ({ watchlist, user }: MyWatchlistProps) => {
     setShowModal(false);
     setEditingId(null);
     resetForm();
+  };
+
+  const toggleFlip = (id: number | undefined) => {
+    if (!id) return;
+    setFlippedCards(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(id)) {
+        newSet.delete(id);
+      } else {
+        newSet.add(id);
+      }
+      return newSet;
+    });
+  };
+
+  const handleNavigateToDetails = (item: Media) => {
+    const slug = item.movieId || item.id;
+    if (item.type === 'movie') {
+      router.push(`/movies/${slug}`);
+    } else {
+      router.push(`/tv/${slug}`);
+    }
   };
 
   const getStatus = (item: Media) => {
@@ -294,91 +320,165 @@ const StreamingWatchlist = ({ watchlist, user }: MyWatchlistProps) => {
 
       <GridContainer>
         <Grid>
-          {filteredItems.map((item) => (
-            <Card key={item.id}>
-              <ImageContainer>
-                <Image src={getProxyImageUrlForPath(item.poster_path || item.backdrop_path, 'w185')!} alt={item.title} />
-                <ImageOverlay />
+          {filteredItems.map((item) => {
+            const isFlipped = flippedCards.has(item.id!);
+            
+            return (
+              <Card key={item.id}>
+                <CardInner $flipped={isFlipped}>
+                  {/* Front of Card */}
+                  <CardFront>
+                    <ImageContainer>
+                      <Image src={getProxyImageUrlForPath(item.poster_path || item.backdrop_path, 'w185')!} alt={item.title} />
+                      <ImageOverlay />
 
-                <CardActions>
-                  <IconButton onClick={() => handleEdit(item)}>
-                    <Edit2 size={14} />
-                  </IconButton>
-                  <IconButton onClick={() => handleDelete(item)}>
-                    <Trash2 size={14} />
-                  </IconButton>
-                </CardActions>
+                      <CardActions>
+                        <IconButton onClick={() => toggleFlip(item.id)} title="More Details">
+                          <Info size={14} />
+                        </IconButton>
+                        <IconButton onClick={() => handleEdit(item)}>
+                          <Edit2 size={14} />
+                        </IconButton>
+                        <IconButton onClick={() => handleDelete(item)}>
+                          <Trash2 size={14} />
+                        </IconButton>
+                      </CardActions>
 
-                {getProviderBadgesForTile(item)}
+                      {getProviderBadgesForTile(item)}
 
-                <TypeBadge>
-                  {item.type === "movie" ? <Film size={12} /> : <Tv size={12} />}
-                  {item.type === "movie" ? "Movie" : "TV Show"}
-                </TypeBadge>
+                      <TypeBadge>
+                        {item.type === "movie" ? <Film size={12} /> : <Tv size={12} />}
+                        {item.type === "movie" ? "Movie" : "TV Show"}
+                      </TypeBadge>
 
-                <CardInfo>
-                  <CardTitle>{item.title}</CardTitle>
+                      <CardInfo>
+                        <CardTitle>{item.title}</CardTitle>
 
-                  {item.type === 'tv' && (() => {
-                    const currentSeason = (item as Media & { currentSeason?: number }).currentSeason;
-                    const currentEpisode = (item as Media & { currentEpisode?: number }).currentEpisode;
-                    
-                    let totalEpisodes = 0;
-                    
-                    // Calculate total episodes from episodes array or seasons array
-                    if (item.episodes && item.episodes.length > 0) {
-                      totalEpisodes = item.episodes.reduce((sum, season) => {
-                        return sum + (Array.isArray(season.episodes) ? season.episodes.length : 0);
-                      }, 0);
-                    } else if (item.seasons && item.seasons.length > 0) {
-                      totalEpisodes = item.seasons.reduce((sum, season) => {
-                        return sum + (season.episode_count || 0);
-                      }, 0);
-                    }
-                    
-                    // Show progress if we have episode data
-                    if (totalEpisodes > 0) {
-                      return (
-                        <ProgressContainer>
-                          <ProgressText>
-                            S{currentSeason ?? 1} E{currentEpisode ?? 1} • {totalEpisodes} total episodes
-                          </ProgressText>
-                          <ProgressBar>
-                            <ProgressFill width={calculateProgress(item)} />
-                          </ProgressBar>
-                        </ProgressContainer>
-                      );
-                    }
-                    
-                    // Fallback: show season/episode if available
-                    if (currentSeason && currentEpisode) {
-                      return (
-                        <ProgressContainer>
-                          <ProgressText>
-                            Season {currentSeason}, Episode {currentEpisode}
-                          </ProgressText>
-                        </ProgressContainer>
-                      );
-                    }
-                    
-                    return null;
-                  })()}
+                        {item.type === 'tv' && (() => {
+                          const currentSeason = (item as Media & { currentSeason?: number }).currentSeason;
+                          const currentEpisode = (item as Media & { currentEpisode?: number }).currentEpisode;
+                          
+                          let totalEpisodes = 0;
+                          
+                          // Calculate total episodes from episodes array or seasons array
+                          if (item.episodes && item.episodes.length > 0) {
+                            totalEpisodes = item.episodes.reduce((sum, season) => {
+                              return sum + (Array.isArray(season.episodes) ? season.episodes.length : 0);
+                            }, 0);
+                          } else if (item.seasons && item.seasons.length > 0) {
+                            totalEpisodes = item.seasons.reduce((sum, season) => {
+                              return sum + (season.episode_count || 0);
+                            }, 0);
+                          }
+                          
+                          // Show progress if we have episode data
+                          if (totalEpisodes > 0) {
+                            return (
+                              <ProgressContainer>
+                                <ProgressText>
+                                  S{currentSeason ?? 1} E{currentEpisode ?? 1} • {totalEpisodes} total episodes
+                                </ProgressText>
+                                <ProgressBar>
+                                  <ProgressFill width={calculateProgress(item)} />
+                                </ProgressBar>
+                              </ProgressContainer>
+                            );
+                          }
+                          
+                          // Fallback: show season/episode if available
+                          if (currentSeason && currentEpisode) {
+                            return (
+                              <ProgressContainer>
+                                <ProgressText>
+                                  Season {currentSeason}, Episode {currentEpisode}
+                                </ProgressText>
+                              </ProgressContainer>
+                            );
+                          }
+                          
+                          return null;
+                        })()}
 
-                  <CardBottom>
-                    <Stars>
-                      {[...Array(5)].map((_, i) => (
-                        <Star key={i} $filled={i < item.rating ? true : undefined} viewBox="0 0 20 20">
-                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                        </Star>
-                      ))}
-                    </Stars>
+                        <CardBottom>
+                          <Stars>
+                            {[...Array(5)].map((_, i) => (
+                              <Star key={i} $filled={i < item.rating ? true : undefined} viewBox="0 0 20 20">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                              </Star>
+                            ))}
+                          </Stars>
 
-                    <StatusBadge $status={item.status}>{getStatus(item)}</StatusBadge>
-                  </CardBottom>
-                </CardInfo>
-              </ImageContainer>
-            </Card>
-          ))}
+                          <StatusBadge $status={item.status}>{getStatus(item)}</StatusBadge>
+                        </CardBottom>
+                      </CardInfo>
+                    </ImageContainer>
+                  </CardFront>
+
+                  {/* Back of Card */}
+                  <CardBack>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.5rem' }}>
+                      <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#c084fc', margin: 0 }}>{item.title || item.name}</h3>
+                      <IconButton onClick={() => toggleFlip(item.id)} style={{ position: 'static' }}>
+                        <Info size={14} />
+                      </IconButton>
+                    </div>
+
+                    <div style={{ fontSize: '0.875rem', color: '#d1d5db', lineHeight: '1.5', marginBottom: '1rem' }}>
+                      {item.overview ? (
+                        <p style={{ margin: 0 }}>{item.overview.length > 200 ? `${item.overview.slice(0, 200)}...` : item.overview}</p>
+                      ) : (
+                        <p style={{ margin: 0, fontStyle: 'italic' }}>No overview available</p>
+                      )}
+                    </div>
+
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', fontSize: '0.875rem' }}>
+                      {item.release_date && (
+                        <div>
+                          <span style={{ color: '#9ca3af', fontWeight: 600 }}>Release Date: </span>
+                          <span style={{ color: '#d1d5db' }}>{new Date(item.release_date).toLocaleDateString()}</span>
+                        </div>
+                      )}
+                      {item.first_air_date && (
+                        <div>
+                          <span style={{ color: '#9ca3af', fontWeight: 600 }}>First Air Date: </span>
+                          <span style={{ color: '#d1d5db' }}>{new Date(item.first_air_date).toLocaleDateString()}</span>
+                        </div>
+                      )}
+                      {item.vote_average > 0 && (
+                        <div>
+                          <span style={{ color: '#9ca3af', fontWeight: 600 }}>TMDB Rating: </span>
+                          <span style={{ color: '#fbbf24', fontWeight: 600 }}>{item.vote_average.toFixed(1)}/10</span>
+                        </div>
+                      )}
+                      {item.genres && item.genres.length > 0 && (
+                        <div>
+                          <span style={{ color: '#9ca3af', fontWeight: 600 }}>Genres: </span>
+                          <span style={{ color: '#d1d5db' }}>{item.genres.map(g => g.name).join(', ')}</span>
+                        </div>
+                      )}
+                    </div>
+
+                    <div style={{ marginTop: 'auto', paddingTop: '1rem' }}>
+                      <IconButton 
+                        onClick={() => handleNavigateToDetails(item)}
+                        style={{ 
+                          width: '100%', 
+                          background: 'linear-gradient(to right, #a855f7, #ec4899)',
+                          border: 'none',
+                          padding: '0.75rem',
+                          gap: '0.5rem',
+                          fontWeight: 600
+                        }}
+                      >
+                        <ExternalLink size={16} />
+                        View Full Details
+                      </IconButton>
+                    </div>
+                  </CardBack>
+                </CardInner>
+              </Card>
+            );
+          })}
         </Grid>
       </GridContainer>
 
