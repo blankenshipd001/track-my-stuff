@@ -106,8 +106,7 @@ export interface Media {
   };
   episodes?: Array<{
     season_number: number;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    episodes: any[];
+    episodes: Array<{ name: string }>;
   }>;
   seasons?: Array<{
     season_number: number;

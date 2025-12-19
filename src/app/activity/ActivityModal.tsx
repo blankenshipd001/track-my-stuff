@@ -43,13 +43,15 @@ const WatchlistModal = ({
   if (!show) return null;
 
   // Derive totals for TV shows (display only)
-  const totalNumberOfSeasons = formData.type === 'tv' && Array.isArray(formData.episodes) ? formData.episodes.length : 0;
-  const totalNumberOfEpisodes = formData.type === 'tv' && Array.isArray(formData.episodes)
-    ? formData.episodes.reduce((sum, season) => {
-        const count = Array.isArray(season.episodes) ? season.episodes.length : 0;
-        return sum + count;
-      }, 0)
-    : 0;
+  const totalNumberOfSeasons = formData.type === 'tv' && typeof formData.seasonCount === 'number' ? formData.seasonCount : 0;
+  const totalNumberOfEpisodes = formData.type === 'tv' && typeof formData.episodeCount === 'number' ? formData.episodeCount : 0;
+
+  // Get max episodes for the current season
+  // const currentSeasonNumber = (formData as Media & { currentSeason?: number }).currentSeason ?? 1;
+  const maxEpisodesInCurrentSeason = 23;
+  // = formData.type === 'tv' && Array.isArray(formData.seasons)
+  //   ? (formData.seasons.find(s => s.season_number === currentSeasonNumber)?.episode_count ?? 0)
+  //   : 0;
 
   return (
     <Modal onClick={handleCancel}>
@@ -178,10 +180,26 @@ const WatchlistModal = ({
                       <Input
                         type="number"
                         min="1"
+                        max={totalNumberOfSeasons > 0 ? totalNumberOfSeasons : undefined}
                         value={(formData as Media & { currentSeason?: number }).currentSeason ?? 1}
                         onChange={(e) => {
-                          const seasonVal = e.target.value === '' ? 1 : Math.max(1, parseInt(e.target.value, 10) || 1);
-                          setFormData(prev => ({ ...prev, currentSeason: seasonVal }));
+                          const seasonVal = e.target.value === '' ? 1 : Math.max(1, Math.min(totalNumberOfSeasons || 1, parseInt(e.target.value, 10) || 1));
+                          
+                          // Check if the new season has fewer episodes than the current episode number
+                          const maxEpisodesInNewSeason = Array.isArray(formData.seasons)
+                            ? (formData.seasons.find(s => s.season_number === seasonVal)?.episode_count ?? 0)
+                            : 0;
+                          
+                          const currentEpisode = (formData as Media & { currentEpisode?: number }).currentEpisode ?? 1;
+                          const adjustedEpisode = maxEpisodesInNewSeason > 0 && currentEpisode > maxEpisodesInNewSeason 
+                            ? maxEpisodesInNewSeason 
+                            : currentEpisode;
+
+                          setFormData(prev => ({ 
+                            ...prev, 
+                            currentSeason: seasonVal,
+                            currentEpisode: adjustedEpisode
+                          }));
                         }}
                         placeholder="Season"
                       />
@@ -191,9 +209,10 @@ const WatchlistModal = ({
                       <Input
                         type="number"
                         min="1"
+                        max={maxEpisodesInCurrentSeason > 0 ? maxEpisodesInCurrentSeason : undefined}
                         value={(formData as Media & { currentEpisode?: number }).currentEpisode ?? 1}
                         onChange={(e) => {
-                          const epVal = e.target.value === '' ? 1 : Math.max(1, parseInt(e.target.value, 10) || 1);
+                          const epVal = e.target.value === '' ? 1 : Math.max(1, Math.min(maxEpisodesInCurrentSeason || 1, parseInt(e.target.value, 10) || 1));
                           setFormData(prev => ({ ...prev, currentEpisode: epVal }));
                         }}
                         placeholder="Episode"

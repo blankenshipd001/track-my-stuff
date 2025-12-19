@@ -8,6 +8,7 @@ import { Media } from "@/data-models/media.interface";
 import { getProxyImageUrlForPath } from "@/lib/imageUrl";
 import NextImage from "next/image";
 import WatchlistModal from "./ActivityModal";
+import SearchModal from "./SearchModal";
 import {
   Container,
   Header,
@@ -49,7 +50,7 @@ import {
   LegendDot,
   LegendLabel,
 } from "./styles";
-import { requestRemoveFromWatchList, updateMovie } from "@/utils/api/contentApi";
+import { addToWatchList, requestRemoveFromWatchList, updateMovie } from "@/utils/api/contentApi";
 
 interface ProviderDetails {
   name: string;
@@ -67,6 +68,7 @@ const StreamingWatchlist = ({ watchlist, user }: MyWatchlistProps) => {
   const router = useRouter();
   const [filter, setFilter] = useState("all");
   const [showModal, setShowModal] = useState(false);
+  const [showSearchModal, setShowSearchModal] = useState(false);
   const [editingId, setEditingId] = useState<number | null | undefined>(null);
   const [formData, setFormData] = useState<Media>({} as Media);
   const [isLegendCollapsed, setIsLegendCollapsed] = useState(false);
@@ -102,7 +104,21 @@ const StreamingWatchlist = ({ watchlist, user }: MyWatchlistProps) => {
   const handleAdd = () => {
     setEditingId(null);
     resetForm();
-    setShowModal(true);
+    setShowSearchModal(true);
+  };
+
+  const handleSelectTitle = async (selectedMedia: Media) => {
+    // Fetch full details for the selected title
+    try {
+      const result = await addToWatchList(user?.uid as string, selectedMedia);
+      if (typeof result !== 'string') {
+        setFormData(result);
+        setEditingId(result?.id);
+        setShowModal(true);
+      }
+    } catch (err) {
+      console.error("Error fetching title details:", err);
+    }
   };
 
   const handleEdit = (item: Media) => {
@@ -132,6 +148,9 @@ const StreamingWatchlist = ({ watchlist, user }: MyWatchlistProps) => {
     }
 
     await requestRemoveFromWatchList(user.uid, movie);
+
+    // Refresh the page data
+    router.refresh();
   };
 
   const handleCancel = () => {
@@ -147,7 +166,7 @@ const StreamingWatchlist = ({ watchlist, user }: MyWatchlistProps) => {
       return "U";
     }
   }
-
+  
   const calculateProgress = (item: Media) => {
     if (item.type !== 'tv') return 0;
     
@@ -372,6 +391,14 @@ const StreamingWatchlist = ({ watchlist, user }: MyWatchlistProps) => {
           handleCancel={handleCancel}
           handleSave={handleSave}
           setFormData={setFormData}
+        />
+      )}
+
+      {showSearchModal && (
+        <SearchModal
+          show={showSearchModal}
+          onClose={() => setShowSearchModal(false)}
+          onSelectTitle={handleSelectTitle}
         />
       )}
 

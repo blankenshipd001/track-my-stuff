@@ -125,10 +125,14 @@ export const addToWatchList = async (uid: string, movie: Media): Promise<Media |
     const tvShow = await getTVDetails(`${movie.movieId}`);
     if (tvShow) {
       if (tvShow.episodes && Array.isArray(tvShow.episodes)) {
-        // Attach episodes data with season and episode information
+        console.log("TV Show episodes data: ", tvShow);
+        // Attach simplified episodes data with only episode names
         movie.episodes = tvShow.episodes.map((season) => ({
           season_number: season.season_number,
-          episodes: season.episodes || []
+          episodes: Array.isArray(season.episodes) 
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            ? season.episodes.map((ep: any) => ({ name: ep.name || `Episode ${ep.episode_number}` }))
+            : []
         }));
 
         movie.seasons = tvShow.episodes.map((season) => ({
@@ -187,7 +191,7 @@ export const updateMovie = async (uid: string, movie: Media): Promise<Media | st
   const documentRef: DocumentReference = doc(db, path, `${movie.id}`);
 
   let docRef: Media = movie;
-
+  
   await setDoc(documentRef, {
     ...movie,
   })
