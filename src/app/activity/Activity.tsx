@@ -76,6 +76,8 @@ const StreamingWatchlist = ({ watchlist, user }: MyWatchlistProps) => {
   const [formData, setFormData] = useState<Media>({} as Media);
   const [isLegendCollapsed, setIsLegendCollapsed] = useState(false);
   const [flippedCards, setFlippedCards] = useState<Set<number>>(new Set());
+  const [showAddDropdown, setShowAddDropdown] = useState(false);
+  const [shouldShowDetailsAfterAdd, setShouldShowDetailsAfterAdd] = useState(true);
   const { myFavoriteProviders } = useGetMyFavoriteProviders(user?.uid || "");
   
   const providers: Providers = {
@@ -105,10 +107,12 @@ const StreamingWatchlist = ({ watchlist, user }: MyWatchlistProps) => {
     setFormData({} as Media);
   };
 
-  const handleAdd = () => {
+  const handleAdd = (showDetails: boolean) => {
     setEditingId(null);
     resetForm();
+    setShouldShowDetailsAfterAdd(showDetails);
     setShowSearchModal(true);
+    setShowAddDropdown(false);
   };
 
   const handleSelectTitle = async (selectedMedia: Media) => {
@@ -118,7 +122,12 @@ const StreamingWatchlist = ({ watchlist, user }: MyWatchlistProps) => {
       if (typeof result !== 'string') {
         setFormData(result);
         setEditingId(result?.id);
-        setShowModal(true);
+        if (shouldShowDetailsAfterAdd) {
+          setShowModal(true);
+        } else {
+          // Quick add without showing modal - refresh the page
+          router.refresh();
+        }
       }
     } catch (err) {
       console.error("Error fetching title details:", err);
@@ -285,13 +294,91 @@ const StreamingWatchlist = ({ watchlist, user }: MyWatchlistProps) => {
       <Header>
         <HeaderTop>
           <div>
-            <Title>Activity</Title>
+            <Title>My Watchlist</Title>
             <Subtitle>Track what you&apos;re watching across all platforms</Subtitle>
           </div>
-          <AddButton onClick={handleAdd}>
-            <Plus size={20} />
-            Add Title
-          </AddButton>
+          <div style={{ position: 'relative' }}>
+            <AddButton onClick={() => setShowAddDropdown(!showAddDropdown)}>
+              <Plus size={20} />
+              Add Title
+              <ChevronDown size={16} style={{ marginLeft: '0.25rem' }} />
+            </AddButton>
+            {showAddDropdown && (
+              <div style={{
+                position: 'absolute',
+                top: '100%',
+                right: 0,
+                marginTop: '0.5rem',
+                background: 'rgba(17, 24, 39, 0.95)',
+                backdropFilter: 'blur(8px)',
+                border: '1px solid rgba(168, 85, 247, 0.3)',
+                borderRadius: '0.75rem',
+                overflow: 'hidden',
+                boxShadow: '0 10px 25px rgba(0, 0, 0, 0.5)',
+                minWidth: '200px',
+                zIndex: 50
+              }}>
+                <button
+                  onClick={() => handleAdd(false)}
+                  style={{
+                    width: '100%',
+                    padding: '0.75rem 1rem',
+                    textAlign: 'left',
+                    background: 'transparent',
+                    border: 'none',
+                    color: '#e5e7eb',
+                    cursor: 'pointer',
+                    fontSize: '0.875rem',
+                    fontWeight: 500,
+                    transition: 'all 0.2s',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = 'rgba(168, 85, 247, 0.2)';
+                    e.currentTarget.style.color = '#c084fc';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = 'transparent';
+                    e.currentTarget.style.color = '#e5e7eb';
+                  }}
+                >
+                  <Plus size={16} />
+                  Quick Add
+                </button>
+                <button
+                  onClick={() => handleAdd(true)}
+                  style={{
+                    width: '100%',
+                    padding: '0.75rem 1rem',
+                    textAlign: 'left',
+                    background: 'transparent',
+                    border: 'none',
+                    color: '#e5e7eb',
+                    cursor: 'pointer',
+                    fontSize: '0.875rem',
+                    fontWeight: 500,
+                    transition: 'all 0.2s',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = 'rgba(168, 85, 247, 0.2)';
+                    e.currentTarget.style.color = '#c084fc';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = 'transparent';
+                    e.currentTarget.style.color = '#e5e7eb';
+                  }}
+                >
+                  <Edit2 size={16} />
+                  Add with Details
+                </button>
+              </div>
+            )}
+          </div>
         </HeaderTop>
 
         <StatsGrid>

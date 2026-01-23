@@ -20,7 +20,8 @@ export async function POST(req: Request) {
     name: '__session',
     value: sessionCookie,
     httpOnly: true, 
-    secure: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
     path: '/',
     maxAge: expiresIn / 1000,
   });
