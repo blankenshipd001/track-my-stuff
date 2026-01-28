@@ -1,5 +1,3 @@
-/* eslint-env jest */
-
 // Minimal polyfills for Response and Headers so the route code (which uses
 // the Web Fetch Response/Headers API) can run inside Jest's Node environment.
 class MockHeaders {

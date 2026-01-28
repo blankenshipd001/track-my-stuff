@@ -1,4 +1,3 @@
-/* eslint-env jest */
 /* Simple branch tests for the image proxy route */
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const routeModule = require('./route');

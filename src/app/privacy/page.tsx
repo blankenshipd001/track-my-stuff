@@ -19,7 +19,7 @@ export default function PrivacyPolicyPage() {
         <section>
           <h2 className="text-2xl font-semibold mb-4">1. Introduction</h2>
           <p>
-            Welcome to Movies Tracker ("we," "our," or "us"). We respect your privacy and are committed 
+            Welcome to Movies Tracker (&quot;we,&quot; &quot;our,&quot; or &quot;us&quot;). We respect your privacy and are committed 
             to protecting your personal data. This privacy policy explains how we collect, use, and 
             safeguard your information when you use our website and mobile application.
           </p>
@@ -87,7 +87,7 @@ export default function PrivacyPolicyPage() {
         <section>
           <h2 className="text-2xl font-semibold mb-4">4. Data Storage and Security</h2>
           <p>
-            Your data is stored securely using Firebase, Google's backend platform. We implement 
+            Your data is stored securely using Firebase, Googles backend platform. We implement 
             industry-standard security measures including:
           </p>
           <ul className="list-disc pl-6 space-y-2">
@@ -157,7 +157,7 @@ export default function PrivacyPolicyPage() {
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold mb-4">8. Children's Privacy</h2>
+          <h2 className="text-2xl font-semibold mb-4">8. Children&apos;s Privacy</h2>
           <p>
             Our service is not intended for children under 13 years of age. We do not knowingly collect 
             personal information from children under 13. If you believe we have collected information 
@@ -180,7 +180,7 @@ export default function PrivacyPolicyPage() {
           <p>
             Your information may be transferred to and processed in countries other than your own. 
             We use Firebase (Google Cloud), which has data centers worldwide. These transfers are 
-            protected by appropriate safeguards, including Google's compliance with relevant data 
+            protected by appropriate safeguards, including Google&apos;s compliance with relevant data 
             protection frameworks.
           </p>
         </section>
@@ -198,7 +198,7 @@ export default function PrivacyPolicyPage() {
           <h2 className="text-2xl font-semibold mb-4">12. Changes to This Privacy Policy</h2>
           <p>
             We may update this privacy policy from time to time. We will notify you of significant 
-            changes by posting the new policy on this page and updating the "Last Updated" date. 
+            changes by posting the new policy on this page and updating the &quot;Last Updated&quot; date. 
             Continued use of our service after changes indicates your acceptance of the updated policy.
           </p>
         </section>
@@ -243,7 +243,7 @@ export default function PrivacyPolicyPage() {
           <ul className="list-disc pl-6 space-y-2">
             <li>Right of access to your personal data</li>
             <li>Right to rectification of inaccurate data</li>
-            <li>Right to erasure ("right to be forgotten")</li>
+            <li>Right to erasure (&quot;right to be forgotten&quot;)</li>
             <li>Right to restriction of processing</li>
             <li>Right to data portability</li>
             <li>Right to object to processing</li>

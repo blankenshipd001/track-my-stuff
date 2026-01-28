@@ -30,6 +30,9 @@ export default defineConfig([
   // Relax rules specifically for test files
   {
     files: ['**/*.spec.ts', '**/*.spec.tsx', '**/*.test.ts', '**/*.test.tsx'],
+    languageOptions: {
+      globals: globals.jest,
+    },
     rules: {
       '@typescript-eslint/no-explicit-any': 'off',
       'react/display-name': 'off',
