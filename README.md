@@ -1,5 +1,13 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
+## Project Structure
+
+This is a **monorepo** containing both a Next.js web app and a React Native mobile app:
+
+- **`/src`** - Next.js web application
+- **`/mobile`** - React Native mobile app (Expo)
+- **`/shared`** - Shared code (types, utilities) used by both web and mobile
+
 ## Getting Started
 
 The folder structure and why:
@@ -9,7 +17,37 @@ The folder structure and why:
 
 The testPage folder under `/app` can be used to test out styles and components and can be a catch all for fun things we don't want to lose
 
-### Working on the code
+## Mobile App
+
+A React Native mobile app is available in the `/mobile` directory. See [mobile/README.md](mobile/README.md) for full mobile documentation.
+
+### Quick Start - Mobile
+
+```bash
+# Install mobile dependencies
+npm run mobile:install
+
+# Start the Expo dev server
+npm run mobile
+
+# Or run directly on a platform
+npm run mobile:ios      # iOS Simulator
+npm run mobile:android  # Android Emulator
+```
+
+**Important**: The mobile app calls the Next.js API routes, so you must have the web dev server running:
+
+```bash
+# Terminal 1 - Start Next.js backend
+npm run dev
+
+# Terminal 2 - Start mobile app
+npm run mobile
+```
+
+For detailed mobile setup, features, and troubleshooting, see [mobile/README.md](mobile/README.md).
+
+### Working on the code (Web)
 
  - install dependencies
  ```bash
