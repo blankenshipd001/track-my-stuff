@@ -11,10 +11,13 @@ import {
   Divider,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
+import GoogleIcon from "@mui/icons-material/Google";
 import Image from "next/image";
 import Logo from "@utils/assets/logo.svg";
 import { StandardButton } from "@components/buttons";
 import { logoutUser } from "@/lib/clientLogout";
+import { auth, googleProvider } from "@/lib/firebase/config";
+import { signInWithPopup } from "firebase/auth";
 import UserMenu from "./user-menu";
 
 interface HeaderClientProps {
@@ -36,6 +39,50 @@ const HeaderClient = ({ user, navItems }: HeaderClientProps) => {
 
     router.push("/");
     router.refresh();
+  };
+
+  const handleLogin = async () => {
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      const token = await result.user.getIdToken();
+
+      await fetch("/api/session", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token }),
+      });
+
+      router.push("/activity");
+      router.refresh();
+    } catch (error) {
+      console.error("Login error:", error);
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    try {
+      const user = auth.currentUser;
+      if (!user) return;
+
+      const token = await user.getIdToken();
+
+      const response = await fetch("/api/delete-account", {
+        method: "DELETE",
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        router.push("/");
+        router.refresh();
+      } else {
+        console.error("Failed to delete account");
+      }
+    } catch (error) {
+      console.error("Delete account error:", error);
+    }
   };
 
   return (
@@ -66,10 +113,14 @@ const HeaderClient = ({ user, navItems }: HeaderClientProps) => {
         ))}
         {user ? (
           <Suspense fallback={<Box sx={{ width: 36, height: 36 }} />}>
-            <UserMenu user={user} onLogout={handleLogout} />
+            <UserMenu user={user} onLogout={handleLogout} onDeleteAccount={handleDeleteAccount} />
           </Suspense>
         ) : (
-          <StandardButton label="LOG IN" onClickAction={() => router.push("/login")} />
+          <StandardButton
+            label="Sign in"
+            onClickAction={handleLogin}
+            startIcon={<GoogleIcon />}
+          />
         )}
       </Box>
 
@@ -112,13 +163,12 @@ const HeaderClient = ({ user, navItems }: HeaderClientProps) => {
             </ListItemButton>
           ) : (
             <ListItemButton
-              onClick={() => {
-                router.push("/login");
+              onClick={async () => {
                 setDrawerOpen(false);
-                router.refresh();
+                await handleLogin();
               }}
             >
-              <ListItemText primary="Log In" />
+              <ListItemText primary="Sign in" />
             </ListItemButton>
           )}
         </List>

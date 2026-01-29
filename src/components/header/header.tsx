@@ -11,7 +11,7 @@ export const Header = async () => {
     ...(user
       ? [
           { label: "Watchlist", path: "/watched" },
-          { label: "Streaming", path: "/streaming" },
+          // { label: "Streaming", path: "/streaming" },
           { label: "My Providers", path: "/providers" },
           { label: "Activity", path: "/activity" },
         ]

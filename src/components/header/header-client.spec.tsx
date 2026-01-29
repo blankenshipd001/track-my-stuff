@@ -14,10 +14,22 @@ jest.mock('next/navigation', () => ({
 
 jest.mock('@/lib/clientLogout', () => ({ logoutUser: jest.fn() }));
 
-// Stub UserMenu to expose the onLogout prop so tests can trigger it
+// Mock Firebase auth
+const mockSignInWithPopup = jest.fn();
+jest.mock('firebase/auth', () => ({
+  signInWithPopup: (...args: any[]) => mockSignInWithPopup(...args),
+}));
+
+jest.mock('@/lib/firebase/config', () => ({
+  auth: {},
+  googleProvider: {},
+}));
+
+// Stub UserMenu to expose the onLogout and onDeleteAccount props so tests can trigger them
 jest.mock('./user-menu', () => (props: any) => (
   <div data-testid="user-menu">
     <button onClick={() => props.onLogout?.()}>Logout</button>
+    <button onClick={() => props.onDeleteAccount?.()}>Delete Account</button>
   </div>
 ));
 
@@ -26,13 +38,14 @@ import HeaderClient from './header-client';
 describe('HeaderClient', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    global.fetch = jest.fn();
   });
 
   it('renders nav items and login button when user is null', () => {
     renderWithProviders(<HeaderClient user={null} navItems={[{ label: 'Home', path: '/home' }]} />);
 
     expect(screen.getByText('Home')).toBeVisible();
-    expect(screen.getByText('LOG IN')).toBeVisible();
+    expect(screen.getByText('Sign in')).toBeVisible();
   });
 
   it('navigates when buttons are clicked', () => {
@@ -40,9 +53,29 @@ describe('HeaderClient', () => {
 
     fireEvent.click(screen.getByText('Home'));
     expect(pushMock).toHaveBeenCalledWith('/home');
+  });
 
-    fireEvent.click(screen.getByText('LOG IN'));
-    expect(pushMock).toHaveBeenCalledWith('/login');
+  it('triggers Google sign-in when login button clicked', async () => {
+    const mockUser = { getIdToken: jest.fn().mockResolvedValue('fake-token') };
+    mockSignInWithPopup.mockResolvedValue({ user: mockUser });
+    (global.fetch as jest.Mock).mockResolvedValue({ ok: true });
+
+    renderWithProviders(<HeaderClient user={null} navItems={[{ label: 'Home', path: '/home' }]} />);
+
+    fireEvent.click(screen.getByText('Sign in'));
+
+    await (async () => {
+      await new Promise((r) => setTimeout(r, 0));
+    })();
+
+    expect(mockSignInWithPopup).toHaveBeenCalled();
+    expect(global.fetch).toHaveBeenCalledWith('/api/session', expect.objectContaining({
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token: 'fake-token' }),
+    }));
+    expect(pushMock).toHaveBeenCalledWith('/activity');
+    expect(refreshMock).toHaveBeenCalled();
   });
 
   it('shows user menu when user is present and handles logout', async () => {
@@ -81,7 +114,7 @@ describe('HeaderClient', () => {
     // find the drawer's dialog and scope queries to it
     const drawerDialog = screen.getByRole('dialog');
     const buttonsInDrawer = within(drawerDialog).getAllByRole('button');
-    const navBtn = buttonsInDrawer.find((b) => b.textContent?.includes('Movies'));
+    const navBtn = buttonsInDrawer.find((b: any) => b.textContent?.includes('Movies'));
     if (navBtn) fireEvent.click(navBtn);
     expect(pushMock).toHaveBeenCalledWith('/movies');
 
@@ -89,9 +122,33 @@ describe('HeaderClient', () => {
     if (menuButton) fireEvent.click(menuButton);
     const drawerDialog2 = screen.getByRole('dialog');
     const buttonsInDrawer2 = within(drawerDialog2).getAllByRole('button');
-    const logoutBtn = buttonsInDrawer2.find((b) => /Log Out/i.test(b.textContent || ''));
+    const logoutBtn = buttonsInDrawer2.find((b: any) => /Log Out/i.test(b.textContent || ''));
     if (logoutBtn) fireEvent.click(logoutBtn);
 
     expect(logoutUser).toHaveBeenCalled();
+  });
+
+  it('triggers Google sign-in from mobile drawer when not logged in', async () => {
+    const mockUser = { getIdToken: jest.fn().mockResolvedValue('fake-token') };
+    mockSignInWithPopup.mockResolvedValue({ user: mockUser });
+    (global.fetch as jest.Mock).mockResolvedValue({ ok: true });
+
+    renderWithProviders(<HeaderClient user={null} navItems={[{ label: 'Movies', path: '/movies' }]} />);
+
+    // open the drawer
+    const menuIcon = screen.getByTestId('MenuIcon');
+    const menuButton = menuIcon.closest('button');
+    if (menuButton) fireEvent.click(menuButton);
+
+    const drawerDialog = screen.getByRole('dialog');
+    const buttonsInDrawer = within(drawerDialog).getAllByRole('button');
+    const loginBtn = buttonsInDrawer.find((b: any) => b.textContent?.includes('Sign in'));
+    if (loginBtn) fireEvent.click(loginBtn);
+
+    await (async () => {
+      await new Promise((r) => setTimeout(r, 0));
+    })();
+
+    expect(mockSignInWithPopup).toHaveBeenCalled();
   });
 });

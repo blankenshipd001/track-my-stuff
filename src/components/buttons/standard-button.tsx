@@ -6,16 +6,18 @@ import { Button } from "@mui/material";
 interface StandardButtonProps {
   label: string;
   onClickAction?: () => void;
+  startIcon?: React.ReactNode;
 }
 
 /**
  * A styled button that is purple, bold, white text, rounded and responsive to hover/focus.
  */
-export const StandardButton = ({ label, onClickAction }: StandardButtonProps) => {
+export const StandardButton = ({ label, onClickAction, startIcon }: StandardButtonProps) => {
   return (
     <Button
       variant="outlined"
       onClick={onClickAction}
+      startIcon={startIcon}
       sx={{
         color: "white",
         backgroundColor: "#782FEF",

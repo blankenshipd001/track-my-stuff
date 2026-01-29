@@ -251,8 +251,8 @@ const Preferences = ({ user }: PreferencesProps) => {
       <Header>
         <HeaderTop>
           <div>
-            <Title>Streaming Preferences</Title>
-            <Subtitle>Select your favorite streaming providers</Subtitle>
+            <Title>Streaming Providers</Title>
+            <Subtitle>Select your current streaming providers</Subtitle>
           </div>
           <AddButton 
             onClick={handleAddToFavorites}
