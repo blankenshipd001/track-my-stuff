@@ -1,9 +1,24 @@
 import React from 'react';
 import { renderWithProviders, screen, fireEvent, waitFor } from '@/utils/test-utils';
+import { useRouter } from 'next/navigation';
 
 import UserMenu from './user-menu';
 
 describe('UserMenu', () => {
+  const mockPush = jest.fn();
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+    (useRouter as jest.Mock).mockReturnValue({
+      push: mockPush,
+      replace: jest.fn(),
+      refresh: jest.fn(),
+      back: jest.fn(),
+      forward: jest.fn(),
+      prefetch: jest.fn(),
+    });
+  });
+
   it('shows email in menu and calls onLogout when Log Out clicked', () => {
     const onLogout = jest.fn();
     const onDeleteAccount = jest.fn();
@@ -78,5 +93,28 @@ describe('UserMenu', () => {
     await waitFor(() => {
       expect(onDeleteAccount).toHaveBeenCalled();
     });
+  });
+
+  it('navigates to /providers when Add Providers button is clicked', () => {
+    const onLogout = jest.fn();
+    const onDeleteAccount = jest.fn();
+    const user = { uid: 'u1', email: 'test@example.com', picture: '' };
+    const mockPush = jest.fn();
+    
+    (useRouter as jest.Mock).mockReturnValue({
+      push: mockPush,
+    });
+
+    renderWithProviders(<UserMenu user={user} onLogout={onLogout} onDeleteAccount={onDeleteAccount} />);
+
+    // Click the avatar button to open menu
+    const avatarBtn = screen.getByRole('button');
+    fireEvent.click(avatarBtn);
+
+    // Click Add Providers button
+    const addProvidersBtn = screen.getByRole('button', { name: /Add Providers/i });
+    fireEvent.click(addProvidersBtn);
+
+    expect(mockPush).toHaveBeenCalledWith('/providers');
   });
 });

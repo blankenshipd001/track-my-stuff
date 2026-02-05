@@ -3,7 +3,10 @@ import { renderWithProviders, screen, fireEvent, waitFor } from '@/utils/test-ut
 
 // mock next/navigation
 const refreshMock = jest.fn();
-jest.mock('next/navigation', () => ({ useRouter: () => ({ refresh: refreshMock }) }));
+jest.mock('next/navigation', () => ({
+  useRouter: () => ({ refresh: refreshMock }),
+  useServerInsertedHTML: jest.fn((callback) => callback()),
+}));
 
 // mock api helper
 const addToWatchListMock = jest.fn();

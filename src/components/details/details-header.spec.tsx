@@ -5,7 +5,10 @@ import { renderWithProviders, screen, fireEvent } from '@/utils/test-utils';
 jest.mock('@/components/buttons/AddToWatchlist', () => () => <div data-testid="add">AddStub</div>);
 
 const backMock = jest.fn();
-jest.mock('next/navigation', () => ({ useRouter: () => ({ back: backMock }) }));
+jest.mock('next/navigation', () => ({
+  useRouter: () => ({ back: backMock }),
+  useServerInsertedHTML: jest.fn((callback) => callback()),
+}));
 
 import DetailsHeader from './details-header';
 

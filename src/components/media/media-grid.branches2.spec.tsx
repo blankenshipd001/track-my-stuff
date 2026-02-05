@@ -7,7 +7,10 @@ jest.mock('next/image', () => (props: any) => {
 
 const pushMock = jest.fn();
 const refreshMock = jest.fn();
-jest.mock('next/navigation', () => ({ useRouter: () => ({ push: pushMock, refresh: refreshMock }) }));
+jest.mock('next/navigation', () => ({
+  useRouter: () => ({ push: pushMock, refresh: refreshMock }),
+  useServerInsertedHTML: jest.fn((callback) => callback()),
+}));
 
 const enqueueMock = jest.fn();
 jest.mock('@/components/notifications/useNotificationBar', () => () => ({ enqueueNotificationBar: enqueueMock, NotificationBarComponent: null }));

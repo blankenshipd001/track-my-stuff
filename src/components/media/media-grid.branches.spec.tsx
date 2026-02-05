@@ -1,12 +1,15 @@
 import React from 'react';
-import { renderWithProviders, screen, fireEvent } from '@/utils/test-utils';
+import { renderWithProviders, screen, fireEvent, waitFor } from '@/utils/test-utils';
 
 jest.mock('next/image', () => (props: any) => {
   return <img {...props} alt={props.alt} />;
 });
 
 const pushMock = jest.fn();
-jest.mock('next/navigation', () => ({ useRouter: () => ({ push: pushMock, refresh: jest.fn() }) }));
+jest.mock('next/navigation', () => ({
+  useRouter: () => ({ push: pushMock, refresh: jest.fn() }),
+  useServerInsertedHTML: jest.fn((callback) => callback()),
+}));
 
 const enqueueMock = jest.fn();
 jest.mock('@/components/notifications/useNotificationBar', () => () => ({ enqueueNotificationBar: enqueueMock, NotificationBarComponent: null }));
@@ -52,18 +55,21 @@ describe('MediaGrid branch coverage', () => {
   expect(enqueueMock).toHaveBeenCalledWith('Could not load TV details', 'error');
   });
 
-  it('calls addClicked directly when movie has no name', () => {
+  it('calls addClicked directly when movie has no name', async () => {
     const movie = { id: 3, movieId: 3, poster_path: '/p3.jpg', title: 'NoNameMovie' } as any;
-    const addClicked = jest.fn();
+    const addClicked = jest.fn().mockResolvedValue(undefined);
 
     renderWithProviders(<MediaGrid movies={[movie]} addClicked={addClicked} user={null} />);
 
      const listItems = screen.getAllByRole('listitem');
      const first = listItems[0];
      const svg = first.querySelector('svg');
+    
     if (svg) fireEvent.click(svg);
-
-    expect(addClicked).toHaveBeenCalledWith(movie);
+    
+    await waitFor(() => {
+      expect(addClicked).toHaveBeenCalledWith(movie);
+    });
   });
 
   it('when isWatchlist and no user, enqueue please log in message', () => {

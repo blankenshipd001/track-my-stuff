@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   IconButton,
   Avatar,
@@ -26,6 +27,7 @@ const UserMenu = ({
   onLogout: () => void;
   onDeleteAccount: () => Promise<void>;
 }) => {
+  const router = useRouter();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -61,6 +63,28 @@ const UserMenu = ({
         <Typography variant="body2" sx={{ mb: 2, color: "#ccc" }}>
           {user?.email}
         </Typography>
+        <Button
+          variant="outlined"
+          fullWidth
+          sx={{
+            color: "white",
+            background: "#782FEF",
+            fontWeight: "bold",
+            border: "1px solid #782FEF",
+            borderRadius: "100px",
+            mb: 1,
+            "&:hover": {
+              background: "#5b22c6",
+              borderColor: "#5b22c6",
+            },
+          }}
+          onClick={() => {
+            setAnchorEl(null);
+            router.push("/providers");
+          }}
+        >
+          Add Providers
+        </Button>
         <Button
           variant="outlined"
           fullWidth

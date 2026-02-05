@@ -1,5 +1,5 @@
 import React from 'react';
-import { renderWithProviders, screen, fireEvent } from '@/utils/test-utils';
+import { renderWithProviders, screen, fireEvent, waitFor } from '@/utils/test-utils';
 
 // Mock next/image so tests render predictably
 jest.mock('next/image', () => (props: any) => {
@@ -12,10 +12,16 @@ jest.mock('../provider/ProviderLogos', () => ({
 }));
 
 // Mock content API to avoid importing firebase/client which expects fetch in node
-jest.mock('@/utils/api/contentApi', () => ({ requestRemoveFromWatchList: jest.fn() }));
+jest.mock('@/utils/api/contentApi', () => ({
+  requestRemoveFromWatchList: jest.fn(),
+  getContent: jest.fn(() => Promise.resolve([])),
+}));
 
 const pushMock = jest.fn();
-jest.mock('next/navigation', () => ({ useRouter: () => ({ push: pushMock, refresh: jest.fn() }) }));
+jest.mock('next/navigation', () => ({
+  useRouter: () => ({ push: pushMock, refresh: jest.fn() }),
+  useServerInsertedHTML: jest.fn((callback) => callback()),
+}));
 
 // Mock notification hook
 jest.mock('@/components/notifications/useNotificationBar', () => () => ({
@@ -28,7 +34,7 @@ import { MediaGrid } from './media-grid';
 describe('MediaGrid', () => {
   beforeEach(() => jest.clearAllMocks());
 
-  it('renders movies and provider logos when provided', () => {
+  it('renders movies and provider logos when provided', async () => {
     const movie = {
       id: 1,
       movieId: 1,
@@ -38,6 +44,11 @@ describe('MediaGrid', () => {
     } as any;
 
     renderWithProviders(<MediaGrid movies={[movie]} user={{ uid: 'u1' }} />);
+
+    // Wait for async getContent call to complete
+    await waitFor(() => {
+      expect(screen.getByAltText(/My Movie/i)).toBeVisible();
+    });
 
     // Image component renders an <img> due to our mock; find by alt/title
     expect(screen.getByAltText(/My Movie/i)).toBeVisible();

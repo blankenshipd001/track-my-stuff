@@ -10,6 +10,7 @@ const pushMock = jest.fn();
 const refreshMock = jest.fn();
 jest.mock('next/navigation', () => ({
   useRouter: () => ({ push: pushMock, refresh: refreshMock }),
+  useServerInsertedHTML: jest.fn((callback) => callback()),
 }));
 
 jest.mock('@/lib/clientLogout', () => ({ logoutUser: jest.fn() }));

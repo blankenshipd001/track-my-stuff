@@ -14,7 +14,10 @@ jest.mock('@/utils/api/contentApi', () => ({ addToWatchList: jest.fn() }));
 
 // Mock next/navigation so useRouter is available in tests
 const pushMock = jest.fn();
-jest.mock('next/navigation', () => ({ useRouter: () => ({ push: pushMock, refresh: jest.fn() }) }));
+jest.mock('next/navigation', () => ({
+  useRouter: () => ({ push: pushMock, refresh: jest.fn() }),
+  useServerInsertedHTML: jest.fn((callback) => callback()),
+}));
 
 import { SearchBox } from './SearchBox';
 

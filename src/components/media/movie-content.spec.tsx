@@ -3,7 +3,10 @@ import { renderWithProviders, screen, act } from '@/utils/test-utils';
 
 // Mock next/navigation
 const pushMock = jest.fn();
-jest.mock('next/navigation', () => ({ useRouter: () => ({ push: pushMock, refresh: jest.fn() }) }));
+jest.mock('next/navigation', () => ({
+  useRouter: () => ({ push: pushMock, refresh: jest.fn() }),
+  useServerInsertedHTML: jest.fn((callback) => callback()),
+}));
 
 // Mock SearchBox and TabsWrapper to isolate MovieContent
 jest.mock('@/components/search', () => ({ SearchBox: () => <div data-testid="search" /> }));
