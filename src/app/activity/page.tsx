@@ -1,21 +1,20 @@
 import { verifySessionToken } from '@/lib/firebase/auth';
 import getCookieHeader from '@/lib/getCookieHeader';
-// import StreamingPage from './StreamingPage';
 import { adminDB } from '@/lib/firebase/admin';
 import MyWatchlist from './Activity';
 import { getMostRecentSeasonEpisodes } from '@/utils/api/serverContentApi';
+import { Media } from '@/data-models/media.interface';
 
-export default async function WatchedPage() {
+export default async function ActivityPage() {
   const cookieHeader = await getCookieHeader();
   const user = await verifySessionToken(cookieHeader);
 
   const snapshot = await adminDB.collection('/users/' + user?.uid + "/movies").get();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let movies: any = snapshot.docs.map(doc => doc.data());
+  const movies: any = snapshot.docs.map(doc => doc.data());
 
-  // For TV shows, fetch and attach the most recent season's episodes
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  movies = await Promise.all(movies.map(async (item: any) => {
+  // For TV shows, fetch and attach the most recent season's episodes in parallel
+  const moviesWithEpisodes = await Promise.all(movies.map(async (item: Media) => {
     if (item.media_type === 'tv' && item.movieId) {
       const recentSeason = await getMostRecentSeasonEpisodes(item.movieId);
       if (recentSeason) {
@@ -25,8 +24,6 @@ export default async function WatchedPage() {
     return item;
   }));
 
-  return (
-    <MyWatchlist watchlist={movies} user={user} />
-  );
+  return <MyWatchlist watchlist={moviesWithEpisodes} user={user} />;
 }
 

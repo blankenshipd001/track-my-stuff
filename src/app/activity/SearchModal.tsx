@@ -119,7 +119,9 @@ const SearchModal = ({ show, onClose, onSelectTitle }: SearchModalProps) => {
             <div style={{ position: 'absolute', right: '1rem', top: '50%', transform: 'translateY(-50%)', display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
               {searchValue && (
                 <button
+                  type="button"
                   onClick={handleClear}
+                  aria-label="Clear search"
                   style={{
                     background: 'transparent',
                     border: 'none',

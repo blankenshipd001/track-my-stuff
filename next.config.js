@@ -24,9 +24,9 @@ const nextConfig = {
       },
     ],
   },
-  // experimental: {
-  //   serverActions: true,
-  // },
+  experimental: {
+    optimizePackageImports: ['@mui/material', '@mui/icons-material'],
+  },
 };
 
 module.exports = nextConfig;

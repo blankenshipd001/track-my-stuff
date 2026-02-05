@@ -6,7 +6,6 @@ import { Media } from "@/data-models/media.interface";
 import { ServiceProvider } from "@/data-models/service-provider.interface";
 import { getProxyImageUrlForPath } from "@/lib/imageUrl";
 import NextImage from "next/image";
-// Import styled components from MyWatchlist
 import {
   Modal,
   ModalContent,
@@ -131,6 +130,7 @@ const WatchlistModal = ({
               <Select
                 id="providerSelect"
                 aria-label="Streaming Provider"
+                title="Streaming Provider"
                 value={formData.provider}
                 onChange={(e) => {
                   const providerId = e.target.value;
@@ -156,7 +156,8 @@ const WatchlistModal = ({
               <Label htmlFor="statusSelect">Watching Status</Label>
               <Select 
                 id="statusSelect" 
-                aria-label="Choose a status" 
+                aria-label="Watching Status"
+                title="Watching Status"
                 value={formData.status} 
                 onChange={(e) => setFormData({
                   ...formData,
@@ -308,7 +309,8 @@ const WatchlistModal = ({
             <Label htmlFor="posterSelect">Choose Poster</Label>
             <Select
               id="posterSelect"
-              aria-label="Select poster"
+              aria-label="Choose Poster"
+              title="Choose Poster"
               value={formData.poster_path || ''}
               onChange={(e) => setFormData({ ...formData, poster_path: e.target.value })}
             >
