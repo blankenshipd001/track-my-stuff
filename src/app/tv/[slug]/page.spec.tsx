@@ -1,6 +1,14 @@
 import React from 'react';
 import { renderWithProviders, screen } from '@/utils/test-utils';
 
+// Mock Firebase client to prevent fetch errors
+jest.mock('@/lib/firebase/client', () => ({
+  __esModule: true,
+  db: {},
+  auth: {},
+  googleProvider: {},
+}));
+
 // Mock server helpers and Details component
 jest.mock('@/lib/getCookieHeader', () => jest.fn(async () => 'cookie-header'));
 jest.mock('@/lib/firebase/auth', () => ({
@@ -14,8 +22,8 @@ jest.mock('@/utils/api/serverContentApi', () => ({
   getRecommendedTV: (...args: any[]) => mockGetRecommendedTV(...args),
 }));
 
-// Replace the real Details component with a lightweight stub that renders props as JSON
-jest.mock('@/components/details/details-page', () => ({
+// Replace the real DetailsPageServer component with a lightweight stub that renders props as JSON
+jest.mock('@/components/details/details-page-server', () => ({
   __esModule: true,
   default: (props: any) => <div data-testid="details">{JSON.stringify(props)}</div>
 }));
