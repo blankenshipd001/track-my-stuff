@@ -1,7 +1,7 @@
 // app/components/MediaGrid.tsx
 "use client";
 
-import React, { ReactNode, useMemo } from "react";
+import React, { ReactNode, useMemo, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Media } from "@/data-models/media.interface";
 
@@ -15,7 +15,7 @@ import { BookmarkAdd, BookmarkRemove } from "@mui/icons-material";
 // NOTE: This is a client component — avoid importing server helpers directly.
 // Use the API route `/api/tv/[id]` instead so TMDB calls remain server-side.
 import useNotificationBar from "@/components/notifications/useNotificationBar";
-import { requestRemoveFromWatchList } from "@/utils/api/contentApi";
+import { requestRemoveFromWatchList, getContent } from "@/utils/api/contentApi";
 import { ProviderLogos } from "../provider/ProviderLogos";
 
 interface MediaGridProps {
@@ -29,6 +29,7 @@ interface MediaGridProps {
 export const MediaGrid = ({ movies, addClicked, removeClicked, isWatchlist, user }: MediaGridProps): React.ReactElement => {
   const router = useRouter();
   const BASE_URL = process.env.NEXT_PUBLIC_THE_MOVIE_DB_BASE_URL;
+  const [watchlistIds, setWatchlistIds] = useState<Set<number>>(new Set());
 
   const { enqueueNotificationBar, NotificationBarComponent } = useNotificationBar();
 
@@ -44,6 +45,16 @@ export const MediaGrid = ({ movies, addClicked, removeClicked, isWatchlist, user
     return 4;
   }, [isXs, isSm, isMd]);
 
+  // Fetch watchlist IDs if not already on watchlist page
+  useEffect(() => {
+    if (!isWatchlist && user?.uid) {
+      getContent(user.uid).then((watchlist) => {
+        const ids = new Set(watchlist.map((item) => item.movieId ?? item.id).filter(Boolean) as number[]);
+        setWatchlistIds(ids);
+      }).catch(console.error);
+    }
+  }, [user?.uid, isWatchlist]);
+
   const handleClickEvent = (movie: Media) => {
     const isTV = movie.first_air_date !== undefined;
     const path = isTV ? `/tv/${movie.movieId}` : `/movies/${movie.movieId}`;
@@ -57,7 +68,13 @@ export const MediaGrid = ({ movies, addClicked, removeClicked, isWatchlist, user
           const res = await fetch(`/api/tv/${movie.id}`);
           if (res.ok) {
             const tvShow = await res.json();
-            addClicked(tvShow);
+            await addClicked(tvShow);
+            
+            // Update local state
+            const mediaId = tvShow.movieId ?? tvShow.id;
+            if (mediaId) {
+              setWatchlistIds((prev) => new Set(prev).add(mediaId));
+            }
           } else {
             enqueueNotificationBar("Could not load TV details", "error");
           }
@@ -65,7 +82,13 @@ export const MediaGrid = ({ movies, addClicked, removeClicked, isWatchlist, user
           enqueueNotificationBar(String(e), "error");
         }
       } else {
-        addClicked(movie);
+        await addClicked(movie);
+        
+        // Update local state
+        const mediaId = movie.movieId ?? movie.id;
+        if (mediaId) {
+          setWatchlistIds((prev) => new Set(prev).add(mediaId));
+        }
       }
     } else if (removeClicked) {
       removeClicked(movie);
@@ -86,6 +109,17 @@ export const MediaGrid = ({ movies, addClicked, removeClicked, isWatchlist, user
 
       await requestRemoveFromWatchList(user.uid, movie);
       enqueueNotificationBar("Removed from your watch list!", "success");
+      
+      // Update local state
+      const mediaId = movie.movieId ?? movie.id;
+      if (mediaId) {
+        setWatchlistIds((prev) => {
+          const newSet = new Set(prev);
+          newSet.delete(mediaId);
+          return newSet;
+        });
+      }
+      
       router.refresh();
     } catch (err) {
       enqueueNotificationBar(`Error: ${err}`, "error");
@@ -93,7 +127,10 @@ export const MediaGrid = ({ movies, addClicked, removeClicked, isWatchlist, user
   };
 
   const getBookmarkIcon = (media: Media): ReactNode => {
-    if (isWatchlist) {
+    const mediaId = media.movieId ?? media.id;
+    const isInWatchlist = isWatchlist || (mediaId ? watchlistIds.has(mediaId) : false);
+    
+    if (isInWatchlist) {
       return (
         <BookmarkRemove
           sx={{ cursor: "pointer", color: "lightgrey", "&:hover": { color: "#782FEF" } }}
