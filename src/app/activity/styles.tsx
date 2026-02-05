@@ -191,43 +191,50 @@ export const Button = styled.button<ButtonProps>`
 `;
 
 export const StatsGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1rem;
-  margin-bottom: 1.5rem;
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 0;
 `;
 
 export const StatCard = styled.div`
   background: rgba(31, 41, 55, 0.5);
   backdrop-filter: blur(12px);
-  border-radius: 0.75rem;
-  padding: 1rem;
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.875rem;
   border: 1px solid rgba(75, 85, 99, 0.5);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2), 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 0 1 auto;
 
   &:hover {
-    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.3), 0 4px 6px rgba(0, 0, 0, 0.15);
-    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    transform: translateY(-1px);
   }
 `;
 
 export const StatNumber = styled.div<DivProps>`
-  font-size: 1.875rem;
-  font-weight: bold;
+  font-size: 1.25rem;
+  font-weight: 700;
   color: ${(props) => props.color || "#60a5fa"};
+  line-height: 1;
 `;
 
 export const StatLabel = styled.div`
   color: #9ca3af;
-  font-size: 0.875rem;
-  margin-top: 0.25rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  white-space: nowrap;
 `;
 
 export const FilterContainer = styled.div`
   display: flex;
   gap: 0.5rem;
   flex-wrap: wrap;
+  margin-bottom: 1rem;
 `;
 
 export const FilterButton = styled.button<ButtonProps>`

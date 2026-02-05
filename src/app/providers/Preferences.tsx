@@ -91,31 +91,36 @@ const CheckIcon = styled.div<{ selected?: boolean }>`
 const StatsCard = styled.div`
   background: rgba(31, 41, 55, 0.6);
   border: 1px solid rgba(75, 85, 99, 0.5);
-  border-radius: 1rem;
-  padding: 1.5rem;
-  text-align: center;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2), 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.875rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 0 1 auto;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   transition: all 0.3s;
 
   &:hover {
-    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.3), 0 4px 6px rgba(0, 0, 0, 0.15);
-    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    transform: translateY(-1px);
   }
 `;
 
 const StatsNumber = styled.div`
-  font-size: 2rem;
-  font-weight: bold;
+  font-size: 1.25rem;
+  font-weight: 700;
   background: linear-gradient(to right, #c084fc, #f472b6);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  line-height: 1;
 `;
 
 const StatsLabel = styled.div`
   color: #9ca3af;
-  font-size: 0.875rem;
-  margin-top: 0.5rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  white-space: nowrap;
 `;
 
 const SearchContainer = styled.div`
@@ -267,7 +272,7 @@ const Preferences = ({ user }: PreferencesProps) => {
           </AddButton>
         </HeaderTop>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1rem', marginBottom: '2rem' }}>
+        <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', marginBottom: '2rem' }}>
           <StatsCard>
             <StatsNumber>{selectedProviders.length}</StatsNumber>
             <StatsLabel>Selected Providers</StatsLabel>

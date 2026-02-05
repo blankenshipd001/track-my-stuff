@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Plus, Film, Tv, Edit2, Trash2, ChevronDown, ChevronUp, Info, ExternalLink } from "lucide-react";
+import { Plus, Film, Tv, Edit2, Trash2, ChevronDown, ChevronUp, Info, ExternalLink, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import useGetMyFavoriteProviders from "@/hooks/useGetMyFavoriteProviders";
 import { Media } from "@/data-models/media.interface";
@@ -46,12 +46,6 @@ import {
   Stars,
   Star,
   StatusBadge,
-  Legend,
-  LegendTitle,
-  LegendItems,
-  LegendItem,
-  LegendDot,
-  LegendLabel,
 } from "./styles";
 import { addToWatchList, requestRemoveFromWatchList, updateMovie } from "@/utils/api/contentApi";
 
@@ -74,7 +68,7 @@ const StreamingWatchlist = ({ watchlist, user }: MyWatchlistProps) => {
   const [showSearchModal, setShowSearchModal] = useState(false);
   const [editingId, setEditingId] = useState<number | null | undefined>(null);
   const [formData, setFormData] = useState<Media>({} as Media);
-  const [isLegendCollapsed, setIsLegendCollapsed] = useState(false);
+  const [isLegendCollapsed, setIsLegendCollapsed] = useState(true);
   const [flippedCards, setFlippedCards] = useState<Set<number>>(new Set());
   const [showAddDropdown, setShowAddDropdown] = useState(false);
   const [shouldShowDetailsAfterAdd, setShouldShowDetailsAfterAdd] = useState(true);
@@ -297,6 +291,80 @@ const StreamingWatchlist = ({ watchlist, user }: MyWatchlistProps) => {
             <Title>My Watchlist</Title>
             <Subtitle>Track what you&apos;re watching across all platforms</Subtitle>
           </div>
+
+          {/* My Streaming Services dropdown */}
+          {myFavoriteProviders.length > 0 && (
+            <div style={{ width: '100%', marginTop: '1rem' }}>
+              <div 
+                onClick={() => setIsLegendCollapsed(!isLegendCollapsed)}
+                style={{ 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'space-between',
+                  padding: '0.75rem 1rem',
+                  background: 'rgba(31, 41, 55, 0.9)',
+                  borderRadius: '0.5rem',
+                  border: '1px solid rgba(75, 85, 99, 0.5)',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = 'rgba(31, 41, 55, 1)';
+                  e.currentTarget.style.borderColor = 'rgba(168, 85, 247, 0.5)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'rgba(31, 41, 55, 0.9)';
+                  e.currentTarget.style.borderColor = 'rgba(75, 85, 99, 0.5)';
+                }}
+              >
+                <span style={{ fontSize: '0.875rem', fontWeight: 600, color: '#9ca3af' }}>
+                  MY STREAMING SERVICES
+                </span>
+                {isLegendCollapsed ? <ChevronDown size={20} /> : <ChevronUp size={20} />}
+              </div>
+              {!isLegendCollapsed && (
+                <div style={{
+                  marginTop: '0.5rem',
+                  padding: '1rem',
+                  background: 'rgba(31, 41, 55, 0.5)',
+                  borderRadius: '0.5rem',
+                  border: '1px solid rgba(75, 85, 99, 0.3)',
+                }}>
+                  <div style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))',
+                    gap: '0.75rem',
+                  }}>
+                    {myFavoriteProviders
+                      .sort((a, b) => a.display_priority - b.display_priority)
+                      .map((provider) => (
+                        <div key={provider.provider_id} style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '0.5rem',
+                        }}>
+                          {provider.logo_path ? (
+                            <div style={{ width: '24px', height: '24px', borderRadius: '4px', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
+                              <NextImage
+                                src={getProxyImageUrlForPath(provider.logo_path, 'w45')!}
+                                alt={provider.provider_name}
+                                width={24}
+                                height={24}
+                                style={{ objectFit: 'contain' }}
+                              />
+                            </div>
+                          ) : (
+                            <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#a855f7' }} />
+                          )}
+                          <span style={{ fontSize: '0.875rem', color: '#e5e7eb' }}>{provider.provider_name}</span>
+                        </div>
+                      ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
           <div style={{ position: 'relative' }}>
             <AddButton onClick={() => setShowAddDropdown(!showAddDropdown)}>
               <Plus size={20} />
@@ -379,22 +447,22 @@ const StreamingWatchlist = ({ watchlist, user }: MyWatchlistProps) => {
               </div>
             )}
           </div>
-        </HeaderTop>
 
-        <StatsGrid>
-          <StatCard>
-            <StatNumber color="#60a5fa">{stats.watching}</StatNumber>
-            <StatLabel>Currently Watching</StatLabel>
-          </StatCard>
-          <StatCard>
-            <StatNumber color="#4ade80">{stats.completed}</StatNumber>
-            <StatLabel>Completed</StatLabel>
-          </StatCard>
-          <StatCard>
-            <StatNumber color="#c084fc">{stats.watchlist}</StatNumber>
-            <StatLabel>In Watchlist</StatLabel>
-          </StatCard>
-        </StatsGrid>
+          <StatsGrid>
+            <StatCard>
+              <StatNumber color="#60a5fa">{stats.watching}</StatNumber>
+              <StatLabel>Currently Watching</StatLabel>
+            </StatCard>
+            <StatCard>
+              <StatNumber color="#4ade80">{stats.completed}</StatNumber>
+              <StatLabel>Completed</StatLabel>
+            </StatCard>
+            <StatCard>
+              <StatNumber color="#c084fc">{stats.watchlist}</StatNumber>
+              <StatLabel>In Watchlist</StatLabel>
+            </StatCard>
+          </StatsGrid>
+        </HeaderTop>
 
         <FilterContainer>
           {["all", "watching", "completed", "watchlist", "movies", "tv"].map((f) => (
@@ -403,6 +471,69 @@ const StreamingWatchlist = ({ watchlist, user }: MyWatchlistProps) => {
             </FilterButton>
           ))}
         </FilterContainer>
+
+        {/* Active Filter Indicator */}
+        {filter !== "all" && (
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            padding: '0.75rem 1rem',
+            background: 'rgba(168, 85, 247, 0.15)',
+            border: '1px solid rgba(168, 85, 247, 0.3)',
+            borderRadius: '0.5rem',
+            marginBottom: '1.5rem',
+            flexWrap: 'wrap',
+            gap: '0.5rem'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                padding: '0.25rem 0.75rem',
+                background: 'rgba(168, 85, 247, 0.3)',
+                borderRadius: '0.375rem',
+                border: '1px solid rgba(168, 85, 247, 0.4)'
+              }}>
+                {filter === "movies" && <Film size={16} color="#c084fc" />}
+                {filter === "tv" && <Tv size={16} color="#c084fc" />}
+                <span style={{ fontSize: '0.875rem', fontWeight: 600, color: '#c084fc' }}>
+                  {filter.charAt(0).toUpperCase() + filter.slice(1)}
+                </span>
+              </div>
+              <span style={{ fontSize: '0.875rem', color: '#d1d5db' }}>
+                Showing <strong style={{ color: '#c084fc' }}>{filteredItems.length}</strong> {filteredItems.length === 1 ? 'item' : 'items'}
+              </span>
+            </div>
+            <button
+              onClick={() => setFilter("all")}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.375rem',
+                padding: '0.375rem 0.625rem',
+                background: 'transparent',
+                border: '1px solid rgba(168, 85, 247, 0.4)',
+                borderRadius: '0.375rem',
+                color: '#c084fc',
+                fontSize: '0.8125rem',
+                fontWeight: 500,
+                cursor: 'pointer',
+                transition: 'all 0.2s'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = 'rgba(168, 85, 247, 0.2)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'transparent';
+              }}
+            >
+              <X size={14} />
+              Clear Filter
+            </button>
+          </div>
+        )}
       </Header>
 
       <GridContainer>
@@ -587,41 +718,6 @@ const StreamingWatchlist = ({ watchlist, user }: MyWatchlistProps) => {
           onClose={() => setShowSearchModal(false)}
           onSelectTitle={handleSelectTitle}
         />
-      )}
-
-      {myFavoriteProviders.length > 0 && (
-        <Legend>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: isLegendCollapsed ? '0' : '1rem' }}>
-            <LegendTitle>MY STREAMING SERVICES</LegendTitle>
-            <IconButton onClick={() => setIsLegendCollapsed(!isLegendCollapsed)} style={{ position: 'relative' }}>
-              {isLegendCollapsed ? <ChevronDown size={20} /> : <ChevronUp size={20} />}
-            </IconButton>
-          </div>
-          {!isLegendCollapsed && (
-            <LegendItems>
-              {myFavoriteProviders
-                .sort((a, b) => a.display_priority - b.display_priority)
-                .map((provider) => (
-                  <LegendItem key={provider.provider_id}>
-                    {provider.logo_path ? (
-                      <div style={{ width: '24px', height: '24px', borderRadius: '4px', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', marginRight: '0.5rem' }}>
-                        <NextImage
-                          src={getProxyImageUrlForPath(provider.logo_path, 'w45')!}
-                          alt={provider.provider_name}
-                          width={24}
-                          height={24}
-                          style={{ objectFit: 'contain' }}
-                        />
-                      </div>
-                    ) : (
-                      <LegendDot color="#a855f7" />
-                    )}
-                    <LegendLabel>{provider.provider_name}</LegendLabel>
-                  </LegendItem>
-                ))}
-            </LegendItems>
-          )}
-        </Legend>
       )}
     </Container>
   );
