@@ -37,6 +37,49 @@ npm run test
 
 To run tests you can either run `npm run test` to run all tests or if working on them you can run `npm run test:watch` to have them run with every change int he window
 
+## Progressive Web App (PWA)
+
+This app is configured as a PWA, which means users can install it on their devices and use it offline.
+
+### What's Included
+- **Service Worker**: Automatically generated in production for offline support
+- **Manifest**: App metadata for installation (`/public/manifest.json`)
+- **Icons**: Optimized app icons for all devices
+- **Offline Mode**: Cached assets work without internet connection
+
+### Testing the PWA Locally
+
+1. Build and start the production server:
+```bash
+npm run build
+npm run start
+```
+
+2. Open http://localhost:3000 in your browser
+
+3. Test PWA features:
+   - **Chrome DevTools**: Open Application tab → Service Workers to verify registration
+   - **Install**: Look for the install button (⊕) in the browser address bar
+   - **Offline Mode**: In DevTools Network tab, select "Offline" and reload - the app should still work
+
+### Generating New Icons
+
+If you update the app logo, regenerate PWA icons:
+```bash
+# Replace public/monkey.png with your new logo first
+node generate-icons.js
+```
+
+This creates all required icon sizes (192x192, 256x256, 384x384, 512x512, apple-touch-icon, and favicon).
+
+### Production Deployment
+
+When deployed to production (Vercel, etc.), the PWA features activate automatically:
+- Service worker registers and caches assets
+- Users see an "Install App" prompt
+- App works offline after first visit
+- Appears in app drawer on mobile devices
+
 ### NOTES
 
  - CSS Fonts

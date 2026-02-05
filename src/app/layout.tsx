@@ -6,6 +6,7 @@ import { Providers } from "@utils/providers/providers";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import "./globals.css";
+import { Viewport } from "next";
 
 // export const dynamic = 'force-dynamic';
 
@@ -19,6 +20,20 @@ const roboto = Roboto({
 export const metadata = {
   title: "ReelTime",
   description: "ReelTime brings all your TV and movie watch lists together in one place.",
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "ReelTime",
+  },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: "#000000",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
