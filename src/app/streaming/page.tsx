@@ -5,6 +5,8 @@ import CalendarPage from './CalendarPage';
 import { getMostRecentSeasonEpisodes } from '@/utils/api/serverContentApi';
 import { Media } from '@/data-models/media.interface';
 
+export const dynamic = 'force-dynamic';
+
 export default async function StreamingPage() {
   const cookieHeader = await getCookieHeader();
   const user = await verifySessionToken(cookieHeader);

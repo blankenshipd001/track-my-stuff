@@ -1,5 +1,13 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  turbopack: {
+    root: __dirname,
+  },
+  experimental: {
+    //these are optimized by default in the latest next versions
+    // https://nextjs.org/docs/app/api-reference/config/next-config-js/optimizePackageImports
+    //optimizePackageImports: ["@mui/material", "@mui/icons-material"],
+  },
   images: {
     remotePatterns: [
       {
@@ -23,9 +31,6 @@ const nextConfig = {
         pathname: "/api/image*",
       },
     ],
-  },
-  experimental: {
-    optimizePackageImports: ['@mui/material', '@mui/icons-material'],
   },
 };
 
