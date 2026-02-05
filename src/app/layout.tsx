@@ -5,6 +5,7 @@ import { CssBaseline } from "@mui/material";
 import { Providers } from "@utils/providers/providers";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
+import { PWAInstallPrompt } from "@/components/pwa-install-prompt";
 import "./globals.css";
 import { Viewport } from "next";
 
@@ -47,6 +48,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             {children}
           </main>
           <Footer />
+          <PWAInstallPrompt />
           <SpeedInsights />
           <Analytics />
         </body>
