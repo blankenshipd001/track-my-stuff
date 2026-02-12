@@ -1,5 +1,4 @@
 import React from 'react';
-import { screen } from '@testing-library/react';
 
 // Mock Firebase client
 jest.mock('@/lib/firebase/client', () => ({
@@ -30,6 +29,7 @@ jest.mock('@mui/material', () => {
   const actual = jest.requireActual('@mui/material');
   return {
     ...actual,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     Box: ({ children, sx, ...props }: any) => <div {...props}>{children}</div>,
   };
 });
