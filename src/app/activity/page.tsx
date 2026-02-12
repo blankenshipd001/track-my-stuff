@@ -4,10 +4,17 @@ import { adminDB } from '@/lib/firebase/admin';
 import MyWatchlist from './Activity';
 import { getMostRecentSeasonEpisodes } from '@/utils/api/serverContentApi';
 import { Media } from '@/data-models/media.interface';
-
-export const dynamic = 'force-dynamic';
+import { Suspense } from 'react';
 
 export default async function ActivityPage() {
+  return (
+    <Suspense fallback={<div style={{ color: 'white', padding: '20px' }}>Loading activity...</div>}>
+      <ActivityContent />
+    </Suspense>
+  );
+}
+
+async function ActivityContent() {
   const cookieHeader = await getCookieHeader();
   const user = await verifySessionToken(cookieHeader);
 

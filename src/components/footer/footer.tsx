@@ -25,7 +25,7 @@ export const Footer = () => {
       }}
     >
       <div style={{ marginBottom: "0.5rem" }}>
-        © {new Date().getFullYear()} Copyright:
+        © 2025 Copyright:
         <a 
           href="https://github.com/blankenshipd001"
           style={{ 

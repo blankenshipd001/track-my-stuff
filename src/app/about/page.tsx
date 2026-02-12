@@ -47,7 +47,7 @@ const AboutPage = () => {
           </Typography>
           
           <Typography variant="body1" sx={{ color: "#9ca3af", mt: 2 }}>
-            © {new Date().getFullYear()} Copyright:
+            © 2025 Copyright:
             <a 
               href="https://github.com/blankenshipd001"
               style={linkStyle}

@@ -2,9 +2,27 @@
 import { Box } from "@mui/material";
 import { verifySessionToken } from "@/lib/firebase/auth";
 import getCookieHeader from '@/lib/getCookieHeader';
-import { getRecommendedTV, getTVDetails } from "@/utils/api/serverContentApi";
+import { getRecommendedTV, getTVDetails, fetchPopularTV } from "@/utils/api/serverContentApi";
 import DetailsPageServer from "@/components/details/details-page-server";
 import { Metadata } from "next";
+import { Suspense } from "react";
+import TVLoading from "./loading";
+
+/**
+ * Generate static params for popular TV shows at build time
+ * Pre-renders the top 50 most popular TV shows to improve initial load performance
+ */
+export async function generateStaticParams() {
+  try {
+    const popular = await fetchPopularTV();
+    return popular.slice(0, 50).map((show: any) => ({
+      slug: show.id.toString(),
+    }));
+  } catch (error) {
+    console.error('Error generating static params for TV shows:', error);
+    return [];
+  }
+}
 
 export async function generateMetadata({ params }: { params: { slug: string } | Promise<{ slug: string }> }): Promise<Metadata> {
   const resolvedParams = await params;
@@ -28,8 +46,6 @@ export async function generateMetadata({ params }: { params: { slug: string } | 
 }
 
 export default async function TVDetailsPage({ params }: { params: { slug: string } | Promise<{ slug: string }> }) {
-  const cookieHeader = await getCookieHeader();
-  const user = await verifySessionToken(cookieHeader);
   const resolvedParams = await params;
   const tvShow = await getTVDetails(resolvedParams.slug);
 
@@ -37,6 +53,16 @@ export default async function TVDetailsPage({ params }: { params: { slug: string
     <Box sx={{ color: "white" }}>TV Show not found.</Box>
   );
 
+  return (
+    <Suspense fallback={<TVLoading />}>
+      <TVDetailsContent params={resolvedParams} tvShow={tvShow} />
+    </Suspense>
+  );
+}
+
+async function TVDetailsContent({ params, tvShow }: { params: { slug: string }; tvShow: any }) {
+  const cookieHeader = await getCookieHeader();
+  const user = await verifySessionToken(cookieHeader);
   const recommended = await getRecommendedTV(tvShow.genres?.[0]?.id || 0);
 
   return (

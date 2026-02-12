@@ -99,6 +99,3 @@ export async function GET(req: NextRequest) {
     return new Response(String(err ?? 'unknown error'), { status: 500 })
   }
 }
-
-// Make sure Next doesn't statically optimize this route away.
-export const runtime = 'nodejs'

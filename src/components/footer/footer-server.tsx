@@ -7,7 +7,8 @@ import Link from "next/link";
  *
  * @returns Footer
  */
-export const Footer = () => {
+export const Footer = async () => {
+  
   return (
     <Box
       component="footer"
@@ -24,7 +25,7 @@ export const Footer = () => {
       }}
     >
       <div style={{ marginBottom: "0.5rem" }}>
-        © {new Date().getFullYear()} Copyright:
+        © 2025 Copyright:
         <Link 
           href="https://github.com/blankenshipd001"
           style={{ 

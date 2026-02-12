@@ -8,8 +8,7 @@ import { Footer } from "@/components/footer";
 import { PWAInstallPrompt } from "@/components/pwa-install-prompt";
 import "./globals.css";
 import { Viewport } from "next";
-
-// export const dynamic = 'force-dynamic';
+import { Suspense } from "react";
 
 const roboto = Roboto({
   weight: ["300", "400", "500", "700"],
@@ -40,19 +39,21 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <Providers>
-        <body className={roboto.className}>
-          <CssBaseline />
-          <Header />
-          <main style={{ minHeight: "calc(100vh - 200px)" }}>
-            {children}
-          </main>
-          <Footer />
-          <PWAInstallPrompt />
-          <SpeedInsights />
-          <Analytics />
-        </body>
-      </Providers>
+      <body className={roboto.className}>
+        <Suspense fallback={<div style={{ minHeight: "100vh", background: "#111827" }} />}>
+          <Providers>
+            <CssBaseline />
+            <Header />
+            <main style={{ minHeight: "calc(100vh - 200px)" }}>
+              {children}
+            </main>
+            <Footer />
+            <PWAInstallPrompt />
+            <SpeedInsights />
+            <Analytics />
+          </Providers>
+        </Suspense>
+      </body>
     </html>
   );
 }

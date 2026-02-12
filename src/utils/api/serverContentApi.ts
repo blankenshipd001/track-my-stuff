@@ -144,3 +144,37 @@ export async function getRecommendedTV(genreId: number): Promise<Media[]> {
   const data = await res.json();
   return data.results || [];
 }
+
+/**
+ * Fetch popular TV shows with provider data
+ * Used for generating static params at build time
+ * @returns Array of popular TV shows with provider information
+ */
+export async function fetchPopularTV(): Promise<Media[]> {
+  const popular_tv_url = `https://api.themoviedb.org/3/tv/popular?api_key=${movie_api_key}&include_video=false`;
+  
+  return fetch(popular_tv_url, { next: { revalidate: 3600 } }) // Cache for 1 hour
+    .then(async (res) => {
+      const json = await res.json();
+      return json;
+    })
+    .then(async (popularRes) => {
+      const trendingResults: Media[] = await Promise.all(
+        popularRes.results.map((item: { id: unknown }) => {
+          return fetch(`https://api.themoviedb.org/3/tv/${item.id}/watch/providers?api_key=${movie_api_key}&external_source=imdb_id`)
+            .then((res) => res.json())
+            .then((providers) => {
+              const newShow = {
+                ...item,
+                movieId: item.id,
+                providers: providers.results?.US ?? [],
+              };
+
+              return newShow;
+            });
+        })
+      );
+
+      return trendingResults;
+    });
+}

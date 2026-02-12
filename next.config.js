@@ -10,6 +10,7 @@ const nextConfig = {
   turbopack: {
     root: __dirname,
   },
+  cacheComponents: true,
   experimental: {
     //these are optimized by default in the latest next versions
     // https://nextjs.org/docs/app/api-reference/config/next-config-js/optimizePackageImports
