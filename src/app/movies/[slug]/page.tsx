@@ -7,6 +7,7 @@ import DetailsPageServer from "@/components/details/details-page-server";
 import { Metadata } from "next";
 import { Suspense } from "react";
 import MovieLoading from "./loading";
+import { Media } from "@/data-models/media.interface";
 
 /**
  * Generate static params for popular movies at build time
@@ -15,8 +16,8 @@ import MovieLoading from "./loading";
 export async function generateStaticParams() {
   try {
     const popular = await fetchPopularContent();
-    return popular.slice(0, 50).map((movie: any) => ({
-      slug: movie.id.toString(),
+    return popular.slice(0, 50).map((movie: Media) => ({
+      slug: movie?.id?.toString(),
     }));
   } catch (error) {
     console.error('Error generating static params for movies:', error);
@@ -60,7 +61,8 @@ export default async function MovieDetailsPage({ params }: { params: { slug: str
   );
 }
 
-async function MovieDetailsContent({ params, movie }: { params: { slug: string }; movie: any }) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+async function MovieDetailsContent({ params, movie }: { params: { slug: string }; movie: Media }) {
   const cookieHeader = await getCookieHeader();
   const user = await verifySessionToken(cookieHeader);
   const recommended = await getRecommendedMovies(movie.genres?.[0]?.id || 0);

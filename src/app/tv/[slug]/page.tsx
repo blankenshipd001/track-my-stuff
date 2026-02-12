@@ -7,6 +7,7 @@ import DetailsPageServer from "@/components/details/details-page-server";
 import { Metadata } from "next";
 import { Suspense } from "react";
 import TVLoading from "./loading";
+import { Media } from "@/data-models/media.interface";
 
 /**
  * Generate static params for popular TV shows at build time
@@ -15,8 +16,8 @@ import TVLoading from "./loading";
 export async function generateStaticParams() {
   try {
     const popular = await fetchPopularTV();
-    return popular.slice(0, 50).map((show: any) => ({
-      slug: show.id.toString(),
+    return popular.slice(0, 50).map((show: Media) => ({
+      slug: show?.id?.toString(),
     }));
   } catch (error) {
     console.error('Error generating static params for TV shows:', error);
@@ -60,7 +61,8 @@ export default async function TVDetailsPage({ params }: { params: { slug: string
   );
 }
 
-async function TVDetailsContent({ params, tvShow }: { params: { slug: string }; tvShow: any }) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+async function TVDetailsContent({ params, tvShow }: { params: { slug: string }; tvShow: Media }) {
   const cookieHeader = await getCookieHeader();
   const user = await verifySessionToken(cookieHeader);
   const recommended = await getRecommendedTV(tvShow.genres?.[0]?.id || 0);

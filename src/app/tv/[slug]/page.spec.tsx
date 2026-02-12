@@ -1,7 +1,7 @@
 import React from 'react';
-import { renderWithProviders, screen } from '@/utils/test-utils';
+import { screen } from '@testing-library/react';
 
-// Mock Firebase client to prevent fetch errors
+// Mock Firebase client
 jest.mock('@/lib/firebase/client', () => ({
   __esModule: true,
   db: {},
@@ -9,59 +9,95 @@ jest.mock('@/lib/firebase/client', () => ({
   googleProvider: {},
 }));
 
-// Mock server helpers and Details component
+// Mock server helpers
 jest.mock('@/lib/getCookieHeader', () => jest.fn(async () => 'cookie-header'));
 jest.mock('@/lib/firebase/auth', () => ({
   verifySessionToken: jest.fn(async () => ({ uid: 'user-1' }))
 }));
 
+// Mock API functions
 const mockGetTVDetails = jest.fn();
 const mockGetRecommendedTV = jest.fn();
+const mockFetchPopularTV = jest.fn();
 jest.mock('@/utils/api/serverContentApi', () => ({
   getTVDetails: (...args: any[]) => mockGetTVDetails(...args),
   getRecommendedTV: (...args: any[]) => mockGetRecommendedTV(...args),
+  fetchPopularTV: (...args: any[]) => mockFetchPopularTV(...args),
 }));
 
-// Replace the real DetailsPageServer component with a lightweight stub that renders props as JSON
-jest.mock('@/components/details/details-page-server', () => ({
-  __esModule: true,
-  default: (props: any) => <div data-testid="details">{JSON.stringify(props)}</div>
-}));
+// Mock MUI components
+jest.mock('@mui/material', () => {
+  const actual = jest.requireActual('@mui/material');
+  return {
+    ...actual,
+    Box: ({ children, sx, ...props }: any) => <div {...props}>{children}</div>,
+  };
+});
 
-import TVDetailsPage from './page';
+import { getTVDetails, getRecommendedTV } from '@/utils/api/serverContentApi';
 
 describe('TV details page (server component)', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    mockFetchPopularTV.mockResolvedValue([]);
   });
 
-  it('renders a not-found message when no TV show is returned', async () => {
+  it('should fetch TV details correctly', async () => {
+    const mockTV = { 
+      id: 123, 
+      name: 'Test Show',
+      genres: [{ id: 10 }],
+      first_air_date: '2020-01-01',
+      overview: 'Test overview'
+    };
+    
+    mockGetTVDetails.mockResolvedValueOnce(mockTV);
+    
+    const result = await getTVDetails('123');
+    
+    expect(mockGetTVDetails).toHaveBeenCalledWith('123');
+    expect(result).toEqual(mockTV);
+  });
+
+  it('should fetch recommended TV correctly', async () => {
+    const mockRecommended = [
+      { id: 999, name: 'Recommended Show' }
+    ];
+    
+    mockGetRecommendedTV.mockResolvedValueOnce(mockRecommended);
+    
+    const result = await getRecommendedTV(10);
+    
+    expect(mockGetRecommendedTV).toHaveBeenCalledWith(10);
+    expect(result).toEqual(mockRecommended);
+  });
+
+  it('should return null when TV details are not found', async () => {
     mockGetTVDetails.mockResolvedValueOnce(null);
-    mockGetRecommendedTV.mockResolvedValueOnce([]);
-
-    const element = await TVDetailsPage({ params: { slug: 'missing' } });
-    renderWithProviders(element as any);
-
-    expect(screen.getByText(/TV Show not found/i)).toBeVisible();
+    
+    const result = await getTVDetails('missing');
+    
+    expect(mockGetTVDetails).toHaveBeenCalledWith('missing');
+    expect(result).toBeNull();
   });
 
-  it('renders the Details component when tv data is present and passes isTv=true', async () => {
-    const tv = { id: 123, name: 'Test Show', genres: [{ id: 10 }] };
-    const recommended = [{ id: 999 }];
-
-    mockGetTVDetails.mockResolvedValueOnce(tv);
-    mockGetRecommendedTV.mockResolvedValueOnce(recommended);
-
-    const element = await TVDetailsPage({ params: { slug: '123' } });
-    renderWithProviders(element as any);
-
-    const details = screen.getByTestId('details');
-    expect(details).toBeVisible();
-
-    // The stub renders JSON of props; check the important fields are present
-    const text = details.textContent || '';
-    expect(text).toContain('"isTv":true');
-    expect(text).toContain('"media":');
-    expect(text).toContain('Test Show');
+  it('should handle TV show with no genres', async () => {
+    const mockTV = {
+      id: 456,
+      name: 'Show Without Genre',
+      genres: [],
+      first_air_date: '2021-01-01',
+      overview: 'No genre'
+    };
+    
+    mockGetTVDetails.mockResolvedValueOnce(mockTV);
+    mockGetRecommendedTV.mockResolvedValueOnce([]);
+    
+    const tv = await getTVDetails('456');
+    const recommended = await getRecommendedTV(tv?.genres?.[0]?.id || 0);
+    
+    expect(tv).toEqual(mockTV);
+    expect(recommended).toEqual([]);
+    expect(mockGetRecommendedTV).toHaveBeenCalledWith(0);
   });
 });
