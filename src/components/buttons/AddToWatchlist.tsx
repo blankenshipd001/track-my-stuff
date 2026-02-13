@@ -50,10 +50,35 @@ export default function AddToWatchlist({ user, movie }: {user: any, movie: Media
   return (
     <>
       <Button 
-        variant={isInWatchlist ? "outlined" : "contained"} 
         onClick={handleToggle} 
         disabled={loading || checkingWatchlist} 
         fullWidth
+        sx={{
+          background: isInWatchlist 
+            ? 'transparent' 
+            : 'linear-gradient(to right, #c084fc, #f472b6)',
+          color: '#fff',
+          border: isInWatchlist 
+            ? '2px solid rgba(192, 132, 252, 0.5)' 
+            : 'none',
+          fontWeight: 600,
+          textTransform: 'none',
+          fontSize: '1rem',
+          py: 1,
+          transition: 'all 0.3s ease',
+          '&:hover': {
+            background: isInWatchlist 
+              ? 'rgba(192, 132, 252, 0.1)' 
+              : 'linear-gradient(to right, #a855f7, #ec4899)',
+            borderColor: isInWatchlist 
+              ? 'rgba(192, 132, 252, 0.8)' 
+              : 'none',
+          },
+          '&:disabled': {
+            opacity: 0.6,
+            cursor: 'not-allowed',
+          },
+        }}
       >
         {buttonText}
       </Button>

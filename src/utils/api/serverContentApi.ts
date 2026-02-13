@@ -31,14 +31,13 @@ export async function fetchPopularContent(): Promise<Media[]> {
 }
 
 export async function getMovieDetails(slug: string): Promise<Media | null> {
-  const res = await fetch(`https://api.themoviedb.org/3/movie/${slug}?api_key=${movie_api_key}&append_to_response=videos,images`, { next: { revalidate: 3600 } }); // Cache for 1 hour
+  const res = await fetch(`https://api.themoviedb.org/3/movie/${slug}?api_key=${movie_api_key}&append_to_response=videos,images,credits`, { next: { revalidate: 3600 } }); // Cache for 1 hour
   
   if (!res.ok) {
     return null
   }
   
   const movie = await res.json();
-
   const providerRes = await fetch(`https://api.themoviedb.org/3/movie/${slug}/watch/providers?api_key=${movie_api_key}`, { next: { revalidate: 3600 } }); // Cache for 1 hour
   const providerData = await providerRes.json();
 
@@ -98,7 +97,7 @@ export async function getRecommendedMovies(genreId: number): Promise<Media[]> {
 
 export async function getTVDetails(slug: string): Promise<Media | null> {
   // Step 1: Get show details (already have slug as TV id)
-  const res = await fetch(`https://api.themoviedb.org/3/tv/${slug}?api_key=${movie_api_key}&append_to_response=videos,images`, { next: { revalidate: 3600 } }); // Cache for 1 hour
+  const res = await fetch(`https://api.themoviedb.org/3/tv/${slug}?api_key=${movie_api_key}&append_to_response=videos,images,credits`, { next: { revalidate: 3600 } }); // Cache for 1 hour
   if (!res.ok) {
     return null;
   }
@@ -176,5 +175,53 @@ export async function fetchPopularTV(): Promise<Media[]> {
       );
 
       return trendingResults;
+    });
+}
+
+/**
+ * Fetch cast member details and combined filmography (movies + TV shows)
+ * @param castId The TMDB cast/person id
+ * @returns Cast member details with filmography
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function getCastMemberDetails(castId: string | number): Promise<any | null> {
+
+  return fetch(
+    `https://api.themoviedb.org/3/person/${castId}?api_key=${movie_api_key}&append_to_response=combined_credits,images,external_ids`,
+    { next: { revalidate: 7200 } } // Cache for 2 hours
+  )
+    .then(async (res) => {
+      // console.log('API response headers:', res.json());
+      if (!res.ok) return null;
+      const person = await res.json();
+      return person;
+    })
+    .then((person) => {
+      if (!person) return null;
+      console.log('API response status:', person);
+
+      // Combine and sort movie and TV credits by popularity/date
+      const allCredits = [
+        ...(person.combined_credits?.cast || [])
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          .map((credit: any) => ({
+            ...credit,
+            media_type: credit.media_type || (credit.title ? 'movie' : 'tv'),
+          }))
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ].sort((a: any, b: any) => {
+        const dateA = new Date(a.release_date || a.first_air_date || 0).getTime();
+        const dateB = new Date(b.release_date || b.first_air_date || 0).getTime();
+        return dateB - dateA; // Most recent first
+      });
+
+      return {
+        ...person,
+        filmography: allCredits.slice(0, 50), // Top 50 works
+      };
+    })
+    .catch((error) => {
+      console.error('Error fetching cast member details:', error);
+      return null;
     });
 }

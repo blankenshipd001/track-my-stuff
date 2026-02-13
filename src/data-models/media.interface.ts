@@ -1,3 +1,4 @@
+import { Cast } from "./cast.interface";
 import { ServiceProvider } from "./service-provider.interface";
 
 export interface Media {
@@ -17,6 +18,10 @@ export interface Media {
     current: number, 
     total: number,
   },
+  credits: {
+    cast: Cast[];
+    crew: Cast[];
+  };
   airDate?: string;
   adult: boolean;
   backdrop_path: string;

@@ -6,6 +6,7 @@ import DetailsMediaServer from "./details-media-server";
 import DetailsMediaGallery from "./details-media-gallery";
 import DetailsRecommended from "./details-recommended";
 import EpisodesSection from "./episodes-section";
+import CastSection from "./cast-section";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function DetailsPageServer({ user, media, recommended, isTv }: { user: any; media: Media; recommended: Media[]; isTv: boolean }) {
@@ -29,6 +30,11 @@ export default function DetailsPageServer({ user, media, recommended, isTv }: { 
           <Box mt={4}>
             <EpisodesSection episodes={media.episodes} />
           </Box>
+        )}
+
+        {/* Cast Section */}
+        {Array.isArray(media?.credits?.cast) && media?.credits?.cast.length > 0 && (
+          <CastSection cast={media?.credits?.cast} />
         )}
       </Paper>
 

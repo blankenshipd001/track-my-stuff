@@ -1,14 +1,24 @@
+"use client";
+
 import { ArrowBackIos } from "@mui/icons-material";
 import { Box, Fab } from "@mui/material";
 
 interface backButton {
-  buttonClick(): void;
+  buttonClick?(): void;
 }
 
-export const BackButton = ({ buttonClick }: backButton) => {
+export const BackButton = ({ buttonClick }: backButton = {}) => {
+  const handleClick = () => {
+    if (buttonClick) {
+      buttonClick();
+    } else {
+      window.history.back();
+    }
+  };
+
   return (
     <Box
-      onClick={() => buttonClick()}
+      onClick={handleClick}
       style={{
         paddingBottom: "10px",
         cursor: "pointer",
