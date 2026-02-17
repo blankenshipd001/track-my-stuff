@@ -198,7 +198,6 @@ export async function getCastMemberDetails(castId: string | number): Promise<any
     })
     .then((person) => {
       if (!person) return null;
-      console.log('API response status:', person);
 
       // Combine and sort movie and TV credits by popularity/date
       const allCredits = [
