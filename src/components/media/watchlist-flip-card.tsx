@@ -91,7 +91,8 @@ export const WatchlistFlipCard: React.FC<WatchlistFlipCardProps> = ({
           borderRadius: 1.5,
           overflow: "hidden",
           width: "100%",
-          height: "100%",
+          height: "auto",
+          aspectRatio: "2 / 3",
           border: isFocused
             ? '2px solid #a78bfa'
             : '1px solid rgba(192, 132, 252, 0.2)',
@@ -113,19 +114,18 @@ export const WatchlistFlipCard: React.FC<WatchlistFlipCardProps> = ({
       >
         {!isFlipped ? (
           // Front: Poster Image with Action Buttons
-          <Box sx={{ position: 'relative', width: '100%', height: '100%' }}>
+            <Box sx={{ position: 'relative', width: '100%', height: '100%' }}>
             <Image
-              src={`${BASE_URL}${poster}?w=248&fit=crop&auto=format`}
+              src={`${BASE_URL}${poster}?w=500&fit=crop&auto=format`}
               alt={`${title} movie poster - ${movie.release_date ? new Date(movie.release_date).getFullYear() : ''}`}
               loading="lazy"
-              width={355}
-              height={200}
+              width={500}
+              height={300}
               style={{
                 width: "100%",
                 height: "100%",
                 objectFit: "cover",
                 cursor: "pointer",
-                transition: "transform 0.2s ease-in-out",
               }}
               onClick={(event) => {
                 event.stopPropagation();
