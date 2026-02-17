@@ -1,30 +1,41 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getTVDetails } from "@/utils/api/serverContentApi";
 
-// Simple per-id cache
-type CacheEntry = { ts: number; data: unknown };
-const CACHE_TTL = 1000 * 60 * 5; // 5 minutes
-const cache = new Map<string, CacheEntry>();
-
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function GET(request: NextRequest, { params }: { params: any }) {
   const id = (params && (await params).id) || params?.id;
-  if (!id) return NextResponse.json({ error: "Missing id" }, { status: 400 });
+  if (!id) {
+    const headers = new Headers();
+    headers.set('Cache-Control', 'public, max-age=0');
+    return NextResponse.json(
+      { error: "Missing id" },
+      { status: 400, headers }
+    );
+  }
 
   try {
-    const cacheKey = `tv:${id}`;
-    const cached = cache.get(cacheKey);
-    if (cached && Date.now() - cached.ts < CACHE_TTL) {
-      return NextResponse.json(cached.data as Record<string, unknown>);
+    const tv = await getTVDetails(id);
+    if (!tv) {
+      const headers = new Headers();
+      headers.set('Cache-Control', 'public, max-age=60');
+      return NextResponse.json(
+        { error: "Not found" },
+        { status: 404, headers }
+      );
     }
 
-    const tv = await getTVDetails(id);
-    if (!tv) return NextResponse.json({ error: "Not found" }, { status: 404 });
+    // Cache headers
+    const headers = new Headers();
+    headers.set('Cache-Control', 'public, max-age=3600, stale-while-revalidate=86400');
+    headers.set('CDN-Cache-Control', 'max-age=86400');
 
-    cache.set(cacheKey, { ts: Date.now(), data: tv });
-
-    return NextResponse.json(tv);
+    return NextResponse.json(tv, { headers });
   } catch (err) {
-    return NextResponse.json({ error: String(err) }, { status: 500 });
+    const headers = new Headers();
+    headers.set('Cache-Control', 'public, max-age=60');
+    return NextResponse.json(
+      { error: String(err) },
+      { status: 500, headers }
+    );
   }
 }

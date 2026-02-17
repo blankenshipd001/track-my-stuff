@@ -20,9 +20,13 @@ async function WatchedContent() {
   const user: User | null = await verifySessionToken(cookieHeader);
   
   const snapshot = await adminDB.collection('/users/' + user?.uid + "/movies").get();
-  const movies: DocumentData[] = snapshot.docs.map(doc => doc.data());
+  const allMedia: DocumentData[] = snapshot.docs.map(doc => doc.data());
+  
+  // Filter on server side for better performance
+  const movies = (allMedia as Media[]).filter((item: Media) => !!item.title);
+  const tvShows = (allMedia as Media[]).filter((item: Media) => !!item.name);
 
   return (
-    <WatchListPage watchList={movies as Media[]} user={user}/>
+    <WatchListPage movies={movies} tvShows={tvShows} user={user}/>
   );
 }

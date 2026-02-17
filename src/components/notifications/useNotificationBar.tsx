@@ -91,23 +91,43 @@ const useNotificationBar = () => {
   };
 
   const NotificationBarComponent = (
-    <Box sx={notificationBarContainerSx} ref={notificationRef}>
-      {notificationPack.map((msg) => (
-        <Box
-          key={msg.key}
-          sx={notificationBarItemSx}
-          onClick={() => handleNotificationBarClose(msg.key)()}
-          style={{ cursor: 'pointer' }}
-        >
-          <NotificationBar
-            open={!!openMap[msg.key]}
-            onClose={handleNotificationBarClose(msg.key)}
-            severity={msg.severity}
-            text={msg.message}
-          />
-        </Box>
-      ))}
-    </Box>
+    <>
+      {/* Live region for announcements to screen readers */}
+      <Box
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+        className="sr-only"
+      >
+        {notificationPack.map((msg) => (
+          <div key={msg.key}>
+            {msg.severity === 'error' && `Error: ${msg.message}`}
+            {msg.severity === 'warning' && `Warning: ${msg.message}`}
+            {msg.severity === 'info' && `Information: ${msg.message}`}
+            {msg.severity === 'success' && `Success: ${msg.message}`}
+          </div>
+        ))}
+      </Box>
+
+      {/* Visual notifications */}
+      <Box sx={notificationBarContainerSx} ref={notificationRef}>
+        {notificationPack.map((msg) => (
+          <Box
+            key={msg.key}
+            sx={notificationBarItemSx}
+            onClick={() => handleNotificationBarClose(msg.key)()}
+            style={{ cursor: 'pointer' }}
+          >
+            <NotificationBar
+              open={!!openMap[msg.key]}
+              onClose={handleNotificationBarClose(msg.key)}
+              severity={msg.severity}
+              text={msg.message}
+            />
+          </Box>
+        ))}
+      </Box>
+    </>
   );
 
   return { enqueueNotificationBar, NotificationBarComponent };

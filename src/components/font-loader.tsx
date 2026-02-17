@@ -9,6 +9,12 @@ export function FontLoader() {
     link.rel = "stylesheet";
     link.href = "https://fonts.googleapis.com/icon?family=Material+Icons";
     document.head.appendChild(link);
+
+    return () => {
+      if (link.parentNode) {
+        link.parentNode.removeChild(link);
+      }
+    };
   }, []);
 
   return null;

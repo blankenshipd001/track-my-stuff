@@ -7,6 +7,7 @@ import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { PWAInstallPrompt } from "@/components/pwa-install-prompt";
 import { FontLoader } from "@/components/font-loader";
+import { SkipLink } from "@/components/skip-link";
 import { Viewport } from "next";
 import { Suspense } from "react";
 import "./globals.css";
@@ -41,12 +42,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className={roboto.className}>
+        <SkipLink />
+
         <FontLoader />
         <Suspense fallback={<div style={{ minHeight: "100vh", background: "#111827" }} />}>
           <Providers>
             <CssBaseline />
             <Header />
-            <main style={{ minHeight: "calc(100vh - 200px)" }}>
+            <main
+              id="main-content"
+              style={{ minHeight: "calc(100vh - 200px)" }}
+              role="main"
+            >
               {children}
             </main>
             <Footer />

@@ -2,13 +2,13 @@ import { NextRequest, NextResponse } from "next/server";
 
 const TMDB_API_KEY = process.env.TMDB_API_KEY || process.env.NEXT_PUBLIC_THE_MOVIE_DB_API_KEY;
 
-// Simple in-memory cache for search results to reduce TMDB calls.
-type CacheEntry = { ts: number; data: unknown };
-const CACHE_TTL = 1000 * 60; // 60s
-const cache = new Map<string, CacheEntry>();
-
 async function fetchJson(url: string) {
-  const res = await fetch(url);
+  const res = await fetch(url, {
+    next: {
+      tags: ['search-results'],
+      revalidate: 3600, // 1 hour ISR
+    },
+  });
   if (!res.ok) return null;
   return res.json();
 }
@@ -16,16 +16,14 @@ async function fetchJson(url: string) {
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const q = searchParams.get("q") || "";
-  if (!q) return NextResponse.json({ movies: [], tv: [], all: [] });
+  
+  if (!q) {
+    const headers = new Headers();
+    headers.set('Cache-Control', 'public, max-age=60');
+    return NextResponse.json({ movies: [], tv: [], all: [] }, { headers });
+  }
 
   try {
-    const cacheKey = `search:${q}`;
-    const cached = cache.get(cacheKey);
-    
-    if (cached && Date.now() - cached.ts < CACHE_TTL) {
-      return NextResponse.json(cached.data as Record<string, unknown>);
-    }
-
     const movieUrl = `https://api.themoviedb.org/3/search/movie?api_key=${TMDB_API_KEY}&query=${encodeURIComponent(q)}&include_adult=false&language=en-US&region=us`;
     const tvUrl = `https://api.themoviedb.org/3/search/tv?api_key=${TMDB_API_KEY}&query=${encodeURIComponent(q)}&include_adult=false&language=en-US&region=us`;
 
@@ -34,7 +32,7 @@ export async function GET(request: NextRequest) {
     const movies = Array.isArray(movieResp?.results) ? movieResp.results : [];
     const tv = Array.isArray(tvResp?.results) ? tvResp.results : [];
 
-    // Attach US providers to each result (server-side) to avoid client doing this work
+    // Attach US providers to each result (server-side)
     const attachProviders = async (items: Array<{ id?: number }>, isTv = false) => {
       return Promise.all(
         items.map(async (item) => {
@@ -42,7 +40,13 @@ export async function GET(request: NextRequest) {
             const id = item.id;
             const type = isTv ? "tv" : "movie";
             const providerRes = await fetch(
-              `https://api.themoviedb.org/3/${type}/${id}/watch/providers?api_key=${TMDB_API_KEY}`
+              `https://api.themoviedb.org/3/${type}/${id}/watch/providers?api_key=${TMDB_API_KEY}`,
+              {
+                next: {
+                  tags: ['search-providers', `search-provider:${type}:${id}`],
+                  revalidate: 3600,
+                },
+              }
             );
             const providerJson = await providerRes.json();
             return {
@@ -64,9 +68,19 @@ export async function GET(request: NextRequest) {
     const all = [...moviesWithProviders, ...tvWithProviders];
 
     const result = { movies: moviesWithProviders, tv: tvWithProviders, all };
-    cache.set(cacheKey, { ts: Date.now(), data: result });
-    return NextResponse.json(result);
+
+    // Add HTTP cache headers
+    const headers = new Headers();
+    headers.set('Cache-Control', 'public, max-age=60, stale-while-revalidate=600');
+    headers.set('CDN-Cache-Control', 'max-age=600');
+
+    return NextResponse.json(result, { headers });
   } catch (err) {
-    return NextResponse.json({ movies: [], tv: [], all: [], error: String(err) }, { status: 500 });
+    const headers = new Headers();
+    headers.set('Cache-Control', 'public, max-age=60');
+    return NextResponse.json(
+      { movies: [], tv: [], all: [], error: String(err) },
+      { status: 500, headers }
+    );
   }
 }
