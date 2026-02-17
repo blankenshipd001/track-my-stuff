@@ -6,9 +6,10 @@ import { Providers } from "@utils/providers/providers";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { PWAInstallPrompt } from "@/components/pwa-install-prompt";
-import "./globals.css";
+import { FontLoader } from "@/components/font-loader";
 import { Viewport } from "next";
 import { Suspense } from "react";
+import "./globals.css";
 
 const roboto = Roboto({
   weight: ["300", "400", "500", "700"],
@@ -40,6 +41,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className={roboto.className}>
+        <FontLoader />
         <Suspense fallback={<div style={{ minHeight: "100vh", background: "#111827" }} />}>
           <Providers>
             <CssBaseline />

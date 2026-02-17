@@ -265,7 +265,7 @@ export default function CastSection({ cast }: CastSectionProps) {
   }
 
   return (
-    <Box sx={{ mt: 6, mb: 4 }}>
+    <Box sx={{ mt: 3, mb: 4 }}>
       <Typography
         variant="h5"
         sx={{

@@ -39,11 +39,11 @@ export const MediaGrid = ({ movies, addClicked, removeClicked, isWatchlist, user
   const isMd = useMediaQuery(theme.breakpoints.between("md", "lg"));
 
   const cols = useMemo(() => {
-    if (isXs) return 1;
-    if (isSm) return 2;
-    if (isMd) return 3;
-    return 4;
-  }, [isXs, isSm, isMd]);
+    if (isXs) return 2;
+    if (isSm) return 3;
+    if (isMd) return 4;
+    return isWatchlist ? 6 : 4;
+  }, [isXs, isSm, isMd, isWatchlist]);
 
   // Fetch watchlist IDs if not already on watchlist page
   useEffect(() => {
@@ -165,7 +165,7 @@ export const MediaGrid = ({ movies, addClicked, removeClicked, isWatchlist, user
 
   return (
     <>
-      <ImageList cols={cols} sx={{ width: "100%", height: "100%" }} gap={16}>
+      <ImageList cols={cols} sx={{ width: "100%", height: "100%" }} gap={isWatchlist ? 12 : 16}>
         {movies.map((movie) => {
           const poster = movie.poster_path ?? movie.backdrop_path;
           const title = movie.title ?? movie.original_title ?? movie.original_name;

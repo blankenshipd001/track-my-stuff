@@ -16,8 +16,10 @@ export default function DetailsPageServer({ user, media, recommended, isTv }: { 
         sx={{
           p: { xs: 2, md: 3 },
           borderRadius: 2,
+          background: 'linear-gradient(135deg, rgba(17, 24, 39, 0.85), rgba(31, 41, 55, 0.85))',
+          backdropFilter: 'blur(10px)',
           boxShadow: "0 4px 20px rgba(0,0,0,0.6)",
-          border: "1px solid rgba(255,255,255,0.05)",
+          border: "1px solid rgba(192, 132, 252, 0.15)",
         }}
       >
         <DetailsHeaderServer user={user} media={media} />
