@@ -32,7 +32,8 @@
         "watchilst",
         "watchlist",
         "WATCHLIST",
-        "watchlists"
+        "watchlists",
+        "WCAG"
     ],
     "ignoreWords": [],
     "import": []

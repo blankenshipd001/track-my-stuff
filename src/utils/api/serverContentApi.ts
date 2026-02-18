@@ -32,14 +32,16 @@ export async function fetchPopularContent(): Promise<Media[]> {
     
     const batchResults = await Promise.all(
       batch.map((item) =>
-        fetch(`https://api.themoviedb.org/3/movie/${item.id}/watch/providers?api_key=${movie_api_key}&external_source=imdb_id`)
+        fetch(`https://api.themoviedb.org/3/movie/${item.id}/watch/providers?api_key=${movie_api_key}&external_source=imdb_id`, {
+          next: { revalidate: 86400 } // Cache for 24 hours
+        })
           .then((res) => res.json())
           .then((providers) => {
             return {
               ...item,
               movieId: item.id,
               providers: providers.results?.US ?? [],
-            };
+            } as Partial<Media>;
           })
           .catch((error) => {
             console.error(`Error fetching providers for movie ${item.id}:`, error);
@@ -47,17 +49,12 @@ export async function fetchPopularContent(): Promise<Media[]> {
               ...item,
               movieId: item.id,
               providers: [],
-            };
+            } as Partial<Media>;
           })
       )
     );
 
-    trendingResults.push(...batchResults);
-
-    // Add small delay between batches to avoid rate limiting
-    if (i + BATCH_SIZE < allResults.length) {
-      await new Promise(resolve => setTimeout(resolve, 100));
-    }
+    trendingResults.push(...(batchResults as Media[]));
   }
 
   return trendingResults;
