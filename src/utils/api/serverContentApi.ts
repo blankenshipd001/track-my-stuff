@@ -6,7 +6,7 @@ const popular_url = `https://api.themoviedb.org/3/movie/popular?api_key=${movie_
 export async function fetchPopularContent(): Promise<Media[]> {
   // Fetch multiple pages to support pagination on the frontend
   const pages = [1, 2];
-  const allResults: any[] = [];
+  const allResults: Array<{ id: number; [key: string]: unknown }> = [];
 
   // Fetch multiple pages in parallel
   const pageResponses = await Promise.all(
