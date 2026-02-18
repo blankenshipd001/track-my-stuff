@@ -3,6 +3,7 @@
 import { Box, Container, Typography, Button } from "@mui/material";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { COLORS, GRADIENTS, TRANSITIONS } from '@/lib/theme-constants';
 
 export default function NotFound() {
   const router = useRouter();
@@ -36,7 +37,7 @@ export default function NotFound() {
             sx={{
               fontSize: { xs: "6rem", md: "10rem" },
               fontWeight: "bold",
-              background: "linear-gradient(to right, #c084fc, #f472b6)",
+              background: GRADIENTS.textPurplePink,
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
               backgroundClip: "text",
@@ -63,7 +64,7 @@ export default function NotFound() {
           <Typography
             variant="body1"
             sx={{
-              color: "#d1d5db",
+              color: COLORS.gray[300],
               maxWidth: "500px",
               lineHeight: 1.8,
               mb: 4,
@@ -78,14 +79,14 @@ export default function NotFound() {
               variant="contained"
               onClick={() => router.back()}
               sx={{
-                background: "linear-gradient(to right, #c084fc, #f472b6)",
+                background: GRADIENTS.textPurplePink,
                 color: "white",
                 px: 4,
                 py: 1.5,
                 textTransform: "none",
                 fontWeight: "600",
                 "&:hover": {
-                  background: "linear-gradient(to right, #a855f7, #ec4899)",
+                  background: GRADIENTS.purplePink,
                 },
               }}
             >
@@ -96,16 +97,16 @@ export default function NotFound() {
               href="/"
               variant="outlined"
               sx={{
-                borderColor: "#c084fc",
-                color: "#c084fc",
+                borderColor: COLORS.purple.solid,
+                color: COLORS.purple.solid,
                 px: 4,
                 py: 1.5,
                 textTransform: "none",
                 fontWeight: "600",
                 "&:hover": {
-                  borderColor: "#f472b6",
-                  color: "#f472b6",
-                  background: "rgba(192, 132, 252, 0.1)",
+                  borderColor: COLORS.pink.solid,
+                  color: COLORS.pink.solid,
+                  background: COLORS.purple[100],
                 },
               }}
             >
@@ -122,7 +123,7 @@ export default function NotFound() {
               width: "100%",
             }}
           >
-            <Typography variant="body2" sx={{ color: "#9ca3af", mb: 2 }}>
+            <Typography variant="body2" sx={{ color: COLORS.gray[400], mb: 2 }}>
               Popular pages:
             </Typography>
             <Box
@@ -136,9 +137,9 @@ export default function NotFound() {
               <Link
                 href="/activity"
                 style={{
-                  color: "#c084fc",
+                  color: COLORS.purple.solid,
                   textDecoration: "none",
-                  transition: "color 0.2s",
+                  transition: TRANSITIONS.fast,
                 }}
               >
                 Activity
@@ -146,9 +147,9 @@ export default function NotFound() {
               <Link
                 href="/streaming"
                 style={{
-                  color: "#c084fc",
+                  color: COLORS.purple.solid,
                   textDecoration: "none",
-                  transition: "color 0.2s",
+                  transition: TRANSITIONS.fast,
                 }}
               >
                 Streaming
@@ -156,9 +157,9 @@ export default function NotFound() {
               <Link
                 href="/watched"
                 style={{
-                  color: "#c084fc",
+                  color: COLORS.purple.solid,
                   textDecoration: "none",
-                  transition: "color 0.2s",
+                  transition: TRANSITIONS.fast,
                 }}
               >
                 Watched
@@ -166,9 +167,9 @@ export default function NotFound() {
               <Link
                 href="/about"
                 style={{
-                  color: "#c084fc",
+                  color: COLORS.purple.solid,
                   textDecoration: "none",
-                  transition: "color 0.2s",
+                  transition: TRANSITIONS.fast,
                 }}
               >
                 About

@@ -11,6 +11,7 @@ import ImageList from "@mui/material/ImageList";
 import useNotificationBar from "@/components/notifications/useNotificationBar";
 import { requestRemoveFromWatchList, getContent } from "@/utils/api/contentApi";
 import { WatchlistFlipCard } from "./watchlist-flip-card";
+import { COLORS } from '@/lib/theme-constants';
 
 interface MediaGridProps {
   movies: Media[];
@@ -180,12 +181,12 @@ export const MediaGrid = ({ movies, isWatchlist, user }: MediaGridProps): React.
               borderColor: '#a78bfa',
               color: '#a78bfa',
               '&:hover': {
-                borderColor: '#c084fc',
+                borderColor: COLORS.purple.solid,
                 backgroundColor: 'rgba(167, 139, 250, 0.08)',
               },
               '&:disabled': {
-                borderColor: '#6b7280',
-                color: '#6b7280',
+                borderColor: COLORS.gray[500],
+                color: COLORS.gray[500],
               },
             }}
           >

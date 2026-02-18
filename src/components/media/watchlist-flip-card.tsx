@@ -8,6 +8,7 @@ import { motion } from "framer-motion";
 import ImageListItem from "@mui/material/ImageListItem";
 import { Media } from "@/data-models/media.interface";
 import { ProviderLogos } from "../provider/ProviderLogos";
+import { COLORS, GRADIENTS, SHADOWS, TRANSITIONS, BORDER_RADIUS } from "@/lib/theme-constants";
 
 export interface WatchlistFlipCardProps {
   movie: Media;
@@ -60,7 +61,7 @@ export const WatchlistFlipCard: React.FC<WatchlistFlipCardProps> = ({
       return <ProviderLogos list={providers} />;
     }
     return (
-      <Box sx={{ color: '#9ca3af', fontSize: '0.85rem', textAlign: 'center' }}>
+      <Box sx={{ color: COLORS.gray[400], fontSize: '0.85rem', textAlign: 'center' }}>
         Not available
       </Box>
     );
@@ -88,23 +89,23 @@ export const WatchlistFlipCard: React.FC<WatchlistFlipCardProps> = ({
         aria-pressed={isFlipped}
         aria-label={`${title} - press Enter to see available providers. Currently showing ${isFlipped ? 'providers' : 'poster'}`}
         sx={{
-          borderRadius: 1.5,
+          borderRadius: BORDER_RADIUS.md,
           overflow: "hidden",
           width: "100%",
           height: "auto",
           aspectRatio: "2 / 3",
           border: isFocused
             ? '2px solid #a78bfa'
-            : '1px solid rgba(192, 132, 252, 0.2)',
+            : `1px solid ${COLORS.purple[200]}`,
           outline: isFocused ? '2px solid #a78bfa' : 'none',
           outlineOffset: '2px',
-          background: 'linear-gradient(135deg, rgba(17, 24, 39, 0.85), rgba(31, 41, 55, 0.85))',
+          background: GRADIENTS.card,
           backdropFilter: 'blur(10px)',
           display: 'flex',
-          transition: 'all 0.3s ease',
+          transition: TRANSITIONS.default,
           '&:hover': {
-            borderColor: 'rgba(192, 132, 252, 0.5)',
-            boxShadow: '0 8px 32px rgba(192, 132, 252, 0.15)',
+            borderColor: COLORS.purple[500],
+            boxShadow: SHADOWS.cardHoverLight,
           },
           '&:focus-visible': {
             outline: '2px solid #a78bfa',
@@ -180,11 +181,11 @@ export const WatchlistFlipCard: React.FC<WatchlistFlipCardProps> = ({
                   title="View available providers"
                   sx={{
                     pointerEvents: 'auto',
-                    background: 'rgba(192, 132, 252, 0.2)',
-                    border: '1px solid rgba(192, 132, 252, 0.5)',
-                    color: '#c084fc',
+                    background: COLORS.purple[200],
+                    border: `1px solid ${COLORS.purple[500]}`,
+                    color: COLORS.purple.solid,
                     '&:hover': {
-                      background: 'rgba(192, 132, 252, 0.4)',
+                      background: COLORS.purple[400],
                     },
                   }}
                 >
@@ -203,11 +204,11 @@ export const WatchlistFlipCard: React.FC<WatchlistFlipCardProps> = ({
                 title={isInWatchlist ? "Remove from watchlist" : "Add to watchlist"}
                 sx={{
                   pointerEvents: 'auto',
-                  background: isInWatchlist ? 'rgba(244, 114, 182, 0.2)' : 'rgba(192, 132, 252, 0.2)',
-                  border: isInWatchlist ? '1px solid rgba(244, 114, 182, 0.5)' : '1px solid rgba(192, 132, 252, 0.5)',
-                  color: isInWatchlist ? '#f472b6' : '#c084fc',
+                  background: isInWatchlist ? COLORS.pink[200] : COLORS.purple[200],
+                  border: isInWatchlist ? `1px solid ${COLORS.pink[500]}` : `1px solid ${COLORS.purple[500]}`,
+                  color: isInWatchlist ? COLORS.pink.solid : COLORS.purple.solid,
                   '&:hover': {
-                    background: isInWatchlist ? 'rgba(244, 114, 182, 0.4)' : 'rgba(192, 132, 252, 0.4)',
+                    background: isInWatchlist ? COLORS.pink[400] : COLORS.purple[400],
                   },
                 }}
               >
@@ -228,8 +229,8 @@ export const WatchlistFlipCard: React.FC<WatchlistFlipCardProps> = ({
               alignItems: "center",
               justifyContent: "space-between",
               p: 1.5,
-              background: 'linear-gradient(135deg, rgba(192, 132, 252, 0.1), rgba(244, 114, 182, 0.1))',
-              transform: 'scaleX(-1)',
+              background: GRADIENTS.flipCardBack,
+              transform: 'rotateY(180deg)',
               cursor: isMobile ? 'pointer' : 'default',
             }}
             onClick={(e) => {
@@ -246,7 +247,7 @@ export const WatchlistFlipCard: React.FC<WatchlistFlipCardProps> = ({
             >
               <Box
                 sx={{
-                  color: '#f472b6',
+                  color: COLORS.pink.solid,
                   fontWeight: 700,
                   fontSize: '0.85rem',
                   display: '-webkit-box',
@@ -262,7 +263,7 @@ export const WatchlistFlipCard: React.FC<WatchlistFlipCardProps> = ({
 
             {/* Available On */}
             <Box sx={{ width: '100%', textAlign: 'center' }}>
-              <Box sx={{ color: '#c084fc', fontWeight: 700, fontSize: '0.75rem', mb: 0.75 }}>
+              <Box sx={{ color: COLORS.purple.solid, fontWeight: 700, fontSize: '0.75rem', mb: 0.75 }}>
                 AVAILABLE ON
               </Box>
               <Box
@@ -296,11 +297,11 @@ export const WatchlistFlipCard: React.FC<WatchlistFlipCardProps> = ({
                 title="View poster"
                 sx={{
                   pointerEvents: 'auto',
-                  background: 'rgba(192, 132, 252, 0.2)',
-                  border: '1px solid rgba(192, 132, 252, 0.5)',
-                  color: '#c084fc',
+                  background: COLORS.purple[200],
+                  border: `1px solid ${COLORS.purple[500]}`,
+                  color: COLORS.purple.solid,
                   '&:hover': {
-                    background: 'rgba(192, 132, 252, 0.4)',
+                    background: COLORS.purple[400],
                   },
                 }}
               >
@@ -317,11 +318,11 @@ export const WatchlistFlipCard: React.FC<WatchlistFlipCardProps> = ({
                 title="More information"
                 sx={{
                   pointerEvents: 'auto',
-                  background: 'rgba(168, 85, 247, 0.2)',
-                  border: '1px solid rgba(168, 85, 247, 0.5)',
-                  color: '#a855f7',
+                  background: COLORS.purple[300],
+                  border: `1px solid ${COLORS.purple[600]}`,
+                  color: COLORS.purple.solid,
                   '&:hover': {
-                    background: 'rgba(168, 85, 247, 0.4)',
+                    background: COLORS.purple[500],
                   },
                 }}
               >
@@ -338,11 +339,11 @@ export const WatchlistFlipCard: React.FC<WatchlistFlipCardProps> = ({
                 title={isInWatchlist ? "Remove from watchlist" : "Add to watchlist"}
                 sx={{
                   pointerEvents: 'auto',
-                  background: isInWatchlist ? 'rgba(244, 114, 182, 0.2)' : 'rgba(192, 132, 252, 0.2)',
-                  border: isInWatchlist ? '1px solid rgba(244, 114, 182, 0.5)' : '1px solid rgba(192, 132, 252, 0.5)',
-                  color: isInWatchlist ? '#f472b6' : '#c084fc',
+                  background: isInWatchlist ? COLORS.pink[200] : COLORS.purple[200],
+                  border: isInWatchlist ? `1px solid ${COLORS.pink[500]}` : `1px solid ${COLORS.purple[500]}`,
+                  color: isInWatchlist ? COLORS.pink.solid : COLORS.purple.solid,
                   '&:hover': {
-                    background: isInWatchlist ? 'rgba(244, 114, 182, 0.4)' : 'rgba(192, 132, 252, 0.4)',
+                    background: isInWatchlist ? COLORS.pink[400] : COLORS.purple[400],
                   },
                 }}
               >

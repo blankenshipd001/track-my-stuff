@@ -1,6 +1,7 @@
 "use client";
 
 import { Box } from "@mui/material";
+import { COLORS } from '@/lib/theme-constants';
 
 /**
  * Contains any items relevant for a footer. 
@@ -20,7 +21,7 @@ export const Footer = () => {
         backdropFilter: "blur(12px)",
         borderTop: "1px solid rgba(75, 85, 99, 0.3)",
         textAlign: "center",
-        color: "#9ca3af",
+        color: COLORS.gray[400],
         fontSize: "0.875rem",
       }}
     >
@@ -29,18 +30,18 @@ export const Footer = () => {
         <a 
           href="https://github.com/blankenshipd001"
           style={{ 
-            color: "#c084fc", 
+            color: COLORS.purple.solid, 
             textDecoration: "none",
             marginLeft: "0.25rem",
             transition: "color 0.2s"
           }}
-          onMouseEnter={(e) => e.currentTarget.style.color = "#f472b6"}
-          onMouseLeave={(e) => e.currentTarget.style.color = "#c084fc"}
+          onMouseEnter={(e) => e.currentTarget.style.color = COLORS.pink.solid}
+          onMouseLeave={(e) => e.currentTarget.style.color = COLORS.purple.solid}
         >
           Code-Monkey
         </a>
       </div>
-      <div style={{ fontSize: "0.75rem", color: "#6b7280" }}>
+      <div style={{ fontSize: "0.75rem", color: COLORS.gray[500] }}>
         This product uses the TMDB API but is not endorsed or certified by TMDB.
         <br />
         This product uses the Just Watch API but is not endorsed or certified by Just Watch.

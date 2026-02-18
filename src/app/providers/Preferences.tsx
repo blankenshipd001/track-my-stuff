@@ -22,10 +22,11 @@ import {
 import styled from "styled-components";
 import Image from "next/image";
 import { getProxyImageUrlForPath } from '@/lib/imageUrl';
+import { COLORS, GRADIENTS } from '@/lib/theme-constants';
 
 const ProviderCard = styled.div<{ selected?: boolean }>`
   background: rgba(31, 41, 55, 0.8);
-  border: 2px solid ${props => props.selected ? '#a855f7' : 'rgba(75, 85, 99, 0.5)'};
+  border: 2px solid ${props => props.selected ? COLORS.purple.solid : 'rgba(75, 85, 99, 0.5)'};
   border-radius: 1rem;
   padding: 1.5rem;
   cursor: pointer;
@@ -37,7 +38,7 @@ const ProviderCard = styled.div<{ selected?: boolean }>`
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2), 0 2px 4px rgba(0, 0, 0, 0.1);
   
   &:hover {
-    border-color: ${props => props.selected ? '#c084fc' : '#6b7280'};
+    border-color: ${props => props.selected ? COLORS.purple.solid : '#6b7280'};
     transform: translateY(-2px);
     box-shadow: ${props => props.selected 
       ? '0 12px 24px rgba(168, 85, 247, 0.2), 0 8px 12px rgba(0, 0, 0, 0.3)' 
@@ -75,8 +76,8 @@ const CheckIcon = styled.div<{ selected?: boolean }>`
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  border: 2px solid ${props => props.selected ? '#a855f7' : '#6b7280'};
-  background: ${props => props.selected ? 'linear-gradient(to right, #a855f7, #ec4899)' : 'transparent'};
+  border: 2px solid ${props => props.selected ? COLORS.purple.solid : '#6b7280'};
+  background: ${props => props.selected ? GRADIENTS.textPurplePink : 'transparent'};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -109,7 +110,7 @@ const StatsCard = styled.div`
 const StatsNumber = styled.div`
   font-size: 1.25rem;
   font-weight: 700;
-  background: linear-gradient(to right, #c084fc, #f472b6);
+  background: ${GRADIENTS.textPurplePink};
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -117,7 +118,7 @@ const StatsNumber = styled.div`
 `;
 
 const StatsLabel = styled.div`
-  color: #9ca3af;
+  color: ${COLORS.gray[400]};
   font-size: 0.8125rem;
   font-weight: 500;
   white-space: nowrap;
@@ -141,12 +142,12 @@ const SearchInput = styled.input`
 
   &:focus {
     outline: none;
-    border-color: #a855f7;
+    border-color: ${COLORS.purple.solid};
     box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.1);
   }
 
   &::placeholder {
-    color: #9ca3af;
+    color: ${COLORS.gray[400]};
   }
 `;
 

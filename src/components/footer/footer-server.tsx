@@ -1,4 +1,5 @@
 import { Box } from "@mui/material";
+import { COLORS } from '@/lib/theme-constants';
 import Link from "next/link";
 
 /**
@@ -20,7 +21,7 @@ export const Footer = async () => {
         backdropFilter: "blur(12px)",
         borderTop: "1px solid rgba(75, 85, 99, 0.3)",
         textAlign: "center",
-        color: "#9ca3af",
+        color: COLORS.gray[400],
         fontSize: "0.875rem",
       }}
     >
@@ -29,7 +30,7 @@ export const Footer = async () => {
         <Link 
           href="https://github.com/blankenshipd001"
           style={{ 
-            color: "#c084fc", 
+            color: COLORS.purple.solid, 
             textDecoration: "none",
             marginLeft: "0.25rem",
           }}

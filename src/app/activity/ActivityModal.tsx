@@ -6,6 +6,7 @@ import { Media } from "@/data-models/media.interface";
 import { ServiceProvider } from "@/data-models/service-provider.interface";
 import { getProxyImageUrlForPath } from "@/lib/imageUrl";
 import NextImage from "next/image";
+import { COLORS } from "@/lib/theme-constants";
 import {
   Modal,
   ModalContent,
@@ -73,12 +74,12 @@ const WatchlistModal = ({
             <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center', marginBottom: '1rem' }}>
               <div style={{ 
                 padding: '0.25rem 0.75rem', 
-                background: 'rgba(168, 85, 247, 0.2)', 
-                border: '1px solid rgba(168, 85, 247, 0.5)',
+                background: COLORS.purple[300], 
+                border: `1px solid ${COLORS.purple[600]}`,
                 borderRadius: '6px',
                 fontSize: '0.875rem',
                 fontWeight: 600,
-                color: '#c084fc'
+                color: COLORS.purple.solid
               }}>
                 {formData.type === 'movie' ? 'Movie' : 'TV Show'}
               </div>
@@ -177,7 +178,7 @@ const WatchlistModal = ({
                   <Label>Where You Are</Label>
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
                     <div>
-                      <label style={{ fontSize: '0.75rem', color: '#9ca3af', display: 'block', marginBottom: '0.25rem' }}>Season</label>
+                      <label style={{ fontSize: '0.75rem', color: COLORS.gray[400], display: 'block', marginBottom: '0.25rem' }}>Season</label>
                       <Input
                         type="number"
                         inputMode="numeric"
@@ -236,7 +237,7 @@ const WatchlistModal = ({
                       />
                     </div>
                     <div>
-                      <label style={{ fontSize: '0.75rem', color: '#9ca3af', display: 'block', marginBottom: '0.25rem' }}>Episode</label>
+                      <label style={{ fontSize: '0.75rem', color: COLORS.gray[400], display: 'block', marginBottom: '0.25rem' }}>Episode</label>
                       <Input
                         type="number"
                         inputMode="numeric"
@@ -291,7 +292,7 @@ const WatchlistModal = ({
                     border: '1px solid rgba(168, 85, 247, 0.2)'
                   }}>
                     <div style={{ fontSize: '0.875rem', color: '#d1d5db', textAlign: 'center' }}>
-                      <div style={{ fontSize: '1.5rem', fontWeight: 700, color: '#c084fc', marginBottom: '0.25rem' }}>
+                      <div style={{ fontSize: '1.5rem', fontWeight: 700, color: COLORS.purple.solid, marginBottom: '0.25rem' }}>
                         {totalNumberOfSeasons} / {totalNumberOfEpisodes}
                       </div>
                       <div>Total Seasons / Episodes</div>

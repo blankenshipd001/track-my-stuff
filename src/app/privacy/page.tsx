@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Box, Container, Typography, List, ListItem, Paper } from '@mui/material';
+import { COLORS, GRADIENTS } from '@/lib/theme-constants';
 
 export const metadata: Metadata = {
   title: 'Privacy Policy - Movies Tracker',
@@ -25,7 +26,7 @@ export default function PrivacyPolicyPage() {
             sx={{
               fontWeight: 'bold',
               mb: 2,
-              background: 'linear-gradient(to right, #c084fc, #f472b6)',
+              background: GRADIENTS.textPurplePink,
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
               backgroundClip: 'text',
@@ -34,7 +35,7 @@ export default function PrivacyPolicyPage() {
             Privacy Policy
           </Typography>
           
-          <Typography variant="body2" sx={{ color: '#9ca3af', mb: 4 }}>
+          <Typography variant="body2" sx={{ color: COLORS.gray[400], mb: 4 }}>
             <strong>Last Updated:</strong> January 28, 2026
           </Typography>
 
@@ -216,7 +217,7 @@ export default function PrivacyPolicyPage() {
                   <strong style={{ color: 'white' }}>With your explicit consent:</strong> Only if you specifically authorize us to share information
                 </ListItem>
               </List>
-              <Typography variant="body2" sx={{ mt: 1.5, color: '#9ca3af' }}>
+              <Typography variant="body2" sx={{ mt: 1.5, color: COLORS.gray[400] }}>
                 <strong>Note:</strong> We use TMDB and streaming availability APIs to retrieve public movie/TV information, 
                 but we do not send your personal information to these services. Your searches and watchlist data stay private.
               </Typography>

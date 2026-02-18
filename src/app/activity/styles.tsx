@@ -1,6 +1,6 @@
 
 import styled, { css } from "styled-components";
-// import { Plus, Film, Tv, Edit2, X, Check, Trash2 } from "lucide-react";
+import { COLORS, GRADIENTS } from "@/lib/theme-constants";
 
 export interface ButtonProps {
   variant?: "primary" | "secondary";
@@ -44,7 +44,7 @@ export const HeaderTop = styled.div`
 export const Title = styled.h1`
   font-size: 2.25rem;
   font-weight: bold;
-  background: linear-gradient(to right, #c084fc, #f472b6);
+  background: ${GRADIENTS.textPurplePink};
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -52,12 +52,12 @@ export const Title = styled.h1`
 `;
 
 export const Subtitle = styled.p`
-  color: #9ca3af;
+  color: ${COLORS.gray[400]};
   margin-top: 0.5rem;
 `;
 
 export const AddButton = styled.button<ButtonProps>`
-  background: linear-gradient(to right, #a855f7, #ec4899);
+  background: ${GRADIENTS.purplePink};
   padding: 0.75rem 1.5rem;
   border-radius: 0.5rem;
   font-weight: 600;
@@ -244,11 +244,11 @@ export const FilterButton = styled.button<ButtonProps>`
   border: none;
   cursor: pointer;
   transition: all 0.2s;
-  background: ${(props) => (props.$active ? "#a855f7" : "rgba(31, 41, 55, 0.5)")};
+  background: ${(props) => (props.$active ? COLORS.purple.solid : "rgba(31, 41, 55, 0.5)")};
   color: ${(props) => (props.$active ? "white" : "#d1d5db")};
 
   &:hover {
-    background: ${(props) => (props.$active ? "#a855f7" : "rgba(55, 65, 81, 0.5)")};
+    background: ${(props) => (props.$active ? COLORS.purple.solid : "rgba(55, 65, 81, 0.5)")};
   }
 `;
 

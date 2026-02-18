@@ -4,30 +4,63 @@ const movie_api_key = process.env.TMDB_API_KEY || process.env.NEXT_PUBLIC_THE_MO
 const popular_url = `https://api.themoviedb.org/3/movie/popular?api_key=${movie_api_key}&include_video=false`;
 
 export async function fetchPopularContent(): Promise<Media[]> {
-  return fetch(popular_url, { next: { revalidate: 3600 } }) // Cache for 1 hour
-    .then(async (res) => {
-      const json = await res.json();
-      return json;
-    })
-    .then(async (popularRes) => {
-      const trendingResults: Media[] = await Promise.all(
-        popularRes.results.map((item: { id: unknown }) => {
-          return fetch(`https://api.themoviedb.org/3/movie/${item.id}/watch/providers?api_key=${movie_api_key}&external_source=imdb_id`)
-            .then((res) => res.json())
-            .then((providers) => {
-              const newMovie = {
-                ...item,
-                movieId: item.id,
-                providers: providers.results.US ?? [],
-              };
+  // Fetch multiple pages to support pagination on the frontend
+  const pages = [1, 2];
+  const allResults: any[] = [];
 
-              return newMovie;
-            });
-        })
-      );
+  // Fetch multiple pages in parallel
+  const pageResponses = await Promise.all(
+    pages.map((page) =>
+      fetch(`${popular_url}&page=${page}`, { next: { revalidate: 3600 } })
+        .then((res) => res.json())
+    )
+  );
 
-      return trendingResults;
-    });
+  // Combine all results
+  pageResponses.forEach((response) => {
+    if (response.results && Array.isArray(response.results)) {
+      allResults.push(...response.results);
+    }
+  });
+
+  // Fetch providers for all movies with batching to avoid overwhelming the API
+  const BATCH_SIZE = 5;
+  const trendingResults: Media[] = [];
+
+  for (let i = 0; i < allResults.length; i += BATCH_SIZE) {
+    const batch = allResults.slice(i, i + BATCH_SIZE);
+    
+    const batchResults = await Promise.all(
+      batch.map((item) =>
+        fetch(`https://api.themoviedb.org/3/movie/${item.id}/watch/providers?api_key=${movie_api_key}&external_source=imdb_id`)
+          .then((res) => res.json())
+          .then((providers) => {
+            return {
+              ...item,
+              movieId: item.id,
+              providers: providers.results?.US ?? [],
+            };
+          })
+          .catch((error) => {
+            console.error(`Error fetching providers for movie ${item.id}:`, error);
+            return {
+              ...item,
+              movieId: item.id,
+              providers: [],
+            };
+          })
+      )
+    );
+
+    trendingResults.push(...batchResults);
+
+    // Add small delay between batches to avoid rate limiting
+    if (i + BATCH_SIZE < allResults.length) {
+      await new Promise(resolve => setTimeout(resolve, 100));
+    }
+  }
+
+  return trendingResults;
 }
 
 export async function getMovieDetails(slug: string): Promise<Media | null> {

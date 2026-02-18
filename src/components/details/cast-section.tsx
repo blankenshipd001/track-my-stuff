@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { ChevronLeft, ChevronRight } from '@mui/icons-material';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
+import { COLORS, GRADIENTS, SHADOWS, TRANSITIONS, BORDER_RADIUS } from '@/lib/theme-constants';
 
 interface CastMember {
   id: number;
@@ -46,16 +47,16 @@ const FlipCard: React.FC<{ castMember: CastMember }> = ({ castMember }) => {
       <Card
         sx={{
           height: '100%',
-          borderRadius: 1.5,
-          border: '1px solid rgba(192, 132, 252, 0.3)',
-          background: 'linear-gradient(135deg, rgba(17, 24, 39, 0.8), rgba(31, 41, 55, 0.8))',
+          borderRadius: BORDER_RADIUS.md,
+          border: `1px solid ${COLORS.purple[300]}`,
+          background: GRADIENTS.cardLight,
           backdropFilter: 'blur(10px)',
           display: 'flex',
           flexDirection: 'column',
-          transition: 'all 0.3s ease',
+          transition: TRANSITIONS.default,
           '&:hover': {
-            borderColor: 'rgba(192, 132, 252, 0.6)',
-            boxShadow: '0 8px 32px rgba(192, 132, 252, 0.2)',
+            borderColor: COLORS.purple[600],
+            boxShadow: SHADOWS.cardHover,
           },
         }}
       >
@@ -83,7 +84,7 @@ const FlipCard: React.FC<{ castMember: CastMember }> = ({ castMember }) => {
                 sx={{
                   width: '100%',
                   height: '100%',
-                  background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                  background: GRADIENTS.purpleShade,
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -105,8 +106,9 @@ const FlipCard: React.FC<{ castMember: CastMember }> = ({ castMember }) => {
               display: 'flex',
               flexDirection: 'column',
               p: 1.5,
-              background: 'linear-gradient(135deg, rgba(192, 132, 252, 0.1), rgba(244, 114, 182, 0.1))',
+              background: GRADIENTS.flipCardBack,
               justifyContent: 'space-between',
+              transform: 'rotateY(180deg)',
             }}
           >
             <Box>
@@ -114,7 +116,7 @@ const FlipCard: React.FC<{ castMember: CastMember }> = ({ castMember }) => {
               <Typography
                 variant="body2"
                 sx={{
-                  color: '#f472b6',
+                  color: COLORS.pink.solid,
                   fontWeight: 900,
                   fontSize: '0.85rem',
                   mb: 0.5,
@@ -132,7 +134,7 @@ const FlipCard: React.FC<{ castMember: CastMember }> = ({ castMember }) => {
               <Typography
                 variant="body2"
                 sx={{
-                  color: '#c084fc',
+                  color: COLORS.purple.solid,
                   fontWeight: 600,
                   fontSize: '0.8rem',
                   mb: 0.75,
@@ -151,7 +153,7 @@ const FlipCard: React.FC<{ castMember: CastMember }> = ({ castMember }) => {
                 <Typography
                   variant="caption"
                   sx={{
-                    color: '#9ca3af',
+                    color: COLORS.gray[400],
                     fontSize: '0.65rem',
                     display: 'block',
                     mb: 0.5,
@@ -166,7 +168,7 @@ const FlipCard: React.FC<{ castMember: CastMember }> = ({ castMember }) => {
                 <Typography
                   variant="caption"
                   sx={{
-                    color: '#9ca3af',
+                    color: COLORS.gray[400],
                     fontSize: '0.65rem',
                   }}
                 >
@@ -181,13 +183,14 @@ const FlipCard: React.FC<{ castMember: CastMember }> = ({ castMember }) => {
           sx={{
             p: 0.75,
             backgroundColor: 'rgba(0,0,0,0.3)',
-            borderTop: '1px solid rgba(192, 132, 252, 0.2)',
+            borderTop: `1px solid ${COLORS.purple[200]}`,
+            transform: isFlipped ? 'rotateY(180deg)' : 'none',
           }}
         >
           <Typography
             variant="body2"
             sx={{
-              color: '#d1d5db',
+              color: COLORS.gray[300],
               fontSize: '0.7rem',
               mb: 0.5,
               overflow: 'hidden',
@@ -202,17 +205,17 @@ const FlipCard: React.FC<{ castMember: CastMember }> = ({ castMember }) => {
             href={`/cast/${castMember.id}`}
             size="small"
             sx={{
-              background: '#a855f7',
+              background: COLORS.purpleDark.solid,
               color: 'white',
               textTransform: 'none',
               fontSize: '0.75rem',
               p: '4px 8px',
               minWidth: 'auto',
               fontWeight: 600,
-              transition: 'all 0.2s ease',
+              transition: TRANSITIONS.fast,
               '&:hover': {
-                background: '#9333ea',
-                boxShadow: '0 4px 12px rgba(168, 85, 247, 0.4)',
+                background: COLORS.purpleDark.solidHover,
+                boxShadow: SHADOWS.buttonHover,
               },
             }}
             onClick={(e) => e.stopPropagation()}
@@ -272,7 +275,7 @@ export default function CastSection({ cast }: CastSectionProps) {
           color: 'white',
           fontWeight: 'bold',
           mb: 2,
-          background: 'linear-gradient(to right, #c084fc, #f472b6)',
+          background: GRADIENTS.textPurplePink,
           WebkitBackgroundClip: 'text',
           WebkitTextFillColor: 'transparent',
           backgroundClip: 'text',
@@ -285,18 +288,19 @@ export default function CastSection({ cast }: CastSectionProps) {
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
         {/* Left Arrow */}
         <IconButton
+          aria-label="Scroll cast carousel left"
           onClick={() => scroll('left')}
           disabled={!canScrollLeft}
           sx={{
             display: { xs: 'none', sm: 'flex' },
-            color: canScrollLeft ? '#c084fc' : '#4b5563',
-            border: canScrollLeft ? '1px solid rgba(192, 132, 252, 0.5)' : '1px solid rgba(192, 132, 252, 0.1)',
-            borderRadius: 1,
+            color: canScrollLeft ? COLORS.purple.solid : COLORS.gray[600],
+            border: canScrollLeft ? `1px solid ${COLORS.purple[500]}` : `1px solid ${COLORS.purple[100]}`,
+            borderRadius: BORDER_RADIUS.sm,
             p: 0.5,
-            transition: 'all 0.3s ease',
+            transition: TRANSITIONS.default,
             '&:hover:not(:disabled)': {
-              background: 'rgba(192, 132, 252, 0.1)',
-              borderColor: 'rgba(192, 132, 252, 0.8)',
+              background: COLORS.purple[100],
+              borderColor: COLORS.purple[800],
             },
             '&:disabled': {
               cursor: 'not-allowed',
@@ -324,19 +328,19 @@ export default function CastSection({ cast }: CastSectionProps) {
               height: '6px',
             },
             '&::-webkit-scrollbar-track': {
-              background: 'rgba(192, 132, 252, 0.05)',
+              background: COLORS.purple[50],
               borderRadius: '8px',
             },
             '&::-webkit-scrollbar-thumb': {
-              background: 'rgba(192, 132, 252, 0.3)',
+              background: COLORS.purple[300],
               borderRadius: '8px',
               '&:hover': {
-                background: 'rgba(192, 132, 252, 0.5)',
+                background: COLORS.purple[500],
               },
             },
             
             // Firefox scrollbar
-            scrollbarColor: 'rgba(192, 132, 252, 0.3) rgba(192, 132, 252, 0.05)',
+            scrollbarColor: `${COLORS.purple[300]} ${COLORS.purple[50]}`,
             scrollbarWidth: 'thin',
           }}
         >
@@ -355,18 +359,19 @@ export default function CastSection({ cast }: CastSectionProps) {
         
         {/* Right Arrow */}
         <IconButton
+          aria-label="Scroll cast carousel right"
           onClick={() => scroll('right')}
           disabled={!canScrollRight}
           sx={{
             display: { xs: 'none', sm: 'flex' },
-            color: canScrollRight ? '#c084fc' : '#4b5563',
-            border: canScrollRight ? '1px solid rgba(192, 132, 252, 0.5)' : '1px solid rgba(192, 132, 252, 0.1)',
-            borderRadius: 1,
+            color: canScrollRight ? COLORS.purple.solid : COLORS.gray[600],
+            border: canScrollRight ? `1px solid ${COLORS.purple[500]}` : `1px solid ${COLORS.purple[100]}`,
+            borderRadius: BORDER_RADIUS.sm,
             p: 0.5,
-            transition: 'all 0.3s ease',
+            transition: TRANSITIONS.default,
             '&:hover:not(:disabled)': {
-              background: 'rgba(192, 132, 252, 0.1)',
-              borderColor: 'rgba(192, 132, 252, 0.8)',
+              background: COLORS.purple[100],
+              borderColor: COLORS.purple[800],
             },
             '&:disabled': {
               cursor: 'not-allowed',
@@ -382,7 +387,7 @@ export default function CastSection({ cast }: CastSectionProps) {
         variant="caption"
         sx={{
           display: { xs: 'block', sm: 'none' },
-          color: '#9ca3af',
+          color: COLORS.gray[400],
           mt: 1,
           fontSize: '0.7rem',
           textAlign: 'center',

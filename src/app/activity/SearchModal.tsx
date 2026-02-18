@@ -5,6 +5,7 @@ import { X, Search as SearchIcon } from "lucide-react";
 import { Media } from "@/data-models/media.interface";
 import { getProxyImageUrlForPath } from "@/lib/imageUrl";
 import { debounce } from "@mui/material/utils";
+import { COLORS } from "@/lib/theme-constants";
 import {
   Modal,
   ModalContent,
@@ -113,7 +114,7 @@ const SearchModal = ({ show, onClose, onSelectTitle }: SearchModalProps) => {
                 outline: 'none',
                 transition: 'border-color 0.2s',
               }}
-              onFocus={(e) => e.target.style.borderColor = '#a855f7'}
+              onFocus={(e) => e.target.style.borderColor = COLORS.purple.solid}
               onBlur={(e) => e.target.style.borderColor = '#374151'}
             />
             <div style={{ position: 'absolute', right: '1rem', top: '50%', transform: 'translateY(-50%)', display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
@@ -125,7 +126,7 @@ const SearchModal = ({ show, onClose, onSelectTitle }: SearchModalProps) => {
                   style={{
                     background: 'transparent',
                     border: 'none',
-                    color: '#9ca3af',
+                    color: COLORS.gray[400],
                     cursor: 'pointer',
                     padding: '0.25rem',
                     display: 'flex',
@@ -135,7 +136,7 @@ const SearchModal = ({ show, onClose, onSelectTitle }: SearchModalProps) => {
                   <X size={18} />
                 </button>
               )}
-              <SearchIcon size={18} color="#9ca3af" />
+              <SearchIcon size={18} color={COLORS.gray[400]} />
             </div>
           </div>
         </div>
@@ -143,19 +144,19 @@ const SearchModal = ({ show, onClose, onSelectTitle }: SearchModalProps) => {
         {/* Search Results */}
         <div style={{ flex: 1, overflowY: 'auto', marginBottom: '1.5rem', minHeight: '200px' }}>
           {isSearching && (
-            <div style={{ textAlign: 'center', padding: '2rem', color: '#9ca3af' }}>
+            <div style={{ textAlign: 'center', padding: '2rem', color: COLORS.gray[400] }}>
               Searching...
             </div>
           )}
 
           {!isSearching && searchValue && dropdownOptions.length === 0 && (
-            <div style={{ textAlign: 'center', padding: '2rem', color: '#9ca3af' }}>
+            <div style={{ textAlign: 'center', padding: '2rem', color: COLORS.gray[400] }}>
               No results found for &ldquo;{searchValue}&rdquo;
             </div>
           )}
 
           {!searchValue && (
-            <div style={{ textAlign: 'center', padding: '2rem', color: '#9ca3af' }}>
+            <div style={{ textAlign: 'center', padding: '2rem', color: COLORS.gray[400] }}>
               Start typing to search for titles
             </div>
           )}
@@ -177,7 +178,7 @@ const SearchModal = ({ show, onClose, onSelectTitle }: SearchModalProps) => {
                   }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.background = '#374151';
-                    e.currentTarget.style.borderColor = '#a855f7';
+                    e.currentTarget.style.borderColor = COLORS.purple.solid;
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.background = '#1f2937';
@@ -201,7 +202,7 @@ const SearchModal = ({ show, onClose, onSelectTitle }: SearchModalProps) => {
                     <div style={{ fontWeight: 600, fontSize: '1rem', color: '#f3f4f6', marginBottom: '0.25rem' }}>
                       {option.title || option.name}
                     </div>
-                    <div style={{ fontSize: '0.875rem', color: '#9ca3af' }}>
+                    <div style={{ fontSize: '0.875rem', color: COLORS.gray[400] }}>
                       {option.type === "movie" ? "Movie" : "TV Show"}
                       {option.release_date && ` • ${new Date(option.release_date).getFullYear()}`}
                       {option.first_air_date && ` • ${new Date(option.first_air_date).getFullYear()}`}

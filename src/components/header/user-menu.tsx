@@ -34,7 +34,11 @@ const UserMenu = ({
 
   return (
     <>
-      <IconButton onClick={(e) => setAnchorEl(e.currentTarget)} sx={{ p: 0, ml: 2 }}>
+      <IconButton 
+        aria-label="Open user menu"
+        onClick={(e) => setAnchorEl(e.currentTarget)} 
+        sx={{ p: 0, ml: 2 }}
+      >
         <Avatar
           alt={user?.email || "User"}
           src={user?.picture}

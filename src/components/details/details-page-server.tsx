@@ -7,6 +7,7 @@ import DetailsMediaGallery from "./details-media-gallery";
 import DetailsRecommended from "./details-recommended";
 import EpisodesSection from "./episodes-section";
 import CastSection from "./cast-section";
+import { GRADIENTS, SHADOWS, BORDER_RADIUS } from '@/lib/theme-constants';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function DetailsPageServer({ user, media, recommended, isTv }: { user: any; media: Media; recommended: Media[]; isTv: boolean }) {
@@ -15,11 +16,11 @@ export default function DetailsPageServer({ user, media, recommended, isTv }: { 
       <Paper
         sx={{
           p: { xs: 2, md: 3 },
-          borderRadius: 2,
-          background: 'linear-gradient(135deg, rgba(17, 24, 39, 0.85), rgba(31, 41, 55, 0.85))',
+          borderRadius: BORDER_RADIUS.lg,
+          background: GRADIENTS.card,
           backdropFilter: 'blur(10px)',
-          boxShadow: "0 4px 20px rgba(0,0,0,0.6)",
-          border: "1px solid rgba(192, 132, 252, 0.15)",
+          boxShadow: SHADOWS.dark,
+          border: '1px solid rgba(192, 132, 252, 0.15)',
         }}
       >
         <DetailsHeaderServer user={user} media={media} />

@@ -8,6 +8,7 @@ import { useState } from "react";
 import { addToWatchList, requestRemoveFromWatchList } from "@/utils/api/contentApi";
 import useNotificationBar from "@/components/notifications/useNotificationBar";
 import { useIsInWatchlist } from "@/hooks/useIsInWatchlist";
+import { COLORS, GRADIENTS, TRANSITIONS } from "@/lib/theme-constants";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function AddToWatchlist({ user, movie }: {user: any, movie: Media }) {
@@ -56,22 +57,22 @@ export default function AddToWatchlist({ user, movie }: {user: any, movie: Media
         sx={{
           background: isInWatchlist 
             ? 'transparent' 
-            : 'linear-gradient(to right, #c084fc, #f472b6)',
+            : GRADIENTS.textPurplePink,
           color: '#fff',
           border: isInWatchlist 
-            ? '2px solid rgba(192, 132, 252, 0.5)' 
+            ? `2px solid ${COLORS.purple[500]}` 
             : 'none',
           fontWeight: 600,
           textTransform: 'none',
           fontSize: '1rem',
           py: 1,
-          transition: 'all 0.3s ease',
+          transition: TRANSITIONS.default,
           '&:hover': {
             background: isInWatchlist 
-              ? 'rgba(192, 132, 252, 0.1)' 
+              ? COLORS.purple[100] 
               : 'linear-gradient(to right, #a855f7, #ec4899)',
             borderColor: isInWatchlist 
-              ? 'rgba(192, 132, 252, 0.8)' 
+              ? COLORS.purple[800] 
               : 'none',
           },
           '&:disabled': {

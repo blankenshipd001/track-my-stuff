@@ -1,13 +1,14 @@
 "use client"
 import { Box, Container, Typography } from "@mui/material";
 import Link from "next/link";
+import { COLORS, GRADIENTS, TRANSITIONS } from "@/lib/theme-constants";
 
 const AboutPage = () => {
   const linkStyle = {
-    color: "#c084fc",
+    color: COLORS.purple.solid,
     textDecoration: "none",
     marginLeft: "0.25rem",
-    transition: "color 0.2s",
+    transition: TRANSITIONS.fast,
   };
 
   return (
@@ -28,7 +29,7 @@ const AboutPage = () => {
             color: "white",
             fontWeight: "bold",
             mb: 4,
-            background: "linear-gradient(to right, #c084fc, #f472b6)",
+            background: GRADIENTS.textPurplePink,
             WebkitBackgroundClip: "text",
             WebkitTextFillColor: "transparent",
             backgroundClip: "text",
@@ -38,21 +39,21 @@ const AboutPage = () => {
         </Typography>
         
         <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
-          <Typography variant="body1" sx={{ color: "#d1d5db", lineHeight: 1.8 }}>
+          <Typography variant="body1" sx={{ color: COLORS.gray[300], lineHeight: 1.8 }}>
             We&apos;re passionate TV and movie fans who wanted a better way to keep track of what&apos;s airing and when. This site was built to give you a clear, calendar-style view of your favorite shows, upcoming episodes, and where to watch them — all in one place. Whether you&apos;re tracking new releases, catching up on a series, or planning your next binge, we&apos;re here to make it easy and enjoyable. Built with care using Next.js, Firebase, and Material UI.
           </Typography>
           
-          <Typography variant="body1" sx={{ color: "#d1d5db", lineHeight: 1.8 }}>
+          <Typography variant="body1" sx={{ color: COLORS.gray[300], lineHeight: 1.8 }}>
             This website is built with React and Material-UI.
           </Typography>
           
-          <Typography variant="body1" sx={{ color: "#9ca3af", mt: 2 }}>
+          <Typography variant="body1" sx={{ color: COLORS.gray[400], mt: 2 }}>
             © 2025 Copyright:
             <a 
               href="https://github.com/blankenshipd001"
               style={linkStyle}
-              onMouseEnter={(e) => e.currentTarget.style.color = "#f472b6"}
-              onMouseLeave={(e) => e.currentTarget.style.color = "#c084fc"}
+              onMouseEnter={(e) => e.currentTarget.style.color = COLORS.pink.solid}
+              onMouseLeave={(e) => e.currentTarget.style.color = COLORS.purple.solid}
             >
               Code-Monkey
             </a>
@@ -72,8 +73,8 @@ const AboutPage = () => {
                 marginLeft: 0,
                 fontSize: "0.875rem",
               }}
-              onMouseEnter={(e) => e.currentTarget.style.color = "#f472b6"}
-              onMouseLeave={(e) => e.currentTarget.style.color = "#c084fc"}
+              onMouseEnter={(e) => e.currentTarget.style.color = COLORS.pink.solid}
+              onMouseLeave={(e) => e.currentTarget.style.color = COLORS.purple.solid}
             >
               Privacy Policy
             </Link>

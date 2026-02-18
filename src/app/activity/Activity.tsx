@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import useGetMyFavoriteProviders from "@/hooks/useGetMyFavoriteProviders";
 import { Media } from "@/data-models/media.interface";
 import { getProxyImageUrlForPath } from "@/lib/imageUrl";
+import { COLORS, GRADIENTS } from "@/lib/theme-constants";
 import NextImage from "next/image";
 import WatchlistModal from "./ActivityModal";
 import SearchModal from "./SearchModal";
@@ -277,7 +278,7 @@ const StreamingWatchlist = ({ watchlist, user }: MyWatchlistProps) => {
             />
           </div>
         ) : (
-          <ProviderBadge color="#a855f7">{provider.provider_name}</ProviderBadge>
+          <ProviderBadge color={COLORS.purple.solid}>{provider.provider_name}</ProviderBadge>
         )}
       </ProviderBadgesContainer>
     );
@@ -317,7 +318,7 @@ const StreamingWatchlist = ({ watchlist, user }: MyWatchlistProps) => {
                   e.currentTarget.style.borderColor = 'rgba(75, 85, 99, 0.5)';
                 }}
               >
-                <span style={{ fontSize: '0.875rem', fontWeight: 600, color: '#9ca3af' }}>
+                <span style={{ fontSize: '0.875rem', fontWeight: 600, color: COLORS.gray[400] }}>
                   MY STREAMING SERVICES
                 </span>
                 {isLegendCollapsed ? <ChevronDown size={20} /> : <ChevronUp size={20} />}
@@ -354,7 +355,7 @@ const StreamingWatchlist = ({ watchlist, user }: MyWatchlistProps) => {
                               />
                             </div>
                           ) : (
-                            <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#a855f7' }} />
+                            <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: COLORS.purple.solid }} />
                           )}
                           <span style={{ fontSize: '0.875rem', color: '#e5e7eb' }}>{provider.provider_name}</span>
                         </div>
@@ -405,7 +406,7 @@ const StreamingWatchlist = ({ watchlist, user }: MyWatchlistProps) => {
                   }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.background = 'rgba(168, 85, 247, 0.2)';
-                    e.currentTarget.style.color = '#c084fc';
+                    e.currentTarget.style.color = COLORS.purple.solid;
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.background = 'transparent';
@@ -434,7 +435,7 @@ const StreamingWatchlist = ({ watchlist, user }: MyWatchlistProps) => {
                   }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.background = 'rgba(168, 85, 247, 0.2)';
-                    e.currentTarget.style.color = '#c084fc';
+                    e.currentTarget.style.color = COLORS.purple.solid;
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.background = 'transparent';
@@ -454,11 +455,11 @@ const StreamingWatchlist = ({ watchlist, user }: MyWatchlistProps) => {
               <StatLabel>Currently Watching</StatLabel>
             </StatCard>
             <StatCard>
-              <StatNumber color="#4ade80">{stats.completed}</StatNumber>
+              <StatNumber color={COLORS.gray[300]}>{stats.completed}</StatNumber>
               <StatLabel>Completed</StatLabel>
             </StatCard>
             <StatCard>
-              <StatNumber color="#c084fc">{stats.watchlist}</StatNumber>
+              <StatNumber color={COLORS.purple.solid}>{stats.watchlist}</StatNumber>
               <StatLabel>In Watchlist</StatLabel>
             </StatCard>
           </StatsGrid>
@@ -496,14 +497,14 @@ const StreamingWatchlist = ({ watchlist, user }: MyWatchlistProps) => {
                 borderRadius: '0.375rem',
                 border: '1px solid rgba(168, 85, 247, 0.4)'
               }}>
-                {filter === "movies" && <Film size={16} color="#c084fc" />}
-                {filter === "tv" && <Tv size={16} color="#c084fc" />}
-                <span style={{ fontSize: '0.875rem', fontWeight: 600, color: '#c084fc' }}>
+                {filter === "movies" && <Film size={16} color={COLORS.purple.solid} />}
+                {filter === "tv" && <Tv size={16} color={COLORS.purple.solid} />}
+                <span style={{ fontSize: '0.875rem', fontWeight: 600, color: COLORS.purple.solid }}>
                   {filter.charAt(0).toUpperCase() + filter.slice(1)}
                 </span>
               </div>
               <span style={{ fontSize: '0.875rem', color: '#d1d5db' }}>
-                Showing <strong style={{ color: '#c084fc' }}>{filteredItems.length}</strong> {filteredItems.length === 1 ? 'item' : 'items'}
+                Showing <strong style={{ color: COLORS.purple.solid }}>{filteredItems.length}</strong> {filteredItems.length === 1 ? 'item' : 'items'}
               </span>
             </div>
             <button
@@ -516,7 +517,7 @@ const StreamingWatchlist = ({ watchlist, user }: MyWatchlistProps) => {
                 background: 'transparent',
                 border: '1px solid rgba(168, 85, 247, 0.4)',
                 borderRadius: '0.375rem',
-                color: '#c084fc',
+                color: COLORS.purple.solid,
                 fontSize: '0.8125rem',
                 fontWeight: 500,
                 cursor: 'pointer',
@@ -635,7 +636,7 @@ const StreamingWatchlist = ({ watchlist, user }: MyWatchlistProps) => {
                   {/* Back of Card */}
                   <CardBack>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.5rem' }}>
-                      <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#c084fc', margin: 0 }}>{item.title || item.name}</h3>
+                      <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', color: COLORS.purple.solid, margin: 0 }}>{item.title || item.name}</h3>
                       <IconButton onClick={() => toggleFlip(item.id)} style={{ position: 'static' }}>
                         <Info size={14} />
                       </IconButton>
@@ -652,25 +653,25 @@ const StreamingWatchlist = ({ watchlist, user }: MyWatchlistProps) => {
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', fontSize: '0.875rem' }}>
                       {item.release_date && (
                         <div>
-                          <span style={{ color: '#9ca3af', fontWeight: 600 }}>Release Date: </span>
+                          <span style={{ color: COLORS.gray[400], fontWeight: 600 }}>Release Date: </span>
                           <span style={{ color: '#d1d5db' }}>{new Date(item.release_date).toLocaleDateString()}</span>
                         </div>
                       )}
                       {item.first_air_date && (
                         <div>
-                          <span style={{ color: '#9ca3af', fontWeight: 600 }}>First Air Date: </span>
+                          <span style={{ color: COLORS.gray[400], fontWeight: 600 }}>First Air Date: </span>
                           <span style={{ color: '#d1d5db' }}>{new Date(item.first_air_date).toLocaleDateString()}</span>
                         </div>
                       )}
                       {item.vote_average > 0 && (
                         <div>
-                          <span style={{ color: '#9ca3af', fontWeight: 600 }}>TMDB Rating: </span>
+                          <span style={{ color: COLORS.gray[400], fontWeight: 600 }}>TMDB Rating: </span>
                           <span style={{ color: '#fbbf24', fontWeight: 600 }}>{item.vote_average.toFixed(1)}/10</span>
                         </div>
                       )}
                       {item.genres && item.genres.length > 0 && (
                         <div>
-                          <span style={{ color: '#9ca3af', fontWeight: 600 }}>Genres: </span>
+                          <span style={{ color: COLORS.gray[400], fontWeight: 600 }}>Genres: </span>
                           <span style={{ color: '#d1d5db' }}>{item.genres.map(g => g.name).join(', ')}</span>
                         </div>
                       )}
@@ -681,7 +682,7 @@ const StreamingWatchlist = ({ watchlist, user }: MyWatchlistProps) => {
                         onClick={() => handleNavigateToDetails(item)}
                         style={{ 
                           width: '100%', 
-                          background: 'linear-gradient(to right, #a855f7, #ec4899)',
+                          background: GRADIENTS.textPinkPurple,
                           border: 'none',
                           padding: '0.75rem',
                           gap: '0.5rem',

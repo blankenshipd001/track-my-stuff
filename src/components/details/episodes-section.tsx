@@ -2,6 +2,7 @@
 import React from "react";
 import { Typography, ToggleButtonGroup, ToggleButton, Box, Card, CardContent, IconButton, useMediaQuery, useTheme, Collapse } from "@mui/material";
 import { ExpandMore } from "@mui/icons-material";
+import { COLORS, GRADIENTS, SHADOWS, TRANSITIONS, BORDER_RADIUS } from '@/lib/theme-constants';
 
 interface Episode {
   id?: number;
@@ -32,7 +33,7 @@ export default function EpisodesSection({ episodes }: { episodes: Season[] }) {
           sx={{
             color: 'white',
             fontWeight: 'bold',
-            background: 'linear-gradient(to right, #c084fc, #f472b6)',
+            background: GRADIENTS.textPurplePink,
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
             backgroundClip: 'text',
@@ -41,13 +42,14 @@ export default function EpisodesSection({ episodes }: { episodes: Season[] }) {
           Episodes
         </Typography>
         <IconButton
+          aria-label={isExpanded ? 'Collapse episodes' : 'Expand episodes'}
           onClick={() => setIsExpanded(!isExpanded)}
           sx={{
             transform: isExpanded ? 'rotate(0deg)' : 'rotate(-90deg)',
-            transition: 'transform 0.3s ease',
-            color: '#c084fc',
+            transition: TRANSITIONS.default,
+            color: COLORS.purple.solid,
             '&:hover': {
-              background: 'rgba(192, 132, 252, 0.1)',
+              background: COLORS.purple[100],
             },
           }}
         >
@@ -67,29 +69,29 @@ export default function EpisodesSection({ episodes }: { episodes: Season[] }) {
             gap: 1,
             display: 'flex',
             '& .MuiToggleButton-root': {
-              color: '#9ca3af',
-              border: '1px solid rgba(192, 132, 252, 0.3)',
+              color: COLORS.gray[400],
+              border: `1px solid ${COLORS.purple[300]}`,
               backgroundColor: 'rgba(17, 24, 39, 0.5)',
-              borderRadius: 1,
+              borderRadius: BORDER_RADIUS.sm,
               minWidth: isMobile ? 44 : 48,
               py: 0.75,
               px: isMobile ? 1 : 1.5,
               textTransform: 'none',
               fontWeight: 600,
               fontSize: isMobile ? '0.8rem' : '0.9rem',
-              transition: 'all 0.3s ease',
+              transition: TRANSITIONS.default,
               '&:hover': {
-                backgroundColor: 'rgba(192, 132, 252, 0.1)',
-                borderColor: 'rgba(192, 132, 252, 0.5)',
-                color: '#c084fc',
+                backgroundColor: COLORS.purple[100],
+                borderColor: COLORS.purple[500],
+                color: COLORS.purple.solid,
               },
               '&.Mui-selected': {
-                backgroundColor: 'rgba(192, 132, 252, 0.2)',
-                color: '#f472b6',
-                borderColor: 'rgba(192, 132, 252, 0.6)',
+                backgroundColor: COLORS.purple[200],
+                color: COLORS.pink.solid,
+                borderColor: COLORS.purple[600],
                 fontWeight: 700,
                 '&:hover': {
-                  backgroundColor: 'rgba(192, 132, 252, 0.3)',
+                  backgroundColor: COLORS.purple[300],
                 },
               },
             },
@@ -112,15 +114,15 @@ export default function EpisodesSection({ episodes }: { episodes: Season[] }) {
                   <Card
                     key={ep.id || idx}
                     sx={{
-                      borderRadius: 1.5,
-                      border: '1px solid rgba(192, 132, 252, 0.15)',
-                      background: 'linear-gradient(135deg, rgba(17, 24, 39, 0.85), rgba(31, 41, 55, 0.85))',
+                      borderRadius: BORDER_RADIUS.md,
+                      border: `1px solid ${COLORS.purple[100]}`,
+                      background: GRADIENTS.card,
                       backdropFilter: 'blur(10px)',
-                      transition: 'all 0.3s ease',
+                      transition: TRANSITIONS.default,
                       '&:hover': {
-                        borderColor: 'rgba(192, 132, 252, 0.5)',
-                        boxShadow: '0 8px 32px rgba(192, 132, 252, 0.15)',
-                        background: 'linear-gradient(135deg, rgba(17, 24, 39, 0.9), rgba(31, 41, 55, 0.9))',
+                        borderColor: COLORS.purple[500],
+                        boxShadow: SHADOWS.cardHoverLight,
+                        background: GRADIENTS.cardHeavy,
                       },
                     }}
                   >
@@ -130,14 +132,14 @@ export default function EpisodesSection({ episodes }: { episodes: Season[] }) {
                         sx={{
                           fontWeight: 700,
                           mb: 0.75,
-                          background: 'linear-gradient(to right, #f472b6, #c084fc)',
+                          background: GRADIENTS.textPinkPurple,
                           WebkitBackgroundClip: 'text',
                           WebkitTextFillColor: 'transparent',
                           backgroundClip: 'text',
                           fontSize: isMobile ? '0.95rem' : '1rem',
                         }}
                       >
-                        <span style={{ color: '#9ca3af', WebkitTextFillColor: 'unset' }}>Ep {ep.episode_number}:</span> {ep.name}
+                        <span style={{ color: COLORS.gray[400], WebkitTextFillColor: 'unset' }}>Ep {ep.episode_number}:</span> {ep.name}
                       </Typography>
                       {ep.overview && (
                         <Typography

@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { getCastMemberDetails } from '@/utils/api/serverContentApi';
 import { Metadata } from 'next';
 import { BackButton } from '@/components/buttons/back-button';
+import { COLORS, GRADIENTS, SHADOWS, TRANSITIONS, BORDER_RADIUS } from '@/lib/theme-constants';
 
 export async function generateMetadata({ params }: { params: { slug: string } | Promise<{ slug: string }> }): Promise<Metadata> {
   const resolvedParams = await params;
@@ -61,7 +62,7 @@ export default async function CastMemberPage({ params }: { params: { slug: strin
                 aspectRatio: '2 / 3',
                 borderRadius: 2,
                 overflow: 'hidden',
-                border: '2px solid rgba(192, 132, 252, 0.5)',
+                border: `2px solid ${COLORS.purple[500]}`,
               }}
             >
               {castMember.profile_path ? (
@@ -100,7 +101,7 @@ export default async function CastMemberPage({ params }: { params: { slug: strin
                   color: 'white',
                   fontWeight: 'bold',
                   mb: 2,
-                  background: 'linear-gradient(to right, #c084fc, #f472b6)',
+                  background: GRADIENTS.textPurplePink,
                   WebkitBackgroundClip: 'text',
                   WebkitTextFillColor: 'transparent',
                   backgroundClip: 'text',
@@ -114,9 +115,9 @@ export default async function CastMemberPage({ params }: { params: { slug: strin
                   label={`Known for: ${castMember.known_for_department}`}
                   sx={{
                     mb: 2,
-                    background: 'rgba(192, 132, 252, 0.2)',
-                    color: '#c084fc',
-                    borderColor: 'rgba(192, 132, 252, 0.5)',
+                    background: COLORS.purple[200],
+                    color: COLORS.purple.solid,
+                    borderColor: COLORS.purple[500],
                   }}
                   variant="outlined"
                 />
@@ -153,7 +154,7 @@ export default async function CastMemberPage({ params }: { params: { slug: strin
             <Typography
               variant="h6"
               sx={{
-                color: '#c084fc',
+                color: COLORS.purple.solid,
                 fontWeight: 'bold',
                 mb: 2,
               }}
@@ -163,7 +164,7 @@ export default async function CastMemberPage({ params }: { params: { slug: strin
             <Typography
               variant="body2"
               sx={{
-                color: '#d1d5db',
+                color: COLORS.gray[300],
                 lineHeight: 1.8,
                 whiteSpace: 'pre-wrap',
               }}
@@ -182,7 +183,7 @@ export default async function CastMemberPage({ params }: { params: { slug: strin
             color: 'white',
             fontWeight: 'bold',
             mb: 3,
-            background: 'linear-gradient(to right, #c084fc, #f472b6)',
+            background: GRADIENTS.textPurplePink,
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
             backgroundClip: 'text',
@@ -203,16 +204,16 @@ export default async function CastMemberPage({ params }: { params: { slug: strin
                 <Card
                   sx={{
                     height: '100%',
-                    borderRadius: 1,
-                    border: '1px solid rgba(192, 132, 252, 0.3)',
+                    borderRadius: BORDER_RADIUS.sm,
+                    border: `1px solid ${COLORS.purple[300]}`,
                     background: 'rgba(17, 24, 39, 0.8)',
                     backdropFilter: 'blur(10px)',
-                    transition: 'all 0.3s ease',
+                    transition: TRANSITIONS.default,
                     display: 'flex',
                     flexDirection: 'column',
                     '&:hover': {
-                      borderColor: 'rgba(192, 132, 252, 0.6)',
-                      boxShadow: '0 8px 32px rgba(192, 132, 252, 0.2)',
+                      borderColor: COLORS.purple[600],
+                      boxShadow: SHADOWS.cardHover,
                       transform: 'translateY(-4px)',
                     },
                   }}
@@ -242,7 +243,7 @@ export default async function CastMemberPage({ params }: { params: { slug: strin
                       <Typography
                         variant="body2"
                         sx={{
-                          color: '#c084fc',
+                          color: COLORS.purple.solid,
                           fontWeight: '600',
                           mb: 0.5,
                           fontSize: '0.85rem',
@@ -253,7 +254,7 @@ export default async function CastMemberPage({ params }: { params: { slug: strin
                           WebkitBoxOrient: 'vertical',
                           cursor: 'pointer',
                           '&:hover': {
-                            color: '#f472b6',
+                            color: COLORS.pink.solid,
                           },
                         }}
                       >
@@ -265,7 +266,7 @@ export default async function CastMemberPage({ params }: { params: { slug: strin
                       <Typography
                         variant="caption"
                         sx={{
-                          color: '#9ca3af',
+                          color: COLORS.gray[400],
                           fontSize: '0.75rem',
                           display: 'block',
                           mb: 0.5,

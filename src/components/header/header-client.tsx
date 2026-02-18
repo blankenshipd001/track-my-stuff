@@ -125,7 +125,11 @@ const HeaderClient = ({ user, navItems }: HeaderClientProps) => {
       </Box>
 
       {/* mobile nav */}
-      <IconButton sx={{ display: { xs: "flex", md: "none" } }} onClick={() => setDrawerOpen(true)}>
+      <IconButton 
+        aria-label="Open navigation menu"
+        sx={{ display: { xs: "flex", md: "none" } }} 
+        onClick={() => setDrawerOpen(true)}
+      >
         <MenuIcon sx={{ color: "white" }} />
       </IconButton>
       <Drawer
