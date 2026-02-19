@@ -40,7 +40,7 @@ export const Footer = async () => {
           Code-Monkey
         </Link>
       </div>
-      <div style={{ fontSize: "0.75rem", color: "#6b7280" }}>
+      <div style={{ fontSize: "0.75rem", color: COLORS.gray[400] }}>
         This product uses the TMDB API but is not endorsed or certified by TMDB.
         <br />
         This product uses the Just Watch API but is not endorsed or certified by Just Watch.

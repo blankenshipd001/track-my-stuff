@@ -1,5 +1,10 @@
 /**
  * Shared theme constants for consistent styling across the application
+ * 
+ * WCAG AA Compliance Notes (4.5:1 contrast ratio for normal text):
+ * - On dark backgrounds (#111827, #1f2937): Use gray[300], gray[400], or white with min 0.87 opacity
+ * - Avoid: gray[500], gray[600] on dark backgrounds - insufficient contrast
+ * - For colored text/borders: Use brighter shades or higher opacity values
  */
 
 export const COLORS = {
@@ -34,18 +39,33 @@ export const COLORS = {
     solid: '#f472b6',
   },
   
-  // Gray Shades
+  // Gray Shades (WCAG AA compliant on dark backgrounds from 300 and up)
   gray: {
     50: '#f9fafb',
     100: '#f3f4f6',
     200: '#e5e7eb',
-    300: '#d1d5db',
-    400: '#9ca3af',
-    500: '#6b7280',
-    600: '#4b5563',
+    300: '#d1d5db', // ✓ WCAG AA on dark backgrounds
+    400: '#9ca3af', // ✓ WCAG AA on dark backgrounds
+    500: '#6b7280', // ⚠ Low contrast on dark backgrounds
+    600: '#4b5563', // ⚠ Low contrast on dark backgrounds
     700: '#374151',
     800: '#1f2937',
     900: '#111827',
+  },
+  
+  // WCAG AA compliant text colors for dark backgrounds
+  text: {
+    primary: 'rgba(255, 255, 255, 0.95)',    // High contrast
+    secondary: 'rgba(255, 255, 255, 0.87)',  // Standard text
+    tertiary: 'rgba(255, 255, 255, 0.8)',    // Minimum for WCAG AA
+    disabled: 'rgba(255, 255, 255, 0.5)',    // Not for important text
+  },
+  
+  // Accessible blue shades for links/buttons on dark backgrounds
+  blue: {
+    light: '#a5b4fc',   // ✓ WCAG AA compliant
+    medium: '#8b9fff',  // ✓ WCAG AA compliant
+    border: '#8b9fff',  // ✓ WCAG AA compliant for borders
   },
   
   // Background Gradients

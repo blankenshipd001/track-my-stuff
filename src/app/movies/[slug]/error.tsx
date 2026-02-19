@@ -33,7 +33,7 @@ export default function MovieDetailsError({
           Oops! Something went wrong
         </Typography>
 
-        <Typography variant="body1" sx={{ color: 'rgba(255, 255, 255, 0.7)', mb: 3 }}>
+        <Typography variant="body1" sx={{ color: 'rgba(255, 255, 255, 0.87)', mb: 3 }}>
           We encountered an error while loading this movie. Please try again.
         </Typography>
 
@@ -48,7 +48,7 @@ export default function MovieDetailsError({
               textAlign: 'left',
             }}
           >
-            <Typography variant="caption" sx={{ color: 'rgba(255, 255, 255, 0.6)', wordBreak: 'break-word' }}>
+            <Typography variant="caption" sx={{ color: 'rgba(255, 255, 255, 0.8)', wordBreak: 'break-word' }}>
               {error.message}
             </Typography>
           </Box>
@@ -73,11 +73,11 @@ export default function MovieDetailsError({
             variant="outlined"
             href="/"
             sx={{
-              borderColor: 'rgba(102, 126, 234, 0.5)',
-              color: 'rgba(102, 126, 234, 1)',
+              borderColor: '#8b9fff',
+              color: '#a5b4fc',
               '&:hover': {
-                borderColor: 'rgba(102, 126, 234, 1)',
-                bgcolor: 'rgba(102, 126, 234, 0.1)',
+                borderColor: '#a5b4fc',
+                bgcolor: 'rgba(139, 160, 255, 0.15)',
               },
             }}
           >

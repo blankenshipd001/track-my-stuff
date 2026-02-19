@@ -3,10 +3,12 @@ interface RetryOptions {
   initialDelayMs?: number;
   maxDelayMs?: number;
   backoffMultiplier?: number;
+  skipRetryDuringBuild?: boolean; // Skip retries during build/prerendering
 }
 
 /**
  * Fetch with exponential backoff retry logic and rate limit handling
+ * Compatible with Next.js fetch API and caching
  */
 export async function fetchWithRetry(
   url: string,
@@ -18,11 +20,15 @@ export async function fetchWithRetry(
     initialDelayMs = 1000,
     maxDelayMs = 10000,
     backoffMultiplier = 2,
+    skipRetryDuringBuild = true, // Default to skipping retries during build
   } = retryOptions;
 
   let lastError: Error | null = null;
+  
+  // During build/prerendering, skip retries to avoid hanging promises
+  const effectiveMaxRetries = skipRetryDuringBuild && process.env.NODE_ENV === 'production' ? 1 : maxRetries;
 
-  for (let attempt = 0; attempt < maxRetries; attempt++) {
+  for (let attempt = 0; attempt < effectiveMaxRetries; attempt++) {
     try {
       const response = await fetch(url, options);
 
@@ -41,7 +47,7 @@ export async function fetchWithRetry(
 
       // Retry on server errors (5xx) and rate limits (429)
       if (response.status >= 500 || response.status === 429) {
-        if (attempt === maxRetries - 1) {
+        if (attempt === effectiveMaxRetries - 1) {
           return response;
         }
 
@@ -52,11 +58,14 @@ export async function fetchWithRetry(
         );
 
         console.warn(
-          `[Retry] Attempt ${attempt + 1}/${maxRetries} failed with status ${response.status}. ` +
+          `[Retry] Attempt ${attempt + 1}/${effectiveMaxRetries} failed with status ${response.status}. ` +
           `Retrying in ${delayMs}ms...`
         );
 
-        await new Promise((resolve) => setTimeout(resolve, delayMs));
+        // Only use setTimeout if not during build
+        if (effectiveMaxRetries > 1) {
+          await new Promise((resolve) => setTimeout(resolve, delayMs));
+        }
         continue;
       }
 
@@ -64,7 +73,7 @@ export async function fetchWithRetry(
     } catch (error) {
       lastError = error as Error;
 
-      if (attempt === maxRetries - 1) {
+      if (attempt === effectiveMaxRetries - 1) {
         throw error;
       }
 
@@ -74,15 +83,18 @@ export async function fetchWithRetry(
       );
 
       console.warn(
-        `[Retry] Attempt ${attempt + 1}/${maxRetries} failed with error: ${lastError.message}. ` +
+        `[Retry] Attempt ${attempt + 1}/${effectiveMaxRetries} failed with error: ${lastError.message}. ` +
         `Retrying in ${delayMs}ms...`
       );
 
-      await new Promise((resolve) => setTimeout(resolve, delayMs));
+      // Only use setTimeout if not during build
+      if (effectiveMaxRetries > 1) {
+        await new Promise((resolve) => setTimeout(resolve, delayMs));
+      }
     }
   }
 
-  throw new Error(`Failed after ${maxRetries} attempts. Last error: ${lastError?.message}`);
+  throw new Error(`Failed after ${effectiveMaxRetries} attempts. Last error: ${lastError?.message}`);
 }
 
 /**

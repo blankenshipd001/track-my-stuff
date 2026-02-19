@@ -1,256 +1,167 @@
+/**
+ * Server Content API
+ * Legacy compatibility layer - delegates to service layer
+ * @deprecated Use services directly from @/services
+ */
+
 import { Media } from "@/data-models/media.interface";
+import { 
+  fetchPopularMoviesWithProviders, 
+  fetchMovieDetails as fetchMovieDetailsSvc,
+  fetchTVDetails as fetchTVDetailsSvc,
+  fetchTVSeasonEpisodes as fetchTVSeasonEpisodesSvc,
+  fetchCastMemberDetails as fetchCastMemberDetailsSvc,
+  fetchRecommendedMovies as fetchRecommendedMoviesSvc,
+  fetchRecommendedTV as fetchRecommendedTVSvc,
+  fetchPopularTV as fetchPopularTVSvc
+} from '@/services';
 
-const movie_api_key = process.env.TMDB_API_KEY || process.env.NEXT_PUBLIC_THE_MOVIE_DB_API_KEY;
-const popular_url = `https://api.themoviedb.org/3/movie/popular?api_key=${movie_api_key}&include_video=false`;
-
+/**
+ * Fetch popular movies with providers
+ * @deprecated Use fetchPopularMoviesWithProviders from @/services
+ */
 export async function fetchPopularContent(): Promise<Media[]> {
-  // Fetch multiple pages to support pagination on the frontend
-  const pages = [1, 2];
-  const allResults: Array<{ id: number; [key: string]: unknown }> = [];
-
-  // Fetch multiple pages in parallel
-  const pageResponses = await Promise.all(
-    pages.map((page) =>
-      fetch(`${popular_url}&page=${page}`, { next: { revalidate: 3600 } })
-        .then((res) => res.json())
-    )
-  );
-
-  // Combine all results
-  pageResponses.forEach((response) => {
-    if (response.results && Array.isArray(response.results)) {
-      allResults.push(...response.results);
-    }
-  });
-
-  // Fetch providers for all movies with batching to avoid overwhelming the API
-  const BATCH_SIZE = 5;
-  const trendingResults: Media[] = [];
-
-  for (let i = 0; i < allResults.length; i += BATCH_SIZE) {
-    const batch = allResults.slice(i, i + BATCH_SIZE);
-    
-    const batchResults = await Promise.all(
-      batch.map((item) =>
-        fetch(`https://api.themoviedb.org/3/movie/${item.id}/watch/providers?api_key=${movie_api_key}&external_source=imdb_id`, {
-          next: { revalidate: 86400 } // Cache for 24 hours
-        })
-          .then((res) => res.json())
-          .then((providers) => {
-            return {
-              ...item,
-              movieId: item.id,
-              providers: providers.results?.US ?? [],
-            } as Partial<Media>;
-          })
-          .catch((error) => {
-            console.error(`Error fetching providers for movie ${item.id}:`, error);
-            return {
-              ...item,
-              movieId: item.id,
-              providers: [],
-            } as Partial<Media>;
-          })
-      )
-    );
-
-    trendingResults.push(...(batchResults as Media[]));
-  }
-
-  return trendingResults;
-}
-
-export async function getMovieDetails(slug: string): Promise<Media | null> {
-  const res = await fetch(`https://api.themoviedb.org/3/movie/${slug}?api_key=${movie_api_key}&append_to_response=videos,images,credits`, { next: { revalidate: 3600 } }); // Cache for 1 hour
-  
-  if (!res.ok) {
-    return null
-  }
-  
-  const movie = await res.json();
-  const providerRes = await fetch(`https://api.themoviedb.org/3/movie/${slug}/watch/providers?api_key=${movie_api_key}`, { next: { revalidate: 3600 } }); // Cache for 1 hour
-  const providerData = await providerRes.json();
-
-  return {
-    ...movie,
-    movieId: Number(movie.id),
-    providers: providerData.results?.US ?? [],
-  };
+  return fetchPopularMoviesWithProviders() as Promise<Media[]>;
 }
 
 /**
- * Fetch the most recent season's episodes for a TV show by TMDB id
- * @param tvId The TMDB id of the TV show
- * @returns An object with season_number and episodes[] for the most recent season, or null if not found
+ * Fetch movie details by ID
+ * @deprecated Use fetchMovieDetails from @/services
+ */
+export async function getMovieDetails(slug: string): Promise<Media | null> {
+  try {
+    const movie = await fetchMovieDetailsSvc(slug);
+    return movie as Media;
+  } catch (error) {
+    console.error('Error fetching movie details:', error);
+    return null;
+  }
+}
+
+/**
+ * Fetch TV show details by ID
+ * @deprecated Use fetchTVDetails from @/services
+ */
+export async function getTVDetails(slug: string): Promise<Media | null> {
+  try {
+    const tv = await fetchTVDetailsSvc(slug);
+    return tv as Media;
+  } catch (error) {
+    console.error('Error fetching TV details:', error);
+    return null;
+  }
+}
+
+/**
+ * Fetch most recent season episodes for a TV show
+ * @deprecated Use fetchTVSeasonEpisodes from @/services
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function getMostRecentSeasonEpisodes(tvId: string | number): Promise<{ season_number: number; episodes: any[] } | null> {
-  // Get show details to find all seasons - cache for 1 hour
-  const tvRes = await fetch(`https://api.themoviedb.org/3/tv/${tvId}?api_key=${movie_api_key}`, { next: { revalidate: 3600 } });
+  try {
+    // First get TV details to find the most recent season
+    const tvDetails = await fetchTVDetailsSvc(tvId.toString());
+    
+    if (!tvDetails?.seasons || tvDetails.seasons.length === 0) {
+      return null;
+    }
 
-  if (!tvRes.ok) return null;
-  const tv = await tvRes.json();
+    // Filter out special seasons (season 0) and get the last one
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const regularSeasons = tvDetails.seasons.filter((s: any) => s.season_number > 0);
+    const mostRecentSeason = regularSeasons[regularSeasons.length - 1];
+    
+    if (!mostRecentSeason) {
+      return null;
+    }
 
-  if (!Array.isArray(tv.seasons) || tv.seasons.length === 0) return null;
-  // Find the most recent (highest season_number) season
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const validSeasons = tv.seasons.filter((s: any) => s.season_number !== 0);
-
-  if (validSeasons.length === 0) return null;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const mostRecent = validSeasons.reduce((a: any, b: any) => (a.season_number > b.season_number ? a : b));
-  const season_number = mostRecent.season_number;
-  
-  // Fetch episodes for that season - cache for 1 hour
-  const seasonRes = await fetch(`https://api.themoviedb.org/3/tv/${tvId}/season/${season_number}?api_key=${movie_api_key}`, { next: { revalidate: 3600 } });
-
-  if (!seasonRes.ok) {
-    return null;
-  } 
-
-  const seasonData = await seasonRes.json();
-
-  return {
-    season_number,
-    episodes: Array.isArray(seasonData.episodes) ? seasonData.episodes : [],
-  };
-}
-
-export async function getRecommendedMovies(genreId: number): Promise<Media[]> {
-  const res = await fetch(
-    `https://api.themoviedb.org/3/discover/movie?include_adult=false&with_genres=${genreId}&api_key=${movie_api_key}`,
-    { next: { revalidate: 7200 } } // Cache for 2 hours
-  );
-  const data = await res.json();
-  return data.results || [];
-}
-
-export async function getTVDetails(slug: string): Promise<Media | null> {
-  // Step 1: Get show details (already have slug as TV id)
-  const res = await fetch(`https://api.themoviedb.org/3/tv/${slug}?api_key=${movie_api_key}&append_to_response=videos,images,credits`, { next: { revalidate: 3600 } }); // Cache for 1 hour
-  if (!res.ok) {
+    // Fetch episodes for the most recent season
+    const seasonData = await fetchTVSeasonEpisodesSvc(tvId as number, mostRecentSeason.season_number);
+    
+    return {
+      season_number: mostRecentSeason.season_number,
+      episodes: seasonData.episodes ?? [],
+    };
+  } catch (error) {
+    console.error('Error fetching season episodes:', error);
     return null;
   }
-  const tv = await res.json();
-
-  // Step 2: For each season, fetch all episodes and group by season
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let episodesBySeason: Array<{ season_number: number; episodes: any[] }> = [];
-  if (Array.isArray(tv.seasons)) {
-    episodesBySeason = await Promise.all(
-      tv.seasons
-        .filter((season: { season_number: number }) => season.season_number !== 0)
-        .map(async (season: { season_number: number }) => {
-          const season_number = season.season_number;
-          const seasonRes = await fetch(`https://api.themoviedb.org/3/tv/${slug}/season/${season_number}?api_key=${movie_api_key}`, { next: { revalidate: 3600 } }); // Cache for 1 hour
-          if (!seasonRes.ok) return { season_number, episodes: [] };
-          const seasonData = await seasonRes.json();
-          return {
-            season_number,
-            episodes: Array.isArray(seasonData.episodes) ? seasonData.episodes : [],
-          };
-        })
-    );
-  }
-
-  // Step 3: Get providers
-  const providerRes = await fetch(`https://api.themoviedb.org/3/tv/${slug}/watch/providers?api_key=${movie_api_key}`, { next: { revalidate: 3600 } }); // Cache for 1 hour
-  const providerData = await providerRes.json();
-
-  return {
-    ...tv,
-    movieId: Number(tv.id),
-    providers: providerData.results?.US ?? [],
-    episodes: episodesBySeason,
-  };
-}
-
-export async function getRecommendedTV(genreId: number): Promise<Media[]> {
-  const res = await fetch(
-    `https://api.themoviedb.org/3/discover/tv?include_adult=false&with_genres=${genreId}&api_key=${movie_api_key}`,
-    { next: { revalidate: 7200 } } // Cache for 2 hours
-  );
-  const data = await res.json();
-  return data.results || [];
 }
 
 /**
- * Fetch popular TV shows with provider data
- * Used for generating static params at build time
- * @returns Array of popular TV shows with provider information
- */
-export async function fetchPopularTV(): Promise<Media[]> {
-  const popular_tv_url = `https://api.themoviedb.org/3/tv/popular?api_key=${movie_api_key}&include_video=false`;
-  
-  return fetch(popular_tv_url, { next: { revalidate: 3600 } }) // Cache for 1 hour
-    .then(async (res) => {
-      const json = await res.json();
-      return json;
-    })
-    .then(async (popularRes) => {
-      const trendingResults: Media[] = await Promise.all(
-        popularRes.results.map((item: { id: unknown }) => {
-          return fetch(`https://api.themoviedb.org/3/tv/${item.id}/watch/providers?api_key=${movie_api_key}&external_source=imdb_id`)
-            .then((res) => res.json())
-            .then((providers) => {
-              const newShow = {
-                ...item,
-                movieId: item.id,
-                providers: providers.results?.US ?? [],
-              };
-
-              return newShow;
-            });
-        })
-      );
-
-      return trendingResults;
-    });
-}
-
-/**
- * Fetch cast member details and combined filmography (movies + TV shows)
- * @param castId The TMDB cast/person id
- * @returns Cast member details with filmography
+ * Fetch cast member details
+ * @deprecated Use fetchCastMemberDetails from @/services
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function getCastMemberDetails(castId: string | number): Promise<any | null> {
+  try {
+    const person = await fetchCastMemberDetailsSvc(castId.toString());
+    
+    if (!person) return null;
 
-  return fetch(
-    `https://api.themoviedb.org/3/person/${castId}?api_key=${movie_api_key}&append_to_response=combined_credits,images,external_ids`,
-    { next: { revalidate: 7200 } } // Cache for 2 hours
-  )
-    .then(async (res) => {
-      // console.log('API response headers:', res.json());
-      if (!res.ok) return null;
-      const person = await res.json();
-      return person;
-    })
-    .then((person) => {
-      if (!person) return null;
-
-      // Combine and sort movie and TV credits by popularity/date
-      const allCredits = [
-        ...(person.combined_credits?.cast || [])
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          .map((credit: any) => ({
-            ...credit,
-            media_type: credit.media_type || (credit.title ? 'movie' : 'tv'),
-          }))
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ].sort((a: any, b: any) => {
-        const dateA = new Date(a.release_date || a.first_air_date || 0).getTime();
-        const dateB = new Date(b.release_date || b.first_air_date || 0).getTime();
-        return dateB - dateA; // Most recent first
-      });
-
-      return {
-        ...person,
-        filmography: allCredits.slice(0, 50), // Top 50 works
-      };
-    })
-    .catch((error) => {
-      console.error('Error fetching cast member details:', error);
-      return null;
+    // Combine and sort movie and TV credits by popularity/date
+    const allCredits = [
+      ...(person.combined_credits?.cast || [])
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        .map((credit: any) => ({
+          ...credit,
+          media_type: credit.media_type || (credit.title ? 'movie' : 'tv'),
+        }))
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ].sort((a: any, b: any) => {
+      const dateA = new Date(a.release_date || a.first_air_date || 0).getTime();
+      const dateB = new Date(b.release_date || b.first_air_date || 0).getTime();
+      return dateB - dateA; // Most recent first
     });
+
+    return {
+      ...person,
+      filmography: allCredits.slice(0, 50), // Top 50 works
+    };
+  } catch (error) {
+    console.error('Error fetching cast member details:', error);
+    return null;
+  }
+}
+
+/**
+ * Fetch recommended movies by genre
+ * @deprecated Use fetchRecommendedMovies from @/services
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function getRecommendedMovies(genreId: string | number): Promise<any[]> {
+  try {
+    return await fetchRecommendedMoviesSvc(genreId.toString());
+  } catch (error) {
+    console.error('Error fetching recommended movies:', error);
+    return [];
+  }
+}
+
+/**
+ * Fetch recommended TV shows by genre
+ * @deprecated Use fetchRecommendedTV from @/services
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function getRecommendedTV(genreId: string | number): Promise<any[]> {
+  try {
+    return await fetchRecommendedTVSvc(genreId.toString());
+  } catch (error) {
+    console.error('Error fetching recommended TV:', error);
+    return [];
+  }
+}
+
+/**
+ * Fetch popular TV shows
+ * @deprecated Use fetchPopularTV from @/services
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function fetchPopularTV(): Promise<any[]> {
+  try {
+    return await fetchPopularTVSvc();
+  } catch (error) {
+    console.error('Error fetching popular TV:', error);
+    return [];
+  }
 }

@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-
-const TMDB_API_KEY = process.env.TMDB_API_KEY || process.env.NEXT_PUBLIC_THE_MOVIE_DB_API_KEY;
+import { fetchMovieDetails } from '@/services';
 
 export async function GET(
   request: NextRequest,
@@ -19,18 +18,10 @@ export async function GET(
   }
 
   try {
-    // Fetch movie details with cache tag
-    const movieRes = await fetch(
-      `https://api.themoviedb.org/3/movie/${id}?api_key=${TMDB_API_KEY}&append_to_response=videos,images,credits`,
-      {
-        next: {
-          tags: ['movie-detail', `movie:${id}`],
-          revalidate: 3600, // 1 hour
-        },
-      }
-    );
+    // Fetch movie details (includes providers via service layer)
+    const movie = await fetchMovieDetails(id);
 
-    if (!movieRes.ok) {
+    if (!movie) {
       const headers = new Headers();
       headers.set('Cache-Control', 'public, max-age=60');
       return NextResponse.json(
@@ -39,33 +30,12 @@ export async function GET(
       );
     }
 
-    const movie = await movieRes.json();
-
-    // Fetch providers
-    const providerRes = await fetch(
-      `https://api.themoviedb.org/3/movie/${id}/watch/providers?api_key=${TMDB_API_KEY}`,
-      {
-        next: {
-          tags: ['movie-providers', `movie-provider:${id}`],
-          revalidate: 86400, // 24 hours
-        },
-      }
-    );
-
-    const providerData = await providerRes.json();
-
-    const result = {
-      ...movie,
-      movieId: Number(movie.id),
-      providers: providerData.results?.US ?? [],
-    };
-
     // Cache headers
     const headers = new Headers();
     headers.set('Cache-Control', 'public, max-age=3600, stale-while-revalidate=86400');
     headers.set('CDN-Cache-Control', 'max-age=86400');
 
-    return NextResponse.json(result, { headers });
+    return NextResponse.json(movie, { headers });
   } catch (err) {
     const headers = new Headers();
     headers.set('Cache-Control', 'public, max-age=60');
