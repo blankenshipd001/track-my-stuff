@@ -320,7 +320,6 @@ export async function fetchPopularTV(): Promise<any[]> {
 /**
  * Fetch available streaming providers
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function fetchProvidersList(): Promise<{
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   movies: any[];
