@@ -3,7 +3,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Box, Typography, Card, CardContent, Button, IconButton } from '@mui/material';
 import Link from 'next/link';
-import { ChevronLeft, ChevronRight } from '@mui/icons-material';
+import ChevronLeft from '@mui/icons-material/ChevronLeft';
+import ChevronRight from '@mui/icons-material/ChevronRight';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { COLORS, GRADIENTS, SHADOWS, TRANSITIONS, BORDER_RADIUS } from '@/lib/theme-constants';

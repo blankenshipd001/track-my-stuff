@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { useRouter } from "next/navigation";
-import { ArrowBack } from "@mui/icons-material";
+import ArrowBack from "@mui/icons-material/ArrowBack";
 import { Button, Stack, useMediaQuery, useTheme } from "@mui/material";
 import AddToWatchlist from "@/components/buttons/AddToWatchlist";
 import { Media } from "@/data-models/media.interface";

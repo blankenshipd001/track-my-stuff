@@ -60,7 +60,7 @@ This application has **good fundamentals** with significant improvements complet
 - ✅ aria-labels added to all buttons (mobile menu, user menu, carousels, calendar)
 - ✅ Keyboard navigation implemented on flip cards (Enter, Space, Escape)
 - ✅ Skip-to-main-content link added with focus handling
-- ⏳ Color contrast (WCAG AA) - remaining
+- ✅ Color contrast (WCAG AA) - completed
 
 **See:** IMPLEMENTATION_EXAMPLES.md sections 4-5
 
@@ -104,11 +104,11 @@ This application has **good fundamentals** with significant improvements complet
 - [ ] Implement streaming for large responses
 - [x] Add API retry with exponential backoff
 - [ ] Optimize database queries (Activity page)
-- [ ] Reduce JavaScript bundle size
+- [x] Reduce JavaScript bundle size
 - [x] Add focus visible indicators
 - [x] **Service layer refactor - centralize all API calls**
 
-**Estimated Time:** 6 hours (2 remaining)
+**Estimated Time:** 6 hours (1 remaining)
 
 ---
 

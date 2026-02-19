@@ -8,8 +8,7 @@ import { Media } from "@/data-models/media.interface";
 import { getProxyImageUrlForPath } from "@/lib/imageUrl";
 import { COLORS, GRADIENTS } from "@/lib/theme-constants";
 import NextImage from "next/image";
-import WatchlistModal from "./ActivityModal";
-import SearchModal from "./SearchModal";
+import dynamic from "next/dynamic";
 import {
   Container,
   Header,
@@ -49,6 +48,17 @@ import {
   StatusBadge,
 } from "./styles";
 import { addToWatchList, requestRemoveFromWatchList, updateMovie } from "@/utils/api/contentApi";
+
+// Dynamically import heavy modal components to reduce initial bundle size
+const WatchlistModal = dynamic(() => import("./ActivityModal"), {
+  ssr: false,
+  loading: () => null,
+});
+
+const SearchModal = dynamic(() => import("./SearchModal"), {
+  ssr: false,
+  loading: () => null,
+});
 
 interface ProviderDetails {
   name: string;

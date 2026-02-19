@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { Typography, ToggleButtonGroup, ToggleButton, Box, Card, CardContent, IconButton, useMediaQuery, useTheme, Collapse } from "@mui/material";
-import { ExpandMore } from "@mui/icons-material";
+import ExpandMore from "@mui/icons-material/ExpandMore";
 import { COLORS, GRADIENTS, SHADOWS, TRANSITIONS, BORDER_RADIUS } from '@/lib/theme-constants';
 
 interface Episode {

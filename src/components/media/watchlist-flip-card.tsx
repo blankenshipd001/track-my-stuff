@@ -3,7 +3,10 @@
 import React, { ReactNode, useState } from "react";
 import { Box, useMediaQuery, useTheme, IconButton } from "@mui/material";
 import Image from "next/image";
-import { BookmarkAdd, BookmarkRemove, Info, OpenInNew } from "@mui/icons-material";
+import BookmarkAdd from "@mui/icons-material/BookmarkAdd";
+import BookmarkRemove from "@mui/icons-material/BookmarkRemove";
+import Info from "@mui/icons-material/Info";
+import OpenInNew from "@mui/icons-material/OpenInNew";
 import { motion } from "framer-motion";
 import ImageListItem from "@mui/material/ImageListItem";
 import { Media } from "@/data-models/media.interface";

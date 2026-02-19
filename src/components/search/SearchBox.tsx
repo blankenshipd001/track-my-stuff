@@ -6,7 +6,7 @@ import { debounce } from "@mui/material/utils";
 import CloseIcon from "@mui/icons-material/Close";
 import SearchIcon from "@mui/icons-material/Search";
 import { addToWatchList } from "@/utils/api/contentApi";
-import { BookmarkAdd } from "@mui/icons-material";
+import BookmarkAdd from "@mui/icons-material/BookmarkAdd";
 import { useRouter } from "next/navigation";
 import useNotificationBar from "@/components/notifications/useNotificationBar";
 import { Media } from "@/data-models/media.interface";

@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowBackIos } from "@mui/icons-material";
+import ArrowBackIos from "@mui/icons-material/ArrowBackIos";
 import { Box, Fab } from "@mui/material";
 
 interface backButton {
