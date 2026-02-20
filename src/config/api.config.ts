@@ -48,7 +48,7 @@ export const TMDB_ENDPOINTS = {
   
   // People/Cast
   PERSON_DETAILS: (personId: string | number) => 
-    `${BASE_URLS.TMDB_API}/person/${personId}?api_key=${API_KEYS.TMDB}&append_to_response=movie_credits,tv_credits,images`,
+    `${BASE_URLS.TMDB_API}/person/${personId}?api_key=${API_KEYS.TMDB}&append_to_response=combined_credits,images`,
   
   // Discover/Recommendations
   DISCOVER_MOVIE_BY_GENRE: (genreId: string | number) => 
