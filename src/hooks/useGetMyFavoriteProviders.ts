@@ -19,16 +19,28 @@ const useGetMyFavoriteProviders = (uid: string) => {
       return;
     }
     
+    let isMounted = true;
+    
     const fetchData = async () => {
       setIsLoading(true);
-      
-      getMyFavoriteProviders(uid).then((providers) => {
-        setMyFavoriteProviders(providers);
-        setIsLoading(false);
-      });
-
+      try {
+        const providers = await getMyFavoriteProviders(uid);
+        if (isMounted) {
+          setMyFavoriteProviders(providers);
+          setIsLoading(false);
+        }
+      } catch (error) {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      }
     };
+    
     fetchData();
+    
+    return () => {
+      isMounted = false;
+    };
   }, [uid]);
 
   return { myFavoriteProviders, isLoading };
