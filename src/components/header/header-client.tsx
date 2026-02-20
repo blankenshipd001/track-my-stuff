@@ -19,9 +19,10 @@ import { logoutUser } from "@/lib/clientLogout";
 import { auth, googleProvider } from "@/lib/firebase/config";
 import { signInWithPopup } from "firebase/auth";
 import UserMenu from "./user-menu";
+import { User } from "@/data-models/user.interface";
 
 interface HeaderClientProps {
-  user: { uid: string; email?: string; picture?: string } | null;
+  user: User | null;
   navItems: { label: string; path: string }[];
 }
 

@@ -2,7 +2,17 @@ import { doc, deleteDoc, writeBatch, DocumentData, collection, getDocs, setDoc, 
 import { db } from "@/lib/firebase/client";
 import { Media } from "@/data-models/media.interface";
 import { ServiceProvider } from "@/data-models/service-provider.interface";
-import { getTVDetails } from "./serverContentApi";
+import { fetchTVDetails } from "@/services";
+
+interface Episode {
+  name: string;
+  episode_number: number;
+}
+
+interface Season {
+  season_number: number;
+  episodes: Episode[];
+}
 
 /**
  * Get all items from your watchlist
@@ -122,26 +132,25 @@ export const addToWatchList = async (uid: string, movie: Media): Promise<Media |
     }
   } else {
     movie.type = "tv";
-    const tvShow = await getTVDetails(`${movie.movieId}`);
+    const tvShow = await fetchTVDetails(`${movie.movieId}`);
     if (tvShow) {
       if (tvShow.episodes && Array.isArray(tvShow.episodes)) {
         // Attach simplified episodes data with only episode names
-        movie.episodes = tvShow.episodes.map((season) => ({
+        movie.episodes = tvShow.episodes.map((season: Season) => ({
           season_number: season.season_number,
           episodes: Array.isArray(season.episodes) 
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            ? season.episodes.map((ep: any) => ({ name: ep.name || `Episode ${ep.episode_number}` }))
+            ? season.episodes.map((ep: Episode) => ({ name: ep.name || `Episode ${ep.episode_number}` }))
             : []
         }));
 
-        movie.seasons = tvShow.episodes.map((season) => ({
+        movie.seasons = tvShow.episodes.map((season: Season) => ({
           season_number: season.season_number,
           episode_count: season.episodes ? season.episodes.length : 0
         }));
 
         // Season count derived from number of season objects present
         movie.seasonCount = tvShow.episodes.length;
-        movie.episodeCount = tvShow.episodes.reduce((total: number, season) => {
+        movie.episodeCount = tvShow.episodes.reduce((total: number, season: Season) => {
           const seasonEpisodes = season && Array.isArray(season.episodes) ? season.episodes.length : 0;
           return total + seasonEpisodes;
         }, 0);

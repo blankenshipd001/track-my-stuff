@@ -160,8 +160,10 @@ const SearchIcon = styled.div`
   pointer-events: none;
 `;
 
+import { User } from "@/data-models/user.interface";
+
 interface PreferencesProps {
-  user?: { uid: string; email?: string } | null;
+  user?: User | null;
 }
 
 /**

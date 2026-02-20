@@ -17,4 +17,6 @@ export interface Credit {
     credit_id: string;
     order?: number; // Only for cast credits
     media_type: 'movie' | 'tv';
+    name?: string; // For TV shows, the name field is used instead of title
+    first_air_date?: string; // For TV shows, the first_air_date field is used instead of release_date
 }

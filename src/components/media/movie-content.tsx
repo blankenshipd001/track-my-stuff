@@ -6,10 +6,11 @@ import { Box, Container, useTheme, useMediaQuery } from "@mui/material";
 import { SearchBox } from "@components/search";
 import { getContent } from "@/utils/api/contentApi";
 import { Media } from "@/data-models/media.interface";
+import { User } from "@/data-models/user.interface";
 import TabsWrapper from "../panels/tab-wrapper";
 interface MovieContentProps {
   popularMedia: Media[];
-  user?: { uid: string; email?: string } | null;
+  user?: User | null;
 }
 
 export const MovieContent = ({ popularMedia, user }: MovieContentProps) => {

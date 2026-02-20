@@ -5,7 +5,16 @@ import { adminDB } from '@/lib/firebase/admin';
 import { Media } from '@/data-models/media.interface';
 import { DocumentData } from 'firebase-admin/firestore';
 import { User } from '@/data-models/user.interface';
+import { Metadata } from 'next';
 import { Suspense } from 'react';
+
+export const metadata: Metadata = {
+  title: 'My Watchlist | ReelTime',
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
 export default async function WatchedPage() {
   return (

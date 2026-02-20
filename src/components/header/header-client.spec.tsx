@@ -83,7 +83,7 @@ describe('HeaderClient', () => {
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     const { logoutUser } = require('@/lib/clientLogout');
 
-    renderWithProviders(<HeaderClient user={{ uid: 'u1', email: 'a@b.com' }} navItems={[{ label: 'Home', path: '/home' }]} />);
+    renderWithProviders(<HeaderClient user={{ uid: 'u1', name: 'Test User', email: 'a@b.com', auth_time: 1234567890, firebase: { identities: {}, sign_in_provider: 'google.com' } }} navItems={[{ label: 'Home', path: '/home' }]} />);
 
     const menu = screen.getByTestId('user-menu');
     expect(menu).toBeVisible();
@@ -105,7 +105,7 @@ describe('HeaderClient', () => {
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     const { logoutUser } = require('@/lib/clientLogout');
 
-    renderWithProviders(<HeaderClient user={{ uid: 'u1' }} navItems={[{ label: 'Movies', path: '/movies' }]} />);
+    renderWithProviders(<HeaderClient user={{ uid: 'u1', name: 'Test User', email: 'test@example.com', auth_time: 1234567890, firebase: { identities: {}, sign_in_provider: 'google.com' } }} navItems={[{ label: 'Movies', path: '/movies' }]} />);
 
     // open the drawer by clicking the menu icon inside the header
     const menuIcon = screen.getByTestId('MenuIcon');

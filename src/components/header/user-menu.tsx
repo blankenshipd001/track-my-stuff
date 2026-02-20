@@ -13,9 +13,10 @@ import {
   DialogContentText,
   DialogActions,
 } from "@mui/material";
+import { User } from "@/data-models/user.interface";
 
 interface UserMenuProps {
-  user: { uid: string; email?: string; picture?: string } | null;
+  user: User | null;
 }
 
 const UserMenu = ({ 

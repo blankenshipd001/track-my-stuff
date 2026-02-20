@@ -1,6 +1,7 @@
 import React from 'react';
 import { renderWithProviders, screen, fireEvent, waitFor } from '@/utils/test-utils';
 import { useRouter } from 'next/navigation';
+import { User } from '@/data-models/user.interface';
 
 import UserMenu from './user-menu';
 
@@ -22,7 +23,7 @@ describe('UserMenu', () => {
   it('shows email in menu and calls onLogout when Log Out clicked', () => {
     const onLogout = jest.fn();
     const onDeleteAccount = jest.fn();
-    const user = { uid: 'u1', email: 'a@b.com', picture: '' };
+    const user: User = { uid: 'u1', name: 'Test User', email: 'a@b.com', picture: '', auth_time: 1234567890, firebase: { identities: {}, sign_in_provider: 'google.com' } };
 
     renderWithProviders(<UserMenu user={user} onLogout={onLogout} onDeleteAccount={onDeleteAccount} />);
 
@@ -43,7 +44,7 @@ describe('UserMenu', () => {
   it('shows Delete Account button and confirmation dialog', async () => {
     const onLogout = jest.fn();
     const onDeleteAccount = jest.fn().mockResolvedValue(undefined);
-    const user = { uid: 'u1', email: 'test@example.com', picture: '' };
+    const user: User = { uid: 'u1', name: 'Test User', email: 'test@example.com', picture: '', auth_time: 1234567890, firebase: { identities: {}, sign_in_provider: 'google.com' } };
 
     renderWithProviders(<UserMenu user={user} onLogout={onLogout} onDeleteAccount={onDeleteAccount} />);
 
@@ -70,7 +71,7 @@ describe('UserMenu', () => {
   it('calls onDeleteAccount when confirmed in dialog', async () => {
     const onLogout = jest.fn();
     const onDeleteAccount = jest.fn().mockResolvedValue(undefined);
-    const user = { uid: 'u1', email: 'test@example.com', picture: '' };
+    const user: User = { uid: 'u1', name: 'Test User', email: 'test@example.com', picture: '', auth_time: 1234567890, firebase: { identities: {}, sign_in_provider: 'google.com' } };
 
     renderWithProviders(<UserMenu user={user} onLogout={onLogout} onDeleteAccount={onDeleteAccount} />);
 
@@ -98,7 +99,7 @@ describe('UserMenu', () => {
   it('navigates to /providers when Add Providers button is clicked', () => {
     const onLogout = jest.fn();
     const onDeleteAccount = jest.fn();
-    const user = { uid: 'u1', email: 'test@example.com', picture: '' };
+    const user: User = { uid: 'u1', name: 'Test User', email: 'test@example.com', picture: '', auth_time: 1234567890, firebase: { identities: {}, sign_in_provider: 'google.com' } };
     const mockPush = jest.fn();
     
     (useRouter as jest.Mock).mockReturnValue({

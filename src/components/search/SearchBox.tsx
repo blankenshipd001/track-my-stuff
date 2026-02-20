@@ -10,6 +10,7 @@ import BookmarkAdd from "@mui/icons-material/BookmarkAdd";
 import { useRouter } from "next/navigation";
 import useNotificationBar from "@/components/notifications/useNotificationBar";
 import { Media } from "@/data-models/media.interface";
+import { User } from "@/data-models/user.interface";
 import { getProxyImageUrlForPath } from "@/lib/imageUrl";
 
 const SearchInput = styled(OutlinedInput)(({ theme }) => ({
@@ -27,7 +28,7 @@ const SearchInput = styled(OutlinedInput)(({ theme }) => ({
 }));
 
 interface SearchBoxProps {
-  user?: { uid: string; email?: string } | null;
+  user?: User | null;
 }
 
 export const SearchBox = ({ user: userProp }: SearchBoxProps): React.ReactElement => {

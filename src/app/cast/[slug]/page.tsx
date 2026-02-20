@@ -1,16 +1,52 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
 import { Box, Container, Typography, Paper, Card, CardContent, Chip } from '@mui/material';
 import Link from 'next/link';
 import Image from 'next/image';
-import { getCastMemberDetails } from '@/utils/api/serverContentApi';
+import { fetchCastMemberDetails } from '@/services';
 import { Metadata } from 'next';
 import { BackButton } from '@/components/buttons/back-button';
+import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
+import { generatePersonSchema } from '@/lib/schema-markup';
 import { COLORS, GRADIENTS, SHADOWS, TRANSITIONS, BORDER_RADIUS } from '@/lib/theme-constants';
+import { Credit } from '@/data-models/credit.interface';
+
+/**
+ * Helper function to process cast member details with sorted filmography
+ */
+async function getProcessedCastMemberDetails(castId: string) {
+  try {
+    const person = await fetchCastMemberDetails(castId);
+    
+    if (!person) return null;
+
+    // Combine and sort movie and TV credits by popularity/date
+    const allCredits = [
+      ...(person.combined_credits?.cast || [])
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        .map((credit: any) => ({
+          ...credit,
+          media_type: credit.media_type || (credit.title ? 'movie' : 'tv'),
+        }))
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ].sort((a: any, b: any) => {
+      const dateA = new Date(a.release_date || a.first_air_date || 0).getTime();
+      const dateB = new Date(b.release_date || b.first_air_date || 0).getTime();
+      return dateB - dateA; // Most recent first
+    });
+
+    return {
+      ...person,
+      filmography: allCredits.slice(0, 50), // Top 50 works
+    };
+  } catch (error) {
+    console.error('Error fetching cast member details:', error);
+    return null;
+  }
+}
 
 export async function generateMetadata({ params }: { params: { slug: string } | Promise<{ slug: string }> }): Promise<Metadata> {
   const resolvedParams = await params;
-  const castMember = await getCastMemberDetails(resolvedParams.slug);
+  const castMember = await getProcessedCastMemberDetails(resolvedParams.slug);
 
   if (!castMember) {
     return {
@@ -19,14 +55,31 @@ export async function generateMetadata({ params }: { params: { slug: string } | 
   }
 
   return {
-    title: `${castMember.name} | ReelTime`,
-    description: castMember.biography || `${castMember.name}'s filmography on ReelTime`,
+    title: `${castMember.name} - Actor | ReelTime`,
+    description: castMember.biography ? `${castMember.biography.slice(0, 155)}... See ${castMember.name}'s filmography on ReelTime` : `${castMember.name}'s filmography and movies on ReelTime`,
+    keywords: `${castMember.name}, actor, actress, filmography, movies, TV shows`,
+    alternates: {
+      canonical: `https://reeltime.app/cast/${castMember.id}`,
+    },
+    openGraph: {
+      title: `${castMember.name} - Actor`,
+      description: castMember.biography?.slice(0, 155),
+      images: castMember.profile_path ? [`https://image.tmdb.org/t/p/w500${castMember.profile_path}`] : [],
+      type: 'profile',
+      url: `https://reeltime.app/cast/${castMember.id}`,
+    },
+    twitter: {
+      card: 'summary',
+      title: `${castMember.name} - Actor`,
+      description: castMember.biography?.slice(0, 200),
+      images: castMember.profile_path ? [`https://image.tmdb.org/t/p/w500${castMember.profile_path}`] : [],
+    },
   };
 }
 
 export default async function CastMemberPage({ params }: { params: { slug: string } | Promise<{ slug: string }> }) {
   const resolvedParams = await params;
-  const castMember = await getCastMemberDetails(resolvedParams.slug);
+  const castMember = await getProcessedCastMemberDetails(resolvedParams.slug);
 
   if (!castMember) {
     return (
@@ -39,9 +92,20 @@ export default async function CastMemberPage({ params }: { params: { slug: strin
   }
 
   const filmography = castMember.filmography || [];
+  const breadcrumbItems = [
+    { name: 'Home', url: '/' },
+    { name: 'Cast', url: '/cast' },
+    { name: castMember.name, url: `/cast/${castMember.id}` },
+  ];
+  const schema = generatePersonSchema(castMember);
 
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+      />
+      <Breadcrumb items={breadcrumbItems} />
       {/* Header Section with Profile */}
       <Paper
         sx={{
@@ -193,7 +257,7 @@ export default async function CastMemberPage({ params }: { params: { slug: strin
         </Typography>
 
         <Box sx={{ display: 'grid', gridTemplateColumns: { xs: 'repeat(2, 1fr)', sm: 'repeat(4, 1fr)', md: 'repeat(3, 1fr)', lg: 'repeat(5, 1fr)' }, gap: 2 }}>
-          {filmography.map((work: any) => {
+          {filmography.map((work: Credit) => {
             const isMovie = work.media_type === 'movie';
             const title = isMovie ? work.title : work.name;
             const date = isMovie ? work.release_date : work.first_air_date;
@@ -230,7 +294,7 @@ export default async function CastMemberPage({ params }: { params: { slug: strin
                       <Link href={isMovie ? `/movies/${work.id}` : `/tv/${work.id}`}>
                         <Image
                           src={`https://image.tmdb.org/t/p/w342${posterPath}`}
-                          alt={title}
+                          alt={title ?? 'Poster'}
                           fill
                           className="object-cover hover:scale-105 transition-transform"
                           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"

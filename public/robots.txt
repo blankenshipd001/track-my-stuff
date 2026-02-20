@@ -1,0 +1,25 @@
+# ReelTime - SEO Configuration
+User-agent: *
+Allow: /
+Allow: /movies/
+Allow: /tv/
+Allow: /cast/
+Disallow: /api/
+Disallow: /admin/
+Disallow: /login/
+Disallow: /activity/
+Disallow: /watched/
+Disallow: /account/
+
+# Sitemap
+Sitemap: https://reeltime.app/sitemap.xml
+
+# Crawl delay
+Crawl-delay: 1
+
+# Specific bot rules
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /

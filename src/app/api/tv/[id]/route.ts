@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getTVDetails } from "@/utils/api/serverContentApi";
+import { fetchTVDetails } from "@/services";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function GET(request: NextRequest, { params }: { params: any }) {
@@ -14,7 +14,13 @@ export async function GET(request: NextRequest, { params }: { params: any }) {
   }
 
   try {
-    const tv = await getTVDetails(id);
+    let tv;
+    try {
+      tv = await fetchTVDetails(id);
+    } catch (error) {
+      console.error('Error fetching TV details:', error);
+      tv = null;
+    }
     if (!tv) {
       const headers = new Headers();
       headers.set('Cache-Control', 'public, max-age=60');

@@ -4,10 +4,11 @@ import { useState } from "react";
 import { TabPanel } from "./tab-panel";
 import { MediaGrid } from "../media";
 import { Media } from "@/data-models/media.interface";
+import { User } from "@/data-models/user.interface";
 import useNotificationBar from "../notifications/useNotificationBar";
 
 interface Props {
-  user?: { uid: string; email?: string } | null;
+  user?: User | null;
   watchList: Media[];
   allContent: Media[];
 }

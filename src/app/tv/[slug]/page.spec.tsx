@@ -11,16 +11,16 @@ jest.mock('@/lib/firebase/client', () => ({
 // Mock server helpers
 jest.mock('@/lib/getCookieHeader', () => jest.fn(async () => 'cookie-header'));
 jest.mock('@/lib/firebase/auth', () => ({
-  verifySessionToken: jest.fn(async () => ({ uid: 'user-1' }))
+  verifySessionToken: jest.fn(async () => ({ uid: 'user-1', name: 'Test User', email: 'test@example.com', auth_time: 1234567890, firebase: { identities: {}, sign_in_provider: 'google.com' } }))
 }));
 
 // Mock API functions
-const mockGetTVDetails = jest.fn();
-const mockGetRecommendedTV = jest.fn();
+const mockFetchTVDetails = jest.fn();
+const mockFetchRecommendedTV = jest.fn();
 const mockFetchPopularTV = jest.fn();
-jest.mock('@/utils/api/serverContentApi', () => ({
-  getTVDetails: (...args: any[]) => mockGetTVDetails(...args),
-  getRecommendedTV: (...args: any[]) => mockGetRecommendedTV(...args),
+jest.mock('@/services', () => ({
+  fetchTVDetails: (...args: any[]) => mockFetchTVDetails(...args),
+  fetchRecommendedTV: (...args: any[]) => mockFetchRecommendedTV(...args),
   fetchPopularTV: (...args: any[]) => mockFetchPopularTV(...args),
 }));
 
@@ -34,7 +34,7 @@ jest.mock('@mui/material', () => {
   };
 });
 
-import { getTVDetails, getRecommendedTV } from '@/utils/api/serverContentApi';
+import { fetchTVDetails, fetchRecommendedTV } from '@/services';
 
 describe('TV details page (server component)', () => {
   beforeEach(() => {
@@ -51,11 +51,11 @@ describe('TV details page (server component)', () => {
       overview: 'Test overview'
     };
     
-    mockGetTVDetails.mockResolvedValueOnce(mockTV);
+    mockFetchTVDetails.mockResolvedValueOnce(mockTV);
     
-    const result = await getTVDetails('123');
+    const result = await fetchTVDetails('123');
     
-    expect(mockGetTVDetails).toHaveBeenCalledWith('123');
+    expect(mockFetchTVDetails).toHaveBeenCalledWith('123');
     expect(result).toEqual(mockTV);
   });
 
@@ -64,21 +64,24 @@ describe('TV details page (server component)', () => {
       { id: 999, name: 'Recommended Show' }
     ];
     
-    mockGetRecommendedTV.mockResolvedValueOnce(mockRecommended);
+    mockFetchRecommendedTV.mockResolvedValueOnce(mockRecommended);
     
-    const result = await getRecommendedTV(10);
+    const result = await fetchRecommendedTV('10');
     
-    expect(mockGetRecommendedTV).toHaveBeenCalledWith(10);
+    expect(mockFetchRecommendedTV).toHaveBeenCalledWith('10');
     expect(result).toEqual(mockRecommended);
   });
 
   it('should return null when TV details are not found', async () => {
-    mockGetTVDetails.mockResolvedValueOnce(null);
+    mockFetchTVDetails.mockRejectedValueOnce(new Error('Not found'));
     
-    const result = await getTVDetails('missing');
+    try {
+      await fetchTVDetails('missing');
+    } catch (e) {
+      expect(e).toBeInstanceOf(Error);
+    }
     
-    expect(mockGetTVDetails).toHaveBeenCalledWith('missing');
-    expect(result).toBeNull();
+    expect(mockFetchTVDetails).toHaveBeenCalledWith('missing');
   });
 
   it('should handle TV show with no genres', async () => {
@@ -90,14 +93,14 @@ describe('TV details page (server component)', () => {
       overview: 'No genre'
     };
     
-    mockGetTVDetails.mockResolvedValueOnce(mockTV);
-    mockGetRecommendedTV.mockResolvedValueOnce([]);
+    mockFetchTVDetails.mockResolvedValueOnce(mockTV);
+    mockFetchRecommendedTV.mockResolvedValueOnce([]);
     
-    const tv = await getTVDetails('456');
-    const recommended = await getRecommendedTV(tv?.genres?.[0]?.id || 0);
+    const tv = await fetchTVDetails('456');
+    const recommended = await fetchRecommendedTV((tv?.genres?.[0]?.id?.toString() || '0'));
     
     expect(tv).toEqual(mockTV);
     expect(recommended).toEqual([]);
-    expect(mockGetRecommendedTV).toHaveBeenCalledWith(0);
+    expect(mockFetchRecommendedTV).toHaveBeenCalledWith('0');
   });
 });

@@ -1,6 +1,11 @@
 import { Cast } from "./cast.interface";
 import { ServiceProvider } from "./service-provider.interface";
 
+export interface Genre {
+  id: number;
+  name: string;
+}
+
 export interface Media {
   //this field is NOT pulled from an API. type is added to indicate if it's a tv show or movie
   type?: string;

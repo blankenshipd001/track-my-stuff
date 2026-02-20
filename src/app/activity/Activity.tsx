@@ -5,6 +5,7 @@ import { Plus, Film, Tv, Edit2, Trash2, ChevronDown, ChevronUp, Info, ExternalLi
 import { useRouter } from "next/navigation";
 import useGetMyFavoriteProviders from "@/hooks/useGetMyFavoriteProviders";
 import { Media } from "@/data-models/media.interface";
+import { User } from "@/data-models/user.interface";
 import { getProxyImageUrlForPath } from "@/lib/imageUrl";
 import { COLORS, GRADIENTS } from "@/lib/theme-constants";
 import NextImage from "next/image";
@@ -69,7 +70,7 @@ type Providers = Record<ProviderKey, ProviderDetails>;
 
 interface MyWatchlistProps {
   watchlist: Media[];
-  user?: { uid: string; email?: string } | null;
+  user?: User | null;
 }
 
 const StreamingWatchlist = ({ watchlist, user }: MyWatchlistProps) => {

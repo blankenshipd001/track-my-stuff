@@ -4,6 +4,7 @@
 import React, { useMemo, useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { Media } from "@/data-models/media.interface";
+import { User } from "@/data-models/user.interface";
 
 import { useMediaQuery, useTheme, Button, Box, CircularProgress } from "@mui/material";
 
@@ -16,7 +17,7 @@ import { COLORS } from '@/lib/theme-constants';
 interface MediaGridProps {
   movies: Media[];
   isWatchlist?: boolean;
-  user?: { uid: string; email?: string } | null;
+  user?: User | null;
 }
 
 const ITEMS_PER_PAGE = 20;

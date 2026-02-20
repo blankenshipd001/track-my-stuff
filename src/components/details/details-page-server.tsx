@@ -1,5 +1,6 @@
 import React from 'react';
 import { Media } from "@/data-models/media.interface";
+import { User } from "@/data-models/user.interface";
 import { Container, Paper, Box } from "@mui/material";
 import DetailsHeaderServer from "./details-header-server";
 import DetailsMediaServer from "./details-media-server";
@@ -7,12 +8,32 @@ import DetailsMediaGallery from "./details-media-gallery";
 import DetailsRecommended from "./details-recommended";
 import EpisodesSection from "./episodes-section";
 import CastSection from "./cast-section";
+import { Breadcrumb } from "@/components/breadcrumb/breadcrumb";
 import { GRADIENTS, SHADOWS, BORDER_RADIUS } from '@/lib/theme-constants';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export default function DetailsPageServer({ user, media, recommended, isTv }: { user: any; media: Media; recommended: Media[]; isTv: boolean }) {
+interface BreadcrumbItem {
+  name: string;
+  url: string;
+}
+
+export default function DetailsPageServer({
+  user,
+  media,
+  recommended,
+  isTv,
+  breadcrumbItems,
+}: {
+  user: User | null;
+  media: Media;
+  recommended: Media[];
+  isTv: boolean;
+  breadcrumbItems?: BreadcrumbItem[];
+}) {
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
+      {breadcrumbItems && breadcrumbItems.length > 0 && (
+        <Breadcrumb items={breadcrumbItems} />
+      )}
       <Paper
         sx={{
           p: { xs: 2, md: 3 },
