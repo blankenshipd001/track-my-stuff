@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom';
 import { render } from "@testing-library/react";
-import { ReactElement, ReactNode } from "react";
+import { ReactNode } from "react";
 import { Providers as ReelTimeProviders } from "./providers/providers";
 
 type WrapperOptions = {
@@ -17,7 +17,8 @@ type Options = {
   renderOptions?: Omit<WrapperOptions, "wrapper">;
 };
 
-export const renderWithProviders = (ui: ReactElement, options?: Options) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const renderWithProviders = (ui: any, options?: Options) => {
   const { renderOptions, ...wrapperOptions } = options ?? {};
   
   return render(ui, {

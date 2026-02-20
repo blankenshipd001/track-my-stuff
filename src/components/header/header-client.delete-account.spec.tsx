@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 import React from 'react';
 import { renderWithProviders, screen, fireEvent, waitFor, within } from '@/utils/test-utils';
 

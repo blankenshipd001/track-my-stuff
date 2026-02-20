@@ -1,7 +1,8 @@
 import React from 'react';
-import { renderWithProviders, screen, fireEvent, waitFor } from '@/utils/test-utils';
+import { renderWithProviders, screen, waitFor } from '@/utils/test-utils';
 import { useRouter } from 'next/navigation';
 import { User } from '@/data-models/user.interface';
+import userEvent from '@testing-library/user-event';
 
 import UserMenu from './user-menu';
 
@@ -20,7 +21,7 @@ describe('UserMenu', () => {
     });
   });
 
-  it('shows email in menu and calls onLogout when Log Out clicked', () => {
+  it('shows email in menu and calls onLogout when Log Out clicked', async () => {
     const onLogout = jest.fn();
     const onDeleteAccount = jest.fn();
     const user: User = { uid: 'u1', name: 'Test User', email: 'a@b.com', picture: '', auth_time: 1234567890, firebase: { identities: {}, sign_in_provider: 'google.com' } };
@@ -29,14 +30,16 @@ describe('UserMenu', () => {
 
     // Click the avatar button to open menu
     const avatarBtn = screen.getByRole('button');
-    fireEvent.click(avatarBtn);
+    await userEvent.click(avatarBtn);
 
     // Email should be visible
-    expect(screen.getByText(/a@b.com/i)).toBeVisible();
+    await waitFor(() => {
+      expect(screen.getByText(/a@b.com/i)).toBeVisible();
+    });
 
     // Click Log Out
     const logout = screen.getByRole('button', { name: /Log Out/i });
-    fireEvent.click(logout);
+    await userEvent.click(logout);
 
     expect(onLogout).toHaveBeenCalled();
   });
@@ -50,11 +53,14 @@ describe('UserMenu', () => {
 
     // Click the avatar button to open menu
     const avatarBtn = screen.getByRole('button');
-    fireEvent.click(avatarBtn);
+    await userEvent.click(avatarBtn);
 
     // Click Delete Account button
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: /Delete Account/i })).toBeInTheDocument();
+    });
     const deleteBtn = screen.getByRole('button', { name: /Delete Account/i });
-    fireEvent.click(deleteBtn);
+    await userEvent.click(deleteBtn);
 
     // Confirmation dialog should appear
     await waitFor(() => {
@@ -63,7 +69,7 @@ describe('UserMenu', () => {
 
     // Cancel the deletion
     const cancelBtn = screen.getByRole('button', { name: /Cancel/i });
-    fireEvent.click(cancelBtn);
+    await userEvent.click(cancelBtn);
 
     expect(onDeleteAccount).not.toHaveBeenCalled();
   });
@@ -77,11 +83,14 @@ describe('UserMenu', () => {
 
     // Click the avatar button to open menu
     const avatarBtn = screen.getByRole('button');
-    fireEvent.click(avatarBtn);
+    await userEvent.click(avatarBtn);
 
     // Click Delete Account button
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: /Delete Account/i })).toBeInTheDocument();
+    });
     const deleteBtn = screen.getByRole('button', { name: /Delete Account/i });
-    fireEvent.click(deleteBtn);
+    await userEvent.click(deleteBtn);
 
     // Wait for dialog and confirm deletion
     await waitFor(() => {
@@ -89,14 +98,14 @@ describe('UserMenu', () => {
     });
 
     const confirmBtn = screen.getByRole('button', { name: /^Delete Account$/i });
-    fireEvent.click(confirmBtn);
+    await userEvent.click(confirmBtn);
 
     await waitFor(() => {
       expect(onDeleteAccount).toHaveBeenCalled();
     });
   });
 
-  it('navigates to /providers when Add Providers button is clicked', () => {
+  it('navigates to /providers when Add Providers button is clicked', async () => {
     const onLogout = jest.fn();
     const onDeleteAccount = jest.fn();
     const user: User = { uid: 'u1', name: 'Test User', email: 'test@example.com', picture: '', auth_time: 1234567890, firebase: { identities: {}, sign_in_provider: 'google.com' } };
@@ -110,11 +119,14 @@ describe('UserMenu', () => {
 
     // Click the avatar button to open menu
     const avatarBtn = screen.getByRole('button');
-    fireEvent.click(avatarBtn);
+    await userEvent.click(avatarBtn);
 
     // Click Add Providers button
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: /Add Providers/i })).toBeInTheDocument();
+    });
     const addProvidersBtn = screen.getByRole('button', { name: /Add Providers/i });
-    fireEvent.click(addProvidersBtn);
+    await userEvent.click(addProvidersBtn);
 
     expect(mockPush).toHaveBeenCalledWith('/providers');
   });

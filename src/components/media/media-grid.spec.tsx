@@ -19,10 +19,6 @@ jest.mock('../provider/ProviderLogos', () => ({
   ProviderLogos: ({ list }: any) => <div data-testid="provider-logos">{String(list?.length)}</div>,
 }));
 
-// Mock WatchlistFlipCard to capture props for handler testing
-const mockOnNavigate = jest.fn();
-const mockOnAdd = jest.fn();
-const mockOnRemove = jest.fn();
 
 jest.mock('./watchlist-flip-card', () => ({
   WatchlistFlipCard: ({ movie, onNavigate, onAdd, onRemove, ...props }: any) => {
@@ -175,7 +171,6 @@ describe('MediaGrid', () => {
   });
 
   it('shows "Please log in" notification when adding to watchlist without user', async () => {
-    const user = userEvent.setup();
     const movie = {
       id: 1,
       movieId: 1,

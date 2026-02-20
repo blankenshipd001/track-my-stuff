@@ -122,7 +122,6 @@ describe('About Page', () => {
     it('should have heading with gradient styling', () => {
       renderWithProviders(<AboutPage />);
       const heading = screen.getByRole('heading', { name: 'About Us' });
-      const styles = window.getComputedStyle(heading);
       expect(heading).toBeInTheDocument();
     });
 
@@ -139,7 +138,7 @@ describe('About Page', () => {
     });
 
     it('should have visual separator before Privacy Policy section', () => {
-      const { container } = renderWithProviders(<AboutPage />);
+      renderWithProviders(<AboutPage />);
       const privacyLink = screen.getByRole('link', { name: /Privacy Policy/i });
       const parentBox = privacyLink.closest('[class*="MuiBox"]');
       expect(parentBox).toBeInTheDocument();

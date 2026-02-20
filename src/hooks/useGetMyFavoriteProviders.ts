@@ -30,6 +30,7 @@ const useGetMyFavoriteProviders = (uid: string) => {
           setIsLoading(false);
         }
       } catch (error) {
+        console.error("Error fetching favorite providers:", error);
         if (isMounted) {
           setIsLoading(false);
         }
