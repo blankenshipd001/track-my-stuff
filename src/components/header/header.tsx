@@ -1,10 +1,8 @@
 import HeaderClient from "./header-client";
-import { verifySessionToken } from "@/lib/firebase/auth";
-import getCookieHeader from '@/lib/getCookieHeader';
+import { getCurrentUser } from "@/lib/get-current-user";
 
 export const Header = async () => {
-  const cookieHeader = await getCookieHeader();
-  const user = await verifySessionToken(cookieHeader);
+  const user = await getCurrentUser();
 
   const navItems = [
     { label: "Search", path: "/" },

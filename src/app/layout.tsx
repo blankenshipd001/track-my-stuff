@@ -1,12 +1,10 @@
 import { Roboto } from "next/font/google";
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Analytics } from "@vercel/analytics/react"
-import { CssBaseline } from "@mui/material";
 import { Providers } from "@utils/providers/providers";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { PWAInstallPrompt } from "@/components/pwa-install-prompt";
-import { FontLoader } from "@/components/font-loader";
 import { SkipLink } from "@/components/skip-link";
 import { ScrollToTop } from "@/components/scroll-to-top";
 import { Viewport } from "next";
@@ -31,6 +29,13 @@ export const metadata = {
     "movie tracker, TV show tracker, watchlist, streaming, movies, TV shows, entertainment",
   creator: "ReelTime",
   manifest: "/manifest.json",
+  links: [
+    {
+      rel: "preload",
+      href: "https://fonts.googleapis.com/icon?family=Material+Icons",
+      as: "style",
+    },
+  ],
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
@@ -83,25 +88,27 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className={roboto.className}>
         <SkipLink />
 
-        <FontLoader />
-        <Suspense fallback={<div style={{ minHeight: "100vh", background: "#111827" }} />}>
-          <Providers>
-            <ScrollToTop />
-            <CssBaseline />
+        <Providers>
+          <Suspense fallback={<div style={{ height: "60px", background: "rgba(17, 24, 39, 0.8)", borderBottom: "1px solid rgba(75, 85, 99, 0.3)" }} />}>
             <Header />
-            <main
+          </Suspense>
+          <Suspense fallback={null}>
+            <ScrollToTop />
+          </Suspense>
+          <main
               id="main-content"
               style={{ minHeight: "calc(100vh - 200px)" }}
               role="main"
             >
-              {children}
+              <Suspense fallback={<div style={{ minHeight: "400px", display: "flex", alignItems: "center", justifyContent: "center" }}>Loading...</div>}>
+                {children}
+              </Suspense>
             </main>
             <Footer />
             <PWAInstallPrompt />
             <SpeedInsights />
             <Analytics />
-          </Providers>
-        </Suspense>
+        </Providers>
       </body>
     </html>
   );

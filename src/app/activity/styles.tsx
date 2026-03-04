@@ -306,9 +306,12 @@ export const CardBack = styled(CardFace)`
   backdrop-filter: blur(12px);
   padding: 1.5rem;
   overflow-y: auto;
+  overflow-x: hidden;
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  box-sizing: border-box;
+  -webkit-overflow-scrolling: touch;
 `;
 
 export const ImageContainer = styled.div`

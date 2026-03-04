@@ -5,6 +5,7 @@
  */
 
 import { Media } from "@/data-models/media.interface";
+import { adminDB } from '@/lib/firebase/admin';
 import { 
   fetchPopularMoviesWithProviders, 
   fetchMovieDetails as fetchMovieDetailsSvc,
@@ -15,6 +16,32 @@ import {
   fetchRecommendedTV as fetchRecommendedTVSvc,
   fetchPopularTV as fetchPopularTVSvc
 } from '@/services';
+
+/**
+ * Get all items from a user's watchlist (server-side)
+ * Uses Firebase Admin SDK for server-side data access
+ * @param uid User's unique ID
+ * @returns Array of Media items
+ */
+export async function getContentServerSide(uid: string): Promise<Media[]> {
+  try {
+    const path = `users/${uid}/movies`;
+    const moviesSnapshot = await adminDB.collection(path).get();
+
+    const moviesList: Media[] = moviesSnapshot.docs.map((doc) => {
+      return {
+        id: doc.id,
+        docId: doc.id,
+        ...doc.data(),
+      } as unknown as Media;
+    });
+
+    return moviesList;
+  } catch (error) {
+    console.error('Error fetching watchlist:', error);
+    return [];
+  }
+}
 
 /**
  * Fetch popular movies with providers

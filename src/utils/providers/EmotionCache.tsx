@@ -4,14 +4,30 @@ import { CacheProvider } from "@emotion/react";
 import createCache from "@emotion/cache";
 import { useServerInsertedHTML } from "next/navigation";
 
+/**
+ * EmotionCache for MUI styling with SSR optimization
+ * 
+ * This component:
+ * 1. Creates an Emotion cache with prepend=true to ensure MUI styles override user styles
+ * 2. Uses useServerInsertedHTML to inject critical styles during SSR
+ * 3. Separates global styles from component styles for better CSSOM performance
+ * 4. Prevents style injection delays during hydration
+ */
 export default function EmotionCache({ children }: { children: React.ReactNode }) {
   const [registry] = React.useState(() => {
-    const cache = createCache({ key: "css", prepend: true });
+    const cache = createCache({ 
+      key: "css", 
+      prepend: true,
+      // stylisPlugin: [] // Can add plugins here for critical CSS extraction if needed
+    });
     cache.compat = true;
-    return { cache, flush: () => {
-      const names = cache.inserted;
-      return Object.keys(names);
-    } };
+    return { 
+      cache, 
+      flush: () => {
+        const names = cache.inserted;
+        return Object.keys(names);
+      } 
+    };
   });
 
   useServerInsertedHTML(() => {
