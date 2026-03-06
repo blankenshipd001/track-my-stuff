@@ -88,3 +88,46 @@ export function calculateTvProgress(item: Media): number {
 
   return totalEpisodes > 0 ? (totalWatched / totalEpisodes) * 100 : 0;
 }
+
+export function getMaxEpisodesInSeason(item: Media, seasonNumber: number): number {
+  if (item.episodes && item.episodes.length > 0) {
+    const season = item.episodes.find(s => s.season_number === seasonNumber);
+    return season && Array.isArray(season.episodes) ? season.episodes.length : 0;
+  }
+
+  if (item.seasons && item.seasons.length > 0) {
+    const season = item.seasons.find(s => s.season_number === seasonNumber);
+    return season?.episode_count ?? 0;
+  }
+
+  return 0;
+}
+
+export function getNextEpisodeUpdate(item: Media): { currentSeason: number; currentEpisode: number } | null {
+  if (!isTvMedia(item)) return null;
+
+  const currentSeason = (item as Media & { currentSeason?: number }).currentSeason ?? 1;
+  const currentEpisode = (item as Media & { currentEpisode?: number }).currentEpisode ?? 1;
+
+  const maxEpisodesInCurrentSeason = getMaxEpisodesInSeason(item, currentSeason);
+  const totalSeasons = item.seasonCount ?? (item.seasons?.length ?? 0);
+
+  // If there are more episodes in current season, just increment episode
+  if (maxEpisodesInCurrentSeason > 0 && currentEpisode < maxEpisodesInCurrentSeason) {
+    return {
+      currentSeason,
+      currentEpisode: currentEpisode + 1,
+    };
+  }
+
+  // If there are more seasons, move to next season episode 1
+  if (currentSeason < totalSeasons) {
+    return {
+      currentSeason: currentSeason + 1,
+      currentEpisode: 1,
+    };
+  }
+
+  // At the end, don't advance
+  return null;
+}

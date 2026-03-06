@@ -264,6 +264,69 @@ const StreamingWatchlist = ({ watchlist, user }: MyWatchlistProps) => {
       router.push(`/tv/${slug}`);
     }
   }, [router]);
+
+  const handleUpdateEpisode = useCallback(
+    async (item: Media, currentSeason: number, currentEpisode: number) => {
+      if (!user) {
+        return;
+      }
+
+      const updatedItem = {
+        ...item,
+        currentSeason,
+        currentEpisode,
+      };
+
+      // Optimistically update local state
+      setWatchlistState((prev) =>
+        prev.map((i) =>
+          i.id === item.id
+            ? { ...i, currentSeason, currentEpisode }
+            : i
+        )
+      );
+
+      try {
+        await updateMovie(user.uid, updatedItem);
+      } catch (err) {
+        console.error("Error updating episode progress:", err);
+        // Revert on error
+        setWatchlistState(watchlist);
+      }
+    },
+    [user, watchlist]
+  );
+
+  const handleUpdateRating = useCallback(
+    async (item: Media, rating: number) => {
+      if (!user) {
+        return;
+      }
+
+      const updatedItem = {
+        ...item,
+        rating,
+      };
+
+      // Optimistically update local state
+      setWatchlistState((prev) =>
+        prev.map((i) =>
+          i.id === item.id
+            ? { ...i, rating }
+            : i
+        )
+      );
+
+      try {
+        await updateMovie(user.uid, updatedItem);
+      } catch (err) {
+        console.error("Error updating rating:", err);
+        // Revert on error
+        setWatchlistState(watchlist);
+      }
+    },
+    [user, watchlist]
+  );
   
   return (
     <Container>
@@ -330,6 +393,8 @@ const StreamingWatchlist = ({ watchlist, user }: MyWatchlistProps) => {
                 onEdit={handleEdit}
                 onDelete={handleDelete}
                 onNavigateToDetails={handleNavigateToDetails}
+                onUpdateEpisode={handleUpdateEpisode}
+                onUpdateRating={handleUpdateRating}
               />
             );
           })}
