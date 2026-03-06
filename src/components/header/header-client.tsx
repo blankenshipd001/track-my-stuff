@@ -1,5 +1,5 @@
 "use client";
-import { Suspense, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   Drawer,
@@ -30,6 +30,10 @@ const HeaderClient = ({ user, navItems }: HeaderClientProps) => {
   const router = useRouter();
   const [drawerOpen, setDrawerOpen] = useState(false);
 
+  useEffect(() => {
+    router.prefetch?.("/activity");
+  }, [router]);
+
   const handleNav = (path: string) => {
     setDrawerOpen(false);
     router.push(path);
@@ -47,14 +51,17 @@ const HeaderClient = ({ user, navItems }: HeaderClientProps) => {
       const result = await signInWithPopup(auth, googleProvider);
       const token = await result.user.getIdToken();
 
-      await fetch("/api/session", {
+      const response = await fetch("/api/session", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ token }),
       });
 
+      if (!response.ok) {
+        throw new Error("Failed to create session");
+      }
+
       router.push("/activity");
-      router.refresh();
     } catch (error) {
       console.error("Login error:", error);
     }

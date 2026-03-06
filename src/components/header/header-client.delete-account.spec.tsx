@@ -9,8 +9,9 @@ jest.mock('next/image', () => (props: any) => {
 
 const pushMock = jest.fn();
 const refreshMock = jest.fn();
+const prefetchMock = jest.fn();
 jest.mock('next/navigation', () => ({
-  useRouter: () => ({ push: pushMock, refresh: refreshMock }),
+  useRouter: () => ({ push: pushMock, refresh: refreshMock, prefetch: prefetchMock }),
   useServerInsertedHTML: jest.fn((callback) => callback()),
 }));
 

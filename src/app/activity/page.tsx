@@ -31,9 +31,16 @@ async function ActivityContent() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const movies: any = snapshot.docs.map(doc => doc.data());
 
-  // For TV shows, fetch and attach the most recent season's episodes in parallel
+  // Only enrich in-progress TV items that need episode totals for progress UI.
+  // Skipping completed/watchlist items avoids unnecessary external API calls on first load.
   const moviesWithEpisodes = await Promise.all(movies.map(async (item: Media) => {
-    if (item.media_type === 'tv' && item.movieId) {
+    const shouldEnrichEpisodes =
+      item.media_type === 'tv' &&
+      Boolean(item.movieId) &&
+      item.status === 'watching' &&
+      !item.episodes?.length;
+
+    if (shouldEnrichEpisodes) {
       try {
         // Fetch TV details to find the most recent season
         const tvDetails = await fetchTVDetails(item.movieId.toString());

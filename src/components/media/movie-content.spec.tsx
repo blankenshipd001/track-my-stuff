@@ -1,20 +1,13 @@
 import React from 'react';
-import { renderWithProviders, screen, act } from '@/utils/test-utils';
-
-// Mock next/navigation
-const pushMock = jest.fn();
-jest.mock('next/navigation', () => ({
-  useRouter: () => ({ push: pushMock, refresh: jest.fn() }),
-  useServerInsertedHTML: jest.fn((callback) => callback()),
-}));
+import { renderWithProviders, screen } from '@/utils/test-utils';
 
 // Mock SearchBox and TabsWrapper to isolate MovieContent
 jest.mock('@/components/search', () => ({ SearchBox: () => <div data-testid="search" /> }));
-jest.mock('../panels/tab-wrapper', () => () => <div data-testid="tabs" />);
-
-// Mock getContent to control watchlist loading
-const getContentMock = jest.fn();
-jest.mock('@/utils/api/contentApi', () => ({ getContent: (...args: any[]) => getContentMock(...args) }));
+const tabsWrapperMock = jest.fn(() => <div data-testid="tabs" />);
+jest.mock('../panels/tab-wrapper', () => ({
+  __esModule: true,
+  default: (props: any) => tabsWrapperMock(props),
+}));
 
 import { MovieContent } from './movie-content';
 
@@ -29,27 +22,38 @@ describe('MovieContent', () => {
 
     expect(screen.getByTestId('search')).toBeVisible();
     expect(screen.getByTestId('tabs')).toBeVisible();
+    expect(tabsWrapperMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        user: null,
+        allContent: popular,
+        watchList: [],
+      })
+    );
   });
 
-  it('calls getContent when user provided and sets watchlist', async () => {
-    const popular = [] as any;
-    getContentMock.mockResolvedValueOnce([{ id: 2 }] as any);
+  it('passes initial watchlist to TabsWrapper when user is provided', () => {
+    const popular = [{ id: 1, title: 'Popular' }] as any;
+    const watchList = [{ id: 2, title: 'Saved' }] as any;
 
-    await act(async () => {
-      renderWithProviders(<MovieContent popularMedia={popular} user={{ uid: 'u1' }} />);
-    });
+    renderWithProviders(
+      <MovieContent popularMedia={popular} user={{ uid: 'u1' } as any} initialWatchList={watchList} />
+    );
 
-    expect(getContentMock).toHaveBeenCalledWith('u1');
     expect(screen.getByTestId('tabs')).toBeVisible();
+    expect(tabsWrapperMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        user: expect.objectContaining({ uid: 'u1' }),
+        allContent: popular,
+        watchList,
+      })
+    );
   });
 
-  it('redirects to / when getContent fails', async () => {
-    getContentMock.mockRejectedValueOnce(new Error('fail'));
+  it('defaults watchlist to an empty array when initialWatchList is omitted', () => {
+    renderWithProviders(<MovieContent popularMedia={[]} user={{ uid: 'u2' } as any} />);
 
-    await act(async () => {
-      renderWithProviders(<MovieContent popularMedia={[]} user={{ uid: 'u2' }} />);
-    });
-
-    expect(pushMock).toHaveBeenCalledWith('/');
+    expect(tabsWrapperMock).toHaveBeenCalledWith(
+      expect.objectContaining({ watchList: [] })
+    );
   });
 });
