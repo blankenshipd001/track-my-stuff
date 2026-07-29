@@ -3,7 +3,6 @@ import getCookieHeader from '@/lib/getCookieHeader';
 import WatchListPage from '@/app/watched/WatchListPage';
 import { adminDB } from '@/lib/firebase/admin';
 import { Media } from '@/data-models/media.interface';
-import { DocumentData } from 'firebase-admin/firestore';
 import { User } from '@/data-models/user.interface';
 import { Metadata } from 'next';
 import { Suspense } from 'react';
@@ -27,15 +26,14 @@ export default async function WatchedPage() {
 async function WatchedContent() {
   const cookieHeader = await getCookieHeader();
   const user: User | null = await verifySessionToken(cookieHeader);
-  
-  const snapshot = await adminDB.collection('/users/' + user?.uid + "/movies").get();
-  const allMedia: DocumentData[] = snapshot.docs.map(doc => doc.data());
-  
-  // Filter on server side for better performance
-  const movies = (allMedia as Media[]).filter((item: Media) => !!item.title);
-  const tvShows = (allMedia as Media[]).filter((item: Media) => !!item.name);
 
-  return (
-    <WatchListPage movies={movies} tvShows={tvShows} user={user}/>
-  );
+  const snapshot = await adminDB.collection("/users/" + user?.uid + "/movies").get();
+  const allMedia: Media[] = snapshot.docs.map((doc) => doc.data() as Media);
+
+  // Completed-only archive
+  const completed = allMedia.filter((item) => item.status === "completed");
+  const movies = completed.filter((item) => !!item.title);
+  const tvShows = completed.filter((item) => !!item.name);
+
+  return <WatchListPage movies={movies} tvShows={tvShows} user={user} />;
 }

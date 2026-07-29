@@ -141,7 +141,7 @@ export const MediaGrid = ({ movies, isWatchlist, user }: MediaGridProps): React.
 
   return (
     <Box>
-      <ImageList cols={cols} sx={{ width: "100%", height: "auto" }} gap={8}>
+      <ImageList cols={cols} sx={{ width: "100%", height: "auto", overflow: "visible", px: 1}} gap={8}>
         {visibleMovies.map((movie) => {
           const poster = movie.poster_path ?? movie.backdrop_path;
           const title = movie.title ?? movie.original_title ?? movie.original_name;

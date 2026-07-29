@@ -26,10 +26,12 @@ async function ActivityContent() {
   const cookieHeader = await getCookieHeader();
   const user = await verifySessionToken(cookieHeader);
 
-  const snapshot = await adminDB.collection('/users/' + user?.uid + "/movies").get();
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const movies: any = snapshot.docs.map(doc => doc.data());
+  const snapshot = await adminDB.collection("/users/" + user?.uid + "/movies").get();
+  const allMedia = snapshot.docs.map((doc) => doc.data()) as Media[];
 
-  return <MyWatchlist watchlist={movies as Media[]} user={user} />;
+  // Only active items in Activity
+  const active = allMedia.filter((item) => item.status !== "completed");
+
+  return <MyWatchlist watchlist={active} user={user} />;
 }
 

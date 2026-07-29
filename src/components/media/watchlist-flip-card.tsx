@@ -71,13 +71,14 @@ export const WatchlistFlipCard: React.FC<WatchlistFlipCardProps> = ({
   };
 
   return (
+    <div style={{ perspective: 1000, height: '100%' }}>
     <motion.div
       initial="rest"
       animate={isFlipped ? "hover" : "rest"}
       variants={containerVariants}
       transition={{ duration: 0.6 }}
       style={{
-        perspective: 1000,
+        transformStyle: 'preserve-3d',
         height: '100%',
         cursor: isMobile ? 'pointer' : 'pointer',
       }}
@@ -256,7 +257,7 @@ export const WatchlistFlipCard: React.FC<WatchlistFlipCardProps> = ({
                   display: '-webkit-box',
                   WebkitLineClamp: 2,
                   WebkitBoxOrient: 'vertical',
-                  overflow: 'hidden',
+                  // overflow: 'hidden',
                   textOverflow: 'ellipsis',
                 }}
               >
@@ -357,6 +358,7 @@ export const WatchlistFlipCard: React.FC<WatchlistFlipCardProps> = ({
         )}
       </ImageListItem>
     </motion.div>
+    </div>
   );
 };
 

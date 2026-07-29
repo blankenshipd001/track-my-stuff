@@ -87,14 +87,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body className={roboto.className}>
         <SkipLink />
-
         <Providers>
+          
           <Suspense fallback={<div style={{ height: "60px", background: "rgba(17, 24, 39, 0.8)", borderBottom: "1px solid rgba(75, 85, 99, 0.3)" }} />}>
             <Header />
           </Suspense>
+
           <Suspense fallback={null}>
             <ScrollToTop />
           </Suspense>
+          
           <main
               id="main-content"
               style={{ minHeight: "calc(100vh - 200px)" }}
@@ -104,10 +106,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 {children}
               </Suspense>
             </main>
+
             <Footer />
+            
             <PWAInstallPrompt />
+            
             <SpeedInsights />
+            
             <Analytics />
+        
         </Providers>
       </body>
     </html>

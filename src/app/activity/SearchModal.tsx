@@ -90,7 +90,10 @@ const SearchModal = ({ show, onClose, onSelectTitle }: SearchModalProps) => {
 
   return (
     <Modal onClick={onClose}>
-      <ModalContent onClick={(e) => e.stopPropagation()} style={{ maxWidth: '700px', maxHeight: '80vh', display: 'flex', flexDirection: 'column' }}>
+      <ModalContent 
+        onClick={(e) => e.stopPropagation()} 
+        style={{ maxWidth: '700px', maxHeight: '80vh', display: 'flex', flexDirection: 'column', boxSizing: 'border-box' }}
+      >
         <ModalTitle>Search for a Title</ModalTitle>
 
         {/* Search Input */}
@@ -113,6 +116,7 @@ const SearchModal = ({ show, onClose, onSelectTitle }: SearchModalProps) => {
                 fontSize: '1rem',
                 outline: 'none',
                 transition: 'border-color 0.2s',
+                boxSizing: "border-box",
               }}
               onFocus={(e) => e.target.style.borderColor = COLORS.purple.solid}
               onBlur={(e) => e.target.style.borderColor = '#374151'}
