@@ -1,4 +1,5 @@
 import { Film, Tv, X } from "lucide-react";
+import { Box, Button, Typography } from "@mui/material";
 import { COLORS } from "@/lib/theme-constants";
 import { ActivityFilter, toLabel } from "../activity-helpers";
 
@@ -14,27 +15,27 @@ export function ActiveFilterBanner({ filter, count, onClear }: ActiveFilterBanne
   }
 
   return (
-    <div
-      style={{
+    <Box
+      sx={{
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
-        padding: "0.75rem 1rem",
+        p: "0.75rem 1rem",
         background: "rgba(168, 85, 247, 0.15)",
         border: "1px solid rgba(168, 85, 247, 0.3)",
         borderRadius: "0.5rem",
-        marginBottom: "1.5rem",
+        mb: "1.5rem",
         flexWrap: "wrap",
         gap: "0.5rem",
       }}
     >
-      <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
-        <div
-          style={{
+      <Box sx={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+        <Box
+          sx={{
             display: "flex",
             alignItems: "center",
             gap: "0.5rem",
-            padding: "0.25rem 0.75rem",
+            p: "0.25rem 0.75rem",
             background: "rgba(168, 85, 247, 0.3)",
             borderRadius: "0.375rem",
             border: "1px solid rgba(168, 85, 247, 0.4)",
@@ -42,38 +43,35 @@ export function ActiveFilterBanner({ filter, count, onClear }: ActiveFilterBanne
         >
           {filter === "movies" && <Film size={16} color={COLORS.purple.solid} />}
           {filter === "tv" && <Tv size={16} color={COLORS.purple.solid} />}
-          <span style={{ fontSize: "0.875rem", fontWeight: 600, color: COLORS.purple.solid }}>{toLabel(filter)}</span>
-        </div>
-        <span style={{ fontSize: "0.875rem", color: "#d1d5db" }}>
-          Showing <strong style={{ color: COLORS.purple.solid }}>{count}</strong> {count === 1 ? "item" : "items"}
-        </span>
-      </div>
-      <button
+          <Typography sx={{ fontSize: "0.875rem", fontWeight: 600, color: COLORS.purple.solid }}>{toLabel(filter)}</Typography>
+        </Box>
+        <Typography sx={{ fontSize: "0.875rem", color: "#d1d5db" }}>
+          Showing <Box component="strong" sx={{ color: COLORS.purple.solid }}>{count}</Box> {count === 1 ? "item" : "items"}
+        </Typography>
+      </Box>
+      <Button
         onClick={onClear}
-        style={{
+        sx={{
           display: "flex",
           alignItems: "center",
           gap: "0.375rem",
-          padding: "0.375rem 0.625rem",
+          p: "0.375rem 0.625rem",
           background: "transparent",
           border: "1px solid rgba(168, 85, 247, 0.4)",
           borderRadius: "0.375rem",
           color: COLORS.purple.solid,
           fontSize: "0.8125rem",
           fontWeight: 500,
-          cursor: "pointer",
-          transition: "all 0.2s",
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.background = "rgba(168, 85, 247, 0.2)";
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.background = "transparent";
+          minWidth: "auto",
+          textTransform: "none",
+          "&:hover": {
+            background: "rgba(168, 85, 247, 0.2)",
+          },
         }}
       >
         <X size={14} />
         Clear Filter
-      </button>
-    </div>
+      </Button>
+    </Box>
   );
 }

@@ -1,5 +1,6 @@
 import NextImage from "next/image";
 import { ChevronDown, ChevronUp } from "lucide-react";
+import { Box, ButtonBase, Typography } from "@mui/material";
 import { COLORS } from "@/lib/theme-constants";
 import { getProxyImageUrlForPath } from "@/lib/imageUrl";
 
@@ -24,61 +25,59 @@ export function ProviderLegend({ providers, collapsed, onToggle }: ProviderLegen
   const sortedProviders = [...providers].sort((a, b) => a.display_priority - b.display_priority);
 
   return (
-    <div style={{ width: "100%", marginTop: "1rem" }}>
-      <div
+    <Box sx={{ width: "100%", mt: "1rem" }}>
+      <ButtonBase
         onClick={onToggle}
-        style={{
+        sx={{
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          padding: "0.75rem 1rem",
+          p: "0.75rem 1rem",
+          width: "100%",
           background: "rgba(31, 41, 55, 0.9)",
           borderRadius: "0.5rem",
           border: "1px solid rgba(75, 85, 99, 0.5)",
-          cursor: "pointer",
           transition: "all 0.2s",
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.background = "rgba(31, 41, 55, 1)";
-          e.currentTarget.style.borderColor = "rgba(168, 85, 247, 0.5)";
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.background = "rgba(31, 41, 55, 0.9)";
-          e.currentTarget.style.borderColor = "rgba(75, 85, 99, 0.5)";
+          "&:hover": {
+            background: "rgba(31, 41, 55, 1)",
+            borderColor: "rgba(168, 85, 247, 0.5)",
+          },
         }}
       >
-        <span style={{ fontSize: "0.875rem", fontWeight: 600, color: COLORS.gray[400] }}>MY STREAMING SERVICES</span>
+        <Typography sx={{ fontSize: "0.875rem", fontWeight: 600, color: COLORS.gray[400] }}>
+          MY STREAMING SERVICES
+        </Typography>
         {collapsed ? <ChevronDown size={20} /> : <ChevronUp size={20} />}
-      </div>
+      </ButtonBase>
       {!collapsed && (
-        <div
-          style={{
-            marginTop: "0.5rem",
-            padding: "1rem",
+        <Box
+          sx={{
+            mt: "0.5rem",
+            p: "1rem",
             background: "rgba(31, 41, 55, 0.5)",
             borderRadius: "0.5rem",
             border: "1px solid rgba(75, 85, 99, 0.3)",
           }}
         >
-          <div
-            style={{
+          <Box
+            sx={{
               display: "grid",
               gridTemplateColumns: "repeat(auto-fill, minmax(150px, 1fr))",
               gap: "0.75rem",
             }}
           >
             {sortedProviders.map((provider) => (
-              <div
+              <Box
                 key={provider.provider_id}
-                style={{
+                sx={{
                   display: "flex",
                   alignItems: "center",
                   gap: "0.5rem",
                 }}
               >
                 {provider.logo_path ? (
-                  <div
-                    style={{
+                  <Box
+                    sx={{
                       width: "24px",
                       height: "24px",
                       borderRadius: "4px",
@@ -96,10 +95,10 @@ export function ProviderLegend({ providers, collapsed, onToggle }: ProviderLegen
                       height={24}
                       style={{ objectFit: "contain" }}
                     />
-                  </div>
+                  </Box>
                 ) : (
-                  <div
-                    style={{
+                  <Box
+                    sx={{
                       width: "12px",
                       height: "12px",
                       borderRadius: "50%",
@@ -107,12 +106,12 @@ export function ProviderLegend({ providers, collapsed, onToggle }: ProviderLegen
                     }}
                   />
                 )}
-                <span style={{ fontSize: "0.875rem", color: "#e5e7eb" }}>{provider.provider_name}</span>
-              </div>
+                <Typography sx={{ fontSize: "0.875rem", color: "#e5e7eb" }}>{provider.provider_name}</Typography>
+              </Box>
             ))}
-          </div>
-        </div>
+          </Box>
+        </Box>
       )}
-    </div>
+    </Box>
   );
 }

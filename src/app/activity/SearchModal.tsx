@@ -2,17 +2,11 @@
 
 import React, { ChangeEvent, useRef, useState } from "react";
 import { X, Search as SearchIcon } from "lucide-react";
+import { Box, Button, IconButton, InputBase, Typography } from "@mui/material";
 import { Media } from "@/data-models/media.interface";
 import { getProxyImageUrlForPath } from "@/lib/imageUrl";
 import { debounce } from "@mui/material/utils";
 import { COLORS } from "@/lib/theme-constants";
-import {
-  Modal,
-  ModalContent,
-  ModalTitle,
-  Button,
-  ButtonGroup,
-} from "./styles";
 
 interface SearchModalProps {
   show: boolean;
@@ -89,107 +83,131 @@ const SearchModal = ({ show, onClose, onSelectTitle }: SearchModalProps) => {
   if (!show) return null;
 
   return (
-    <Modal onClick={onClose}>
-      <ModalContent 
-        onClick={(e) => e.stopPropagation()} 
-        style={{ maxWidth: '700px', maxHeight: '80vh', display: 'flex', flexDirection: 'column', boxSizing: 'border-box' }}
+    <Box
+      onClick={onClose}
+      sx={{
+        position: "fixed",
+        inset: 0,
+        background: "rgba(0, 0, 0, 0.8)",
+        backdropFilter: "blur(8px)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        zIndex: 1000,
+        p: "1rem",
+      }}
+    >
+      <Box
+        onClick={(e) => e.stopPropagation()}
+        sx={{
+          background: "#1f2937",
+          borderRadius: "1rem",
+          p: "2rem",
+          maxWidth: "700px",
+          width: "100%",
+          border: "1px solid rgba(75, 85, 99, 0.5)",
+          maxHeight: "80vh",
+          display: "flex",
+          flexDirection: "column",
+          boxSizing: "border-box",
+        }}
       >
-        <ModalTitle>Search for a Title</ModalTitle>
+        <Typography component="h2" sx={{ fontSize: "1.5rem", fontWeight: "bold", m: "0 0 1.5rem 0" }}>
+          Search for a Title
+        </Typography>
 
         {/* Search Input */}
-        <div style={{ marginBottom: '1.5rem' }}>
-          <div style={{ position: 'relative' }}>
-            <input
+        <Box sx={{ mb: "1.5rem" }}>
+          <Box
+            sx={{
+              position: "relative",
+              width: "100%",
+              p: "0.875rem 3rem 0.875rem 1rem",
+              background: "#1f2937",
+              border: "2px solid #374151",
+              borderRadius: "12px",
+              color: "#f3f4f6",
+              fontSize: "1rem",
+              boxSizing: "border-box",
+              display: "flex",
+              alignItems: "center",
+              "&:focus-within": {
+                borderColor: COLORS.purple.solid,
+              },
+            }}
+          >
+            <InputBase
               ref={inputRef}
-              type="text"
+              inputProps={{ "aria-label": "Search for movies or TV shows" }}
               placeholder="Search for movies or TV shows..."
               value={searchValue}
               onChange={handleInputChange}
               autoFocus
-              style={{
-                width: '100%',
-                padding: '0.875rem 3rem 0.875rem 1rem',
-                background: '#1f2937',
-                border: '2px solid #374151',
-                borderRadius: '12px',
-                color: '#f3f4f6',
-                fontSize: '1rem',
-                outline: 'none',
-                transition: 'border-color 0.2s',
-                boxSizing: "border-box",
+              sx={{
+                color: "#f3f4f6",
+                width: "100%",
               }}
-              onFocus={(e) => e.target.style.borderColor = COLORS.purple.solid}
-              onBlur={(e) => e.target.style.borderColor = '#374151'}
             />
-            <div style={{ position: 'absolute', right: '1rem', top: '50%', transform: 'translateY(-50%)', display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+            <Box sx={{ position: "absolute", right: "1rem", top: "50%", transform: "translateY(-50%)", display: "flex", gap: "0.5rem", alignItems: "center" }}>
               {searchValue && (
-                <button
-                  type="button"
+                <IconButton
                   onClick={handleClear}
                   aria-label="Clear search"
-                  style={{
-                    background: 'transparent',
-                    border: 'none',
+                  sx={{
                     color: COLORS.gray[400],
-                    cursor: 'pointer',
-                    padding: '0.25rem',
-                    display: 'flex',
-                    alignItems: 'center',
+                    p: "0.25rem",
                   }}
                 >
                   <X size={18} />
-                </button>
+                </IconButton>
               )}
               <SearchIcon size={18} color={COLORS.gray[400]} />
-            </div>
-          </div>
-        </div>
+            </Box>
+          </Box>
+        </Box>
 
         {/* Search Results */}
-        <div style={{ flex: 1, overflowY: 'auto', marginBottom: '1.5rem', minHeight: '200px' }}>
+        <Box sx={{ flex: 1, overflowY: "auto", mb: "1.5rem", minHeight: "200px" }}>
           {isSearching && (
-            <div style={{ textAlign: 'center', padding: '2rem', color: COLORS.gray[400] }}>
+            <Typography sx={{ textAlign: "center", p: "2rem", color: COLORS.gray[400] }}>
               Searching...
-            </div>
+            </Typography>
           )}
 
           {!isSearching && searchValue && dropdownOptions.length === 0 && (
-            <div style={{ textAlign: 'center', padding: '2rem', color: COLORS.gray[400] }}>
+            <Typography sx={{ textAlign: "center", p: "2rem", color: COLORS.gray[400] }}>
               No results found for &ldquo;{searchValue}&rdquo;
-            </div>
+            </Typography>
           )}
 
           {!searchValue && (
-            <div style={{ textAlign: 'center', padding: '2rem', color: COLORS.gray[400] }}>
+            <Typography sx={{ textAlign: "center", p: "2rem", color: COLORS.gray[400] }}>
               Start typing to search for titles
-            </div>
+            </Typography>
           )}
 
           {!isSearching && dropdownOptions.length > 0 && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+            <Box sx={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
               {dropdownOptions.map((option: Media) => (
-                <div
+                <Button
                   key={option.id}
                   onClick={() => handleSelectTitle(option)}
-                  style={{
-                    display: 'flex',
-                    padding: '0.75rem',
-                    background: '#1f2937',
-                    borderRadius: '8px',
-                    cursor: 'pointer',
-                    transition: 'all 0.2s',
-                    border: '1px solid transparent',
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.background = '#374151';
-                    e.currentTarget.style.borderColor = COLORS.purple.solid;
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.background = '#1f2937';
-                    e.currentTarget.style.borderColor = 'transparent';
+                  sx={{
+                    display: "flex",
+                    p: "0.75rem",
+                    background: "#1f2937",
+                    borderRadius: "8px",
+                    transition: "all 0.2s",
+                    border: "1px solid transparent",
+                    justifyContent: "flex-start",
+                    textTransform: "none",
+                    "&:hover": {
+                      background: "#374151",
+                      borderColor: COLORS.purple.solid,
+                    },
                   }}
                 >
-                  <div style={{ marginRight: '1rem', width: 48, height: 72, borderRadius: 6, overflow: 'hidden', flexShrink: 0 }}>
+                  <Box sx={{ mr: "1rem", width: 48, height: 72, borderRadius: 1, overflow: "hidden", flexShrink: 0 }}>
                     {option.poster_path ? (
                       <img
                         src={getProxyImageUrlForPath(option.poster_path, 'w92')!}
@@ -197,36 +215,55 @@ const SearchModal = ({ show, onClose, onSelectTitle }: SearchModalProps) => {
                         style={{ width: 48, height: 72, objectFit: 'cover' }}
                       />
                     ) : (
-                      <div style={{ width: 48, height: 72, background: '#374151', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#6b7280' }}>
+                      <Box sx={{ width: 48, height: 72, background: '#374151', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#6b7280' }}>
                         No Image
-                      </div>
+                      </Box>
                     )}
-                  </div>
-                  <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                    <div style={{ fontWeight: 600, fontSize: '1rem', color: '#f3f4f6', marginBottom: '0.25rem' }}>
+                  </Box>
+                  <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                    <Typography sx={{ fontWeight: 600, fontSize: '1rem', color: '#f3f4f6', mb: '0.25rem' }}>
                       {option.title || option.name}
-                    </div>
-                    <div style={{ fontSize: '0.875rem', color: COLORS.gray[400] }}>
+                    </Typography>
+                    <Typography sx={{ fontSize: '0.875rem', color: COLORS.gray[400] }}>
                       {option.type === "movie" ? "Movie" : "TV Show"}
                       {option.release_date && ` • ${new Date(option.release_date).getFullYear()}`}
                       {option.first_air_date && ` • ${new Date(option.first_air_date).getFullYear()}`}
-                    </div>
-                  </div>
-                </div>
+                    </Typography>
+                  </Box>
+                </Button>
               ))}
-            </div>
+            </Box>
           )}
-        </div>
+        </Box>
 
         {/* Action buttons */}
-        <ButtonGroup style={{ paddingTop: '1rem', borderTop: '1px solid rgba(75, 85, 99, 0.3)' }}>
-          <Button variant="secondary" onClick={onClose}>
+        <Box sx={{ display: "flex", gap: "0.5rem", pt: "1rem", borderTop: "1px solid rgba(75, 85, 99, 0.3)" }}>
+          <Button
+            onClick={onClose}
+            sx={{
+              flex: 1,
+              p: "0.75rem",
+              borderRadius: "0.5rem",
+              fontWeight: 600,
+              border: "1px solid rgba(75, 85, 99, 0.5)",
+              background: "rgba(31, 41, 55, 0.8)",
+              color: "#fff",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "0.5rem",
+              textTransform: "none",
+              "&:hover": {
+                background: "rgba(55, 65, 81, 0.8)",
+              },
+            }}
+          >
             <X size={16} />
             Cancel
           </Button>
-        </ButtonGroup>
-      </ModalContent>
-    </Modal>
+        </Box>
+      </Box>
+    </Box>
   );
 };
 

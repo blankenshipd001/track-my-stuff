@@ -2,127 +2,10 @@
 
 import { memo, useCallback } from "react";
 import { ChevronUp, ChevronDown } from "lucide-react";
+import { Box, Button, Typography } from "@mui/material";
 import { Media } from "@/data-models/media.interface";
 import { getMaxEpisodesInSeason } from "../activity-helpers";
-import styled from "styled-components";
 import { COLORS } from "@/lib/theme-constants";
-
-const PopoverContainer = styled.div`
-  position: absolute;
-  bottom: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  margin-bottom: 0.5rem;
-  background: ${COLORS.gray[900]};
-  border: 1px solid ${COLORS.gray[700]};
-  border-radius: 8px;
-  padding: 1rem;
-  z-index: 50;
-  min-width: 200px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
-
-  &::after {
-    content: "";
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 0;
-    height: 0;
-    border-left: 6px solid transparent;
-    border-right: 6px solid transparent;
-    border-top: 6px solid ${COLORS.gray[700]};
-  }
-`;
-
-const PopoverTitle = styled.div`
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: ${COLORS.gray[300]};
-  margin-bottom: 0.75rem;
-  text-align: center;
-`;
-
-const ControlRow = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 0.75rem;
-
-  &:last-of-type {
-    margin-bottom: 0;
-  }
-`;
-
-const Label = styled.div`
-  font-size: 0.75rem;
-  color: ${COLORS.gray[400]};
-  width: 60px;
-  font-weight: 600;
-  text-transform: uppercase;
-`;
-
-const InputGroup = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  flex: 1;
-`;
-
-const CountDisplay = styled.div`
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: ${COLORS.gray[100]};
-  min-width: 40px;
-  text-align: center;
-`;
-
-const IconButton = styled.button`
-  background: ${COLORS.purple[600]};
-  border: none;
-  color: white;
-  padding: 0.375rem;
-  border-radius: 4px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.2s;
-
-  &:hover {
-    background: ${COLORS.purple[500]};
-  }
-
-  &:active {
-    background: ${COLORS.purpleDark.solid};
-  }
-`;
-
-const ActionButton = styled.button`
-  background: ${COLORS.purpleDark.solid};
-  border: none;
-  color: white;
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 0.875rem;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  width: 100%;
-  transition: background 0.2s;
-  margin-top: 0.75rem;
-
-  &:hover {
-    background: ${COLORS.purpleDark.solidHover};
-  }
-
-  &:active {
-    background: ${COLORS.purpleDark.solid};
-  }
-`;
 
 interface EpisodeQuickEditPopoverProps {
   item: Media;
@@ -165,72 +48,172 @@ function EpisodeQuickEditPopoverComponent({ item, onSave, onClose }: EpisodeQuic
   }, [currentSeason, currentEpisode, maxEpisodesInSeason, totalSeasons, onSave]);
 
   return (
-    <PopoverContainer onClick={(e) => e.stopPropagation()}>
-      <PopoverTitle>Update Progress</PopoverTitle>
+    <Box
+      onClick={(e) => e.stopPropagation()}
+      sx={{
+        position: "absolute",
+        bottom: "100%",
+        left: "50%",
+        transform: "translateX(-50%)",
+        mb: "0.5rem",
+        background: COLORS.gray[900],
+        border: `1px solid ${COLORS.gray[700]}`,
+        borderRadius: "8px",
+        p: "1rem",
+        zIndex: 50,
+        minWidth: 200,
+        boxShadow: "0 10px 25px rgba(0, 0, 0, 0.5)",
+        "&::after": {
+          content: '""',
+          position: "absolute",
+          top: "100%",
+          left: "50%",
+          transform: "translateX(-50%)",
+          width: 0,
+          height: 0,
+          borderLeft: "6px solid transparent",
+          borderRight: "6px solid transparent",
+          borderTop: `6px solid ${COLORS.gray[700]}`,
+        },
+      }}
+    >
+      <Typography sx={{ fontSize: "0.875rem", fontWeight: 600, color: COLORS.gray[300], mb: "0.75rem", textAlign: "center" }}>
+        Update Progress
+      </Typography>
 
-      <ControlRow>
-        <Label>Season</Label>
-        <InputGroup>
-          <IconButton
+      <Box sx={{ display: "flex", alignItems: "center", gap: "0.5rem", mb: "0.75rem" }}>
+        <Typography sx={{ fontSize: "0.75rem", color: COLORS.gray[400], width: 60, fontWeight: 600, textTransform: "uppercase" }}>
+          Season
+        </Typography>
+        <Box sx={{ display: "flex", alignItems: "center", gap: "0.5rem", flex: 1 }}>
+          <Button
             onClick={() => handleSeasonChange(-1)}
             disabled={currentSeason <= 1}
             title="Previous season"
+            sx={{
+              minWidth: 0,
+              p: "0.375rem",
+              borderRadius: "4px",
+              background: COLORS.purple[600],
+              color: "#fff",
+              "&:hover": { background: COLORS.purple[500] },
+              "&:active": { background: COLORS.purpleDark.solid },
+            }}
           >
             <ChevronUp size={16} />
-          </IconButton>
-          <CountDisplay>S{currentSeason}</CountDisplay>
-          <IconButton
+          </Button>
+          <Typography sx={{ fontSize: "0.875rem", fontWeight: 600, color: COLORS.gray[100], minWidth: 40, textAlign: "center" }}>
+            S{currentSeason}
+          </Typography>
+          <Button
             onClick={() => handleSeasonChange(1)}
             disabled={currentSeason >= totalSeasons}
             title="Next season"
+            sx={{
+              minWidth: 0,
+              p: "0.375rem",
+              borderRadius: "4px",
+              background: COLORS.purple[600],
+              color: "#fff",
+              "&:hover": { background: COLORS.purple[500] },
+              "&:active": { background: COLORS.purpleDark.solid },
+            }}
           >
             <ChevronDown size={16} />
-          </IconButton>
-        </InputGroup>
-      </ControlRow>
+          </Button>
+        </Box>
+      </Box>
 
-      <ControlRow>
-        <Label>Episode</Label>
-        <InputGroup>
-          <IconButton
+      <Box sx={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+        <Typography sx={{ fontSize: "0.75rem", color: COLORS.gray[400], width: 60, fontWeight: 600, textTransform: "uppercase" }}>
+          Episode
+        </Typography>
+        <Box sx={{ display: "flex", alignItems: "center", gap: "0.5rem", flex: 1 }}>
+          <Button
             onClick={() => handleEpisodeChange(-1)}
             disabled={currentEpisode <= 1}
             title="Previous episode"
+            sx={{
+              minWidth: 0,
+              p: "0.375rem",
+              borderRadius: "4px",
+              background: COLORS.purple[600],
+              color: "#fff",
+              "&:hover": { background: COLORS.purple[500] },
+              "&:active": { background: COLORS.purpleDark.solid },
+            }}
           >
             <ChevronUp size={16} />
-          </IconButton>
-          <CountDisplay>
+          </Button>
+          <Typography sx={{ fontSize: "0.875rem", fontWeight: 600, color: COLORS.gray[100], minWidth: 40, textAlign: "center" }}>
             E{currentEpisode}
             {maxEpisodesInSeason > 0 && ` / ${maxEpisodesInSeason}`}
-          </CountDisplay>
-          <IconButton
+          </Typography>
+          <Button
             onClick={() => handleEpisodeChange(1)}
             disabled={maxEpisodesInSeason > 0 && currentEpisode >= maxEpisodesInSeason}
             title="Next episode"
+            sx={{
+              minWidth: 0,
+              p: "0.375rem",
+              borderRadius: "4px",
+              background: COLORS.purple[600],
+              color: "#fff",
+              "&:hover": { background: COLORS.purple[500] },
+              "&:active": { background: COLORS.purpleDark.solid },
+            }}
           >
             <ChevronDown size={16} />
-          </IconButton>
-        </InputGroup>
-      </ControlRow>
+          </Button>
+        </Box>
+      </Box>
 
-      <ActionButton onClick={handleNextEpisode} title="Advance to next episode">
+      <Button
+        onClick={handleNextEpisode}
+        title="Advance to next episode"
+        sx={{
+          mt: "0.75rem",
+          width: "100%",
+          background: COLORS.purpleDark.solid,
+          border: "none",
+          color: "#fff",
+          p: "0.5rem 1rem",
+          borderRadius: "6px",
+          fontSize: "0.875rem",
+          fontWeight: 600,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: "0.5rem",
+          textTransform: "none",
+          "&:hover": { background: COLORS.purpleDark.solidHover },
+          "&:active": { background: COLORS.purpleDark.solid },
+        }}
+      >
         <ChevronDown size={16} />
         Next Episode
-      </ActionButton>
+      </Button>
 
-      <ActionButton
+      <Button
         onClick={() => onClose()}
-        style={{
-          background: COLORS.gray[700],
-          marginTop: "0.5rem",
-        }}
-        onMouseEnter={(e) => (e.currentTarget.style.background = COLORS.gray[600])}
-        onMouseLeave={(e) => (e.currentTarget.style.background = COLORS.gray[700])}
         title="Close"
+        sx={{
+          mt: "0.5rem",
+          width: "100%",
+          background: COLORS.gray[700],
+          border: "none",
+          color: "#fff",
+          p: "0.5rem 1rem",
+          borderRadius: "6px",
+          fontSize: "0.875rem",
+          fontWeight: 600,
+          textTransform: "none",
+          "&:hover": { background: COLORS.gray[600] },
+        }}
       >
         Done
-      </ActionButton>
-    </PopoverContainer>
+      </Button>
+    </Box>
   );
 }
 

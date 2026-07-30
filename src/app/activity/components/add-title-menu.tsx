@@ -1,6 +1,6 @@
-import { AddButton } from "../styles";
 import { ChevronDown, Edit2, Plus } from "lucide-react";
-import { COLORS } from "@/lib/theme-constants";
+import { Box, Button } from "@mui/material";
+import { COLORS, GRADIENTS } from "@/lib/theme-constants";
 import type { CSSProperties } from "react";
 
 interface AddTitleMenuProps {
@@ -12,19 +12,37 @@ interface AddTitleMenuProps {
 
 export function AddTitleMenu({ show, onToggle, onQuickAdd, onAddWithDetails }: AddTitleMenuProps) {
   return (
-    <div style={{ position: "relative" }}>
-      <AddButton onClick={onToggle}>
+    <Box sx={{ position: "relative" }}>
+      <Button
+        onClick={onToggle}
+        sx={{
+          background: GRADIENTS.purplePink,
+          p: "0.75rem 1.5rem",
+          borderRadius: "0.5rem",
+          fontWeight: 600,
+          display: "flex",
+          alignItems: "center",
+          gap: "0.5rem",
+          border: "none",
+          color: "white",
+          textTransform: "none",
+          "&:hover": {
+            background: "linear-gradient(to right, #9333ea, #db2777)",
+            transform: "translateY(-1px)",
+          },
+        }}
+      >
         <Plus size={20} />
         Add Title
         <ChevronDown size={16} style={{ marginLeft: "0.25rem" }} />
-      </AddButton>
+      </Button>
       {show && (
-        <div
-          style={{
+        <Box
+          sx={{
             position: "absolute",
             top: "100%",
             right: 0,
-            marginTop: "0.5rem",
+            mt: "0.5rem",
             background: "rgba(17, 24, 39, 0.95)",
             backdropFilter: "blur(8px)",
             border: "1px solid rgba(168, 85, 247, 0.3)",
@@ -35,39 +53,41 @@ export function AddTitleMenu({ show, onToggle, onQuickAdd, onAddWithDetails }: A
             zIndex: 50,
           }}
         >
-          <button
+          <Button
             onClick={onQuickAdd}
-            style={menuButtonStyle}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = "rgba(168, 85, 247, 0.2)";
-              e.currentTarget.style.color = COLORS.purple.solid;
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = "transparent";
-              e.currentTarget.style.color = "#e5e7eb";
+            sx={{
+              ...menuButtonStyle,
+              borderRadius: 0,
+              justifyContent: "flex-start",
+              textTransform: "none",
+              "&:hover": {
+                background: "rgba(168, 85, 247, 0.2)",
+                color: COLORS.purple.solid,
+              },
             }}
           >
             <Plus size={16} />
             Quick Add
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={onAddWithDetails}
-            style={menuButtonStyle}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = "rgba(168, 85, 247, 0.2)";
-              e.currentTarget.style.color = COLORS.purple.solid;
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = "transparent";
-              e.currentTarget.style.color = "#e5e7eb";
+            sx={{
+              ...menuButtonStyle,
+              borderRadius: 0,
+              justifyContent: "flex-start",
+              textTransform: "none",
+              "&:hover": {
+                background: "rgba(168, 85, 247, 0.2)",
+                color: COLORS.purple.solid,
+              },
             }}
           >
             <Edit2 size={16} />
             Add with Details
-          </button>
-        </div>
+          </Button>
+        </Box>
       )}
-    </div>
+    </Box>
   );
 }
 
@@ -78,7 +98,6 @@ const menuButtonStyle: CSSProperties = {
   background: "transparent",
   border: "none",
   color: "#e5e7eb",
-  cursor: "pointer",
   fontSize: "0.875rem",
   fontWeight: 500,
   transition: "all 0.2s",
