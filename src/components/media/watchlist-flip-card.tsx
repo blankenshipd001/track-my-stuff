@@ -7,6 +7,7 @@ import BookmarkAdd from "@mui/icons-material/BookmarkAdd";
 import BookmarkRemove from "@mui/icons-material/BookmarkRemove";
 import Info from "@mui/icons-material/Info";
 import OpenInNew from "@mui/icons-material/OpenInNew";
+import PlayArrow from "@mui/icons-material/PlayArrow";
 import { motion } from "framer-motion";
 import ImageListItem from "@mui/material/ImageListItem";
 import { Media } from "@/data-models/media.interface";
@@ -21,6 +22,7 @@ export interface WatchlistFlipCardProps {
   onNavigate: (movie: Media) => void;
   onAdd?: (movie: Media) => Promise<void>;
   isInWatchlist?: boolean;
+  onStartWatching?: (movie: Media) => Promise<void>;
 }
 
 export const WatchlistFlipCard: React.FC<WatchlistFlipCardProps> = ({
@@ -31,6 +33,7 @@ export const WatchlistFlipCard: React.FC<WatchlistFlipCardProps> = ({
   onNavigate,
   onAdd,
   isInWatchlist = true,
+  onStartWatching,
 }) => {
   const BASE_URL = process.env.NEXT_PUBLIC_THE_MOVIE_DB_BASE_URL;
   const [isFlipped, setIsFlipped] = useState(false);
@@ -198,26 +201,51 @@ export const WatchlistFlipCard: React.FC<WatchlistFlipCardProps> = ({
               </Box>
 
               {/* Bookmark Button */}
-              <IconButton
-                size="small"
-                onClick={async (e) => {
-                  e.stopPropagation();
-                  await (isInWatchlist ? onRemove(movie) : (onAdd ? onAdd(movie) : onRemove(movie)));
-                }}
-                aria-label={isInWatchlist ? `Remove ${title} from watchlist` : `Add ${title} to watchlist`}
-                title={isInWatchlist ? "Remove from watchlist" : "Add to watchlist"}
-                sx={{
-                  pointerEvents: 'auto',
-                  background: isInWatchlist ? COLORS.pink[200] : COLORS.purple[200],
-                  border: isInWatchlist ? `1px solid ${COLORS.pink[500]}` : `1px solid ${COLORS.purple[500]}`,
-                  color: isInWatchlist ? COLORS.pink.solid : COLORS.purple.solid,
-                  '&:hover': {
-                    background: isInWatchlist ? COLORS.pink[400] : COLORS.purple[400],
-                  },
-                }}
-              >
-                {isInWatchlist ? <BookmarkRemove fontSize="small" /> : <BookmarkAdd fontSize="small" />}
-              </IconButton>
+              <Box sx={{ display: 'flex', gap: 0.5 }}>
+                {isInWatchlist && onStartWatching ? (
+                  <IconButton
+                    size="small"
+                    onClick={async (e) => {
+                      e.stopPropagation();
+                      await onStartWatching(movie);
+                    }}
+                    aria-label={`Move ${title} to currently watching`}
+                    title="Start watching"
+                    sx={{
+                      pointerEvents: 'auto',
+                      background: COLORS.purple[200],
+                      border: `1px solid ${COLORS.purple[500]}`,
+                      color: COLORS.purple.solid,
+                      '&:hover': {
+                        background: COLORS.purple[400],
+                      },
+                    }}
+                  >
+                    <PlayArrow fontSize="small" />
+                  </IconButton>
+                ) : null}
+
+                <IconButton
+                  size="small"
+                  onClick={async (e) => {
+                    e.stopPropagation();
+                    await (isInWatchlist ? onRemove(movie) : (onAdd ? onAdd(movie) : onRemove(movie)));
+                  }}
+                  aria-label={isInWatchlist ? `Remove ${title} from watchlist` : `Add ${title} to watchlist`}
+                  title={isInWatchlist ? "Remove from watchlist" : "Add to watchlist"}
+                  sx={{
+                    pointerEvents: 'auto',
+                    background: isInWatchlist ? COLORS.pink[200] : COLORS.purple[200],
+                    border: isInWatchlist ? `1px solid ${COLORS.pink[500]}` : `1px solid ${COLORS.purple[500]}`,
+                    color: isInWatchlist ? COLORS.pink.solid : COLORS.purple.solid,
+                    '&:hover': {
+                      background: isInWatchlist ? COLORS.pink[400] : COLORS.purple[400],
+                    },
+                  }}
+                >
+                  {isInWatchlist ? <BookmarkRemove fontSize="small" /> : <BookmarkAdd fontSize="small" />}
+                </IconButton>
+              </Box>
             </Box>
           </Box>
         ) : (
@@ -332,6 +360,29 @@ export const WatchlistFlipCard: React.FC<WatchlistFlipCardProps> = ({
               >
                 <OpenInNew fontSize="small" />
               </IconButton>
+
+              {isInWatchlist && onStartWatching ? (
+                <IconButton
+                  size="small"
+                  onClick={async (e) => {
+                    e.stopPropagation();
+                    await onStartWatching(movie);
+                  }}
+                  aria-label={`Move ${title} to currently watching`}
+                  title="Start watching"
+                  sx={{
+                    pointerEvents: 'auto',
+                    background: COLORS.purple[200],
+                    border: `1px solid ${COLORS.purple[500]}`,
+                    color: COLORS.purple.solid,
+                    '&:hover': {
+                      background: COLORS.purple[400],
+                    },
+                  }}
+                >
+                  <PlayArrow fontSize="small" />
+                </IconButton>
+              ) : null}
 
               <IconButton
                 size="small"

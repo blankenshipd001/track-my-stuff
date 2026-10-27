@@ -10,7 +10,7 @@ import { useMediaQuery, useTheme, Button, Box, CircularProgress } from "@mui/mat
 
 import ImageList from "@mui/material/ImageList";
 import useNotificationBar from "@/components/notifications/useNotificationBar";
-import { requestRemoveFromWatchList, getContent } from "@/utils/api/contentApi";
+import { requestRemoveFromWatchList, getContent, updateMovie } from "@/utils/api/contentApi";
 import { WatchlistFlipCard } from "./watchlist-flip-card";
 import { COLORS } from '@/lib/theme-constants';
 
@@ -139,6 +139,33 @@ export const MediaGrid = ({ movies, isWatchlist, user }: MediaGridProps): React.
   const visibleMovies = movies.slice(0, visibleCount);
   const hasMore = visibleCount < movies.length;
 
+  const handleStartWatching = useCallback(async (movie: Media) => {
+    if (!user?.uid) {
+      enqueueNotificationBar("Please log in to update watch status.", "info");
+      return;
+    }
+
+    try {
+      const isTv = movie.type === "tv" || movie.media_type === "tv" || !!movie.name;
+      const updated: Media = {
+        ...movie,
+        status: "watching",
+        ...(isTv
+          ? {
+              currentSeason: movie.currentSeason ?? 1,
+              currentEpisode: movie.currentEpisode ?? 1,
+            }
+          : {}),
+      };
+
+      await updateMovie(user.uid, updated);
+      enqueueNotificationBar("Moved to Activity.", "success");
+      router.refresh();
+    } catch (err) {
+      enqueueNotificationBar(`Error: ${err}`, "error");
+    }
+  }, [user?.uid, enqueueNotificationBar, router]);
+
   return (
     <Box>
       <ImageList cols={cols} sx={{ width: "100%", height: "auto", overflow: "visible", px: 1}} gap={8}>
@@ -159,6 +186,7 @@ export const MediaGrid = ({ movies, isWatchlist, user }: MediaGridProps): React.
               onNavigate={handleClickEvent}
               onAdd={handleAddToWatchlist}
               isInWatchlist={isInWatchlist}
+              onStartWatching={isWatchlist ? handleStartWatching : undefined}
             />
           );
         })}

@@ -9,6 +9,7 @@ export const Header = async () => {
   ...(user
     ? [
         { label: "Activity", path: "/activity" },
+        { label: "Watchlist", path: "/watchlist" },
         { label: "Watched", path: "/watched" },
       ]
     : []),

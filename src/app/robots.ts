@@ -6,7 +6,7 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: '*',
         allow: ['/', '/movies/', '/tv/', '/cast/'],
-        disallow: ['/api/', '/admin/', '/login/', '/activity/', '/watched/', '/account/'],
+        disallow: ['/api/', '/admin/', '/login/', '/activity/', '/watchlist/', '/watched/', '/account/'],
         crawlDelay: 1,
       },
       {

@@ -144,7 +144,7 @@ export function MovieQueueList({ items, providerById, onOpenDetails, onMarkWatch
               </Box>
 
               <Typography sx={{ mt: "0.4rem", color: COLORS.gray[300], fontSize: "0.88rem" }}>
-                Movie in your watchlist queue
+                {item.status === "watching" ? "Currently watching" : "Movie in your watchlist queue"}
               </Typography>
              
               <Box sx={actionsSx}>

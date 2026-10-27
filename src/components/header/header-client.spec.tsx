@@ -77,7 +77,7 @@ describe('HeaderClient', () => {
       body: JSON.stringify({ token: 'fake-token' }),
     }));
     expect(pushMock).toHaveBeenCalledWith('/activity');
-    expect(refreshMock).not.toHaveBeenCalled();
+    expect(refreshMock).toHaveBeenCalledTimes(1);
   });
 
   it('shows user menu when user is present and handles logout', async () => {
@@ -152,5 +152,7 @@ describe('HeaderClient', () => {
     })();
 
     expect(mockSignInWithPopup).toHaveBeenCalled();
+    expect(pushMock).toHaveBeenCalledWith('/activity');
+    expect(refreshMock).toHaveBeenCalledTimes(1);
   });
 });

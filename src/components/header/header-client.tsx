@@ -62,6 +62,7 @@ const HeaderClient = ({ user, navItems }: HeaderClientProps) => {
       }
 
       router.push("/activity");
+      router.refresh();
     } catch (error) {
       console.error("Login error:", error);
     }

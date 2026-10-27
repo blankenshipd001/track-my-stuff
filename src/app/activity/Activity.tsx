@@ -48,7 +48,7 @@ export default function Activity({ watchlist, user }: MyWatchlistProps) {
   );
 
   const movieQueue = useMemo(
-    () => watchlistState.filter((i) => !isTvMedia(i) && i.status === "watchlist"),
+    () => watchlistState.filter((i) => !isTvMedia(i) && (i.status === "watchlist" || i.status === "watching")),
     [watchlistState]
   );
 

@@ -165,6 +165,16 @@ export default function NotFound() {
                 Watched
               </Link>
               <Link
+                href="/watchlist"
+                style={{
+                  color: COLORS.purple.solid,
+                  textDecoration: "none",
+                  transition: TRANSITIONS.fast,
+                }}
+              >
+                Watchlist
+              </Link>
+              <Link
                 href="/about"
                 style={{
                   color: COLORS.purple.solid,
